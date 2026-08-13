@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import HeaderNav from './components/HeaderNav';
 import MobileFrame from './components/MobileFrame';
 import Toast from './components/Toast';
+import VoiceSearchModal from './components/VoiceSearchModal';
 import { INITIAL_USER, BUSINESSES, INITIAL_BOOKINGS } from './data/sampleData';
 
 /* Customer App Screens */
@@ -73,8 +74,9 @@ export default function App() {
   const [favorites, setFavorites] = useState(['biz_1']);
   const [bookings, setBookings] = useState(INITIAL_BOOKINGS);
   const [toast, setToast] = useState(null);
+  const [isVoiceSearchOpen, setIsVoiceSearchOpen] = useState(false);
 
-  // Customer Screen Router: 'splash' | 'onboarding' | 'location' | 'auth' | 'home' | 'explore' | 'bookings' | 'rewards' | 'profile' | 'search' | 'map' | 'business' | 'staff' | 'datetime' | 'addons' | 'summary' | 'payment' | 'success' | 'booking-detail' | 'notifications' | 'referral' | 'addresses' | 'payment-methods' | 'support'
+  // Customer Screen Router
   const [customerScreen, setCustomerScreen] = useState('home');
 
   // Booking Flow Draft State
@@ -193,6 +195,16 @@ export default function App() {
       {/* Global Toast Alert Popup */}
       <Toast toast={toast} onClose={() => setToast(null)} />
 
+      {/* Voice Search Modal */}
+      <VoiceSearchModal
+        isOpen={isVoiceSearchOpen}
+        onClose={() => setIsVoiceSearchOpen(false)}
+        onSearchSubmit={(query) => {
+          showToast({ message: `Voice search result for "${query}"`, type: "info" });
+          setCustomerScreen('search');
+        }}
+      />
+
       {/* PLATFORM 1: CUSTOMER MOBILE APP */}
       {activePlatform === 'customer' && (
         <MobileFrame isDeviceFrame={isDeviceFrame}>
@@ -228,6 +240,7 @@ export default function App() {
               favorites={favorites}
               onToggleFavorite={handleToggleFavorite}
               onQuickRebook={handleQuickRebook}
+              onOpenVoiceSearch={() => setIsVoiceSearchOpen(true)}
             />
           )}
 

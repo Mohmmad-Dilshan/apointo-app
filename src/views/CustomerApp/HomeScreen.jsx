@@ -1,8 +1,26 @@
-import React from 'react';
-import { MapPin, Bell, Search, Mic, Star, Clock, ChevronRight, Tag, Heart, ShieldCheck, RotateCcw } from 'lucide-react';
+import React, { useState } from 'react';
+import { MapPin, Bell, Search, Mic, Star, Clock, ChevronRight, Tag, Heart, ShieldCheck, RotateCcw, Zap, Filter } from 'lucide-react';
 import { CATEGORIES, BUSINESSES } from '../../data/sampleData';
 
-export default function HomeScreen({ user, onOpenLocation, onOpenNotifications, onNavigateScreen, onSelectBusiness, favorites, onToggleFavorite, onQuickRebook }) {
+export default function HomeScreen({ user, onOpenLocation, onOpenNotifications, onNavigateScreen, onSelectBusiness, favorites, onToggleFavorite, onQuickRebook, onOpenVoiceSearch }) {
+  const [activeFilterPill, setActiveFilterPill] = useState('all');
+
+  const filterPills = [
+    { id: 'all', label: 'All Providers' },
+    { id: 'open', label: '⚡ Open Now' },
+    { id: 'under500', label: '🏷️ Under ₹500' },
+    { id: 'top_rated', label: '⭐ 4.5+ Rating' },
+    { id: 'verified', label: '🛡️ Verified Only' }
+  ];
+
+  const displayedBusinesses = BUSINESSES.filter(biz => {
+    if (activeFilterPill === 'open') return biz.isOpen;
+    if (activeFilterPill === 'under500') return biz.services.some(s => s.price <= 500);
+    if (activeFilterPill === 'top_rated') return biz.rating >= 4.5;
+    if (activeFilterPill === 'verified') return biz.verified;
+    return true;
+  });
+
   return (
     <div style={{ background: '#F8FAFC', paddingBottom: '90px' }} className="animate-fade-in">
       {/* Top Header: Location, Notification & Profile */}
@@ -89,26 +107,65 @@ export default function HomeScreen({ user, onOpenLocation, onOpenNotifications, 
           <p style={{ fontSize: '0.82rem', color: '#64748B' }}>Book trusted services near you in seconds</p>
         </div>
 
-        {/* Search Bar Input */}
-        <button
-          onClick={() => onNavigateScreen('search')}
-          style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            background: '#F1F5F9',
-            padding: '12px 16px',
-            borderRadius: '16px',
-            border: '1px solid #E2E8F0'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#64748B' }}>
-            <Search size={18} color="#4F46E5" />
-            <span style={{ fontSize: '0.88rem', fontWeight: 500 }}>Search salons, gyms, doctors...</span>
-          </div>
-          <Mic size={18} color="#64748B" />
-        </button>
+        {/* Search Bar Input with Voice Trigger */}
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
+          <button
+            onClick={() => onNavigateScreen('search')}
+            style={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: '#F1F5F9',
+              padding: '12px 16px',
+              borderRadius: '16px',
+              border: '1px solid #E2E8F0'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#64748B' }}>
+              <Search size={18} color="#4F46E5" />
+              <span style={{ fontSize: '0.88rem', fontWeight: 500 }}>Search salons, gyms, doctors...</span>
+            </div>
+          </button>
+
+          <button
+            onClick={onOpenVoiceSearch}
+            style={{
+              width: '46px',
+              height: '46px',
+              borderRadius: '16px',
+              background: '#EEF2FF',
+              border: '1px solid #C7D2FE',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <Mic size={20} color="#4F46E5" />
+          </button>
+        </div>
+
+        {/* Instant Filter Chips Bar */}
+        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto' }} className="no-scrollbar">
+          {filterPills.map(pill => (
+            <button
+              key={pill.id}
+              onClick={() => setActiveFilterPill(pill.id)}
+              style={{
+                flexShrink: 0,
+                padding: '6px 12px',
+                borderRadius: '999px',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                background: activeFilterPill === pill.id ? '#4F46E5' : '#F1F5F9',
+                color: activeFilterPill === pill.id ? '#FFFFFF' : '#475569',
+                border: activeFilterPill === pill.id ? '1px solid #4F46E5' : '1px solid #E2E8F0'
+              }}
+            >
+              {pill.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Quick Categories Bar */}
@@ -191,14 +248,16 @@ export default function HomeScreen({ user, onOpenLocation, onOpenNotifications, 
       <div style={{ padding: '24px 20px 0' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
           <div>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0F172A' }}>Nearby Businesses</h2>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0F172A' }}>
+              {activeFilterPill === 'all' ? 'Nearby Businesses' : `Filtered Results (${displayedBusinesses.length})`}
+            </h2>
             <p style={{ fontSize: '0.78rem', color: '#64748B' }}>Verified providers within 3 km</p>
           </div>
           <button onClick={() => onNavigateScreen('map')} style={{ fontSize: '0.8rem', fontWeight: 700, color: '#4F46E5' }}>Map View</button>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {BUSINESSES.map(biz => (
+          {displayedBusinesses.map(biz => (
             <div
               key={biz.id}
               onClick={() => onSelectBusiness(biz)}
