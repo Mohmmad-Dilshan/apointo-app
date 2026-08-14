@@ -72,10 +72,11 @@ export default function App() {
   // Top level platform view: 'customer' | 'business' | 'admin' | 'design-system'
   const [activePlatform, setActivePlatform] = useState('customer');
   const [isDeviceFrame, setIsDeviceFrame] = useState(true);
+  const [deviceOs, setDeviceOs] = useState('ios'); // 'ios' | 'android'
 
   // Global State Store
   const [user, setUser] = useState(INITIAL_USER);
-  const [favorites, setFavorites] = useState(['biz_1']);
+  const [favorites, setFavorites] = useState(['biz_1', 'biz_3']);
   const [bookings, setBookings] = useState(INITIAL_BOOKINGS);
   const [toast, setToast] = useState(null);
   const [isVoiceSearchOpen, setIsVoiceSearchOpen] = useState(false);
@@ -85,7 +86,7 @@ export default function App() {
 
   // Booking Flow Draft State
   const [selectedBusiness, setSelectedBusiness] = useState(BUSINESSES[0]);
-  const [selectedService, setSelectedService] = useState(BUSINESSES[0].services[0]);
+  const [selectedService, setSelectedService] = useState(null);
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [selectedDateTime, setSelectedDateTime] = useState(null);
@@ -108,10 +109,10 @@ export default function App() {
   const handleToggleFavorite = (bizId) => {
     if (favorites.includes(bizId)) {
       setFavorites(favorites.filter(id => id !== bizId));
-      showToast({ message: "Removed from Favorites", type: "info" });
+      showToast({ message: "Removed from favorites", type: "info" });
     } else {
       setFavorites([...favorites, bizId]);
-      showToast({ message: "Saved to Favorites ❤️", type: "success" });
+      showToast({ message: "Added to favorites! ❤️", type: "success" });
     }
   };
 
@@ -195,6 +196,8 @@ export default function App() {
         setActivePlatform={setActivePlatform}
         isDeviceFrame={isDeviceFrame}
         setIsDeviceFrame={setIsDeviceFrame}
+        deviceOs={deviceOs}
+        setDeviceOs={setDeviceOs}
       />
 
       {/* Global Toast Alert Popup */}
@@ -212,7 +215,7 @@ export default function App() {
 
       {/* PLATFORM 1: CUSTOMER MOBILE APP */}
       {activePlatform === 'customer' && (
-        <MobileFrame isDeviceFrame={isDeviceFrame}>
+        <MobileFrame isDeviceFrame={isDeviceFrame} deviceOs={deviceOs}>
           {customerScreen === 'splash' && (
             <SplashScreen onStart={() => setCustomerScreen('onboarding')} />
           )}

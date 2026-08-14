@@ -1,7 +1,7 @@
 import React from 'react';
-import { Smartphone, Building2, ShieldCheck, Palette, Sparkles, Monitor } from 'lucide-react';
+import { Smartphone, Building2, ShieldCheck, Palette, Sparkles, Monitor, Apple, Bot } from 'lucide-react';
 
-export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceFrame, setIsDeviceFrame }) {
+export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceFrame, setIsDeviceFrame, deviceOs, setDeviceOs }) {
   return (
     <header style={{
       background: '#0F172A',
@@ -124,9 +124,51 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
         </button>
       </div>
 
-      {/* Frame Mode Toggle for Customer App */}
+      {/* Frame Mode & OS Toggle for Customer App */}
       {activePlatform === 'customer' && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* OS Switcher: iOS vs Android */}
+          <div style={{
+            display: 'flex',
+            background: '#1E293B',
+            padding: '3px',
+            borderRadius: '10px',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <button
+              onClick={() => setDeviceOs('ios')}
+              style={{
+                padding: '5px 10px',
+                borderRadius: '7px',
+                fontSize: '0.76rem',
+                fontWeight: 700,
+                color: deviceOs === 'ios' ? '#FFFFFF' : '#94A3B8',
+                background: deviceOs === 'ios' ? '#6366F1' : 'transparent',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              <span> iOS</span>
+            </button>
+            <button
+              onClick={() => setDeviceOs('android')}
+              style={{
+                padding: '5px 10px',
+                borderRadius: '7px',
+                fontSize: '0.76rem',
+                fontWeight: 700,
+                color: deviceOs === 'android' ? '#FFFFFF' : '#94A3B8',
+                background: deviceOs === 'android' ? '#10B981' : 'transparent',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              <span>🤖 Android</span>
+            </button>
+          </div>
+
           <button
             onClick={() => setIsDeviceFrame(!isDeviceFrame)}
             style={{
