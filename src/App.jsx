@@ -409,7 +409,7 @@ export default function App() {
           )}
 
           {customerScreen === 'referral' && (
-            <ReferralScreen onBack={() => setCustomerScreen('rewards')} onShowToast={showToast} />
+            <ReferralScreen onBack={() => setCustomerScreen('profile')} onShowToast={showToast} />
           )}
 
           {customerScreen === 'profile' && (

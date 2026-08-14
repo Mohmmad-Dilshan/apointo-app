@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, MapPin, CreditCard, Heart, Calendar, Award, Bell, HelpCircle, Shield, Settings, LogOut, ChevronRight, Sparkles, Phone, Mail } from 'lucide-react';
+import { User, MapPin, CreditCard, Heart, Calendar, Award, Bell, HelpCircle, Shield, Settings, LogOut, ChevronRight, Sparkles, Phone, Mail, Gift } from 'lucide-react';
 
 export default function ProfileScreen({ user, onNavigateScreen }) {
   return (
@@ -91,7 +91,12 @@ export default function ProfileScreen({ user, onNavigateScreen }) {
                   }}>
                     {item.icon}
                   </div>
-                  <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0F172A' }}>{item.title}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0F172A' }}>{item.title}</span>
+                    {item.badge && (
+                      <span style={{ fontSize: '0.62rem', fontWeight: 900, color: '#FFFFFF', background: 'linear-gradient(135deg, #10B981, #059669)', padding: '2px 7px', borderRadius: '999px', letterSpacing: '0.02em' }}>{item.badge}</span>
+                    )}
+                  </div>
                 </div>
                 <ChevronRight size={18} color="#94A3B8" />
               </button>
@@ -108,6 +113,7 @@ export default function ProfileScreen({ user, onNavigateScreen }) {
           <div style={{ background: '#FFFFFF', borderRadius: '22px', border: '1px solid #E2E8F0', overflow: 'hidden', boxShadow: '0 4px 16px rgba(15,23,42,0.03)' }}>
             {[
               { icon: <Award size={18} color="#F59E0B" />, title: "Apointo Rewards", action: () => onNavigateScreen('rewards') },
+              { icon: <Gift size={18} color="#10B981" />, title: "Invite & Earn ₹500", badge: "🎁 HOT", action: () => onNavigateScreen('referral') },
               { icon: <Bell size={18} color="#8B5CF6" />, title: "Notification Preferences", action: () => onNavigateScreen('notification-preferences') },
               { icon: <HelpCircle size={18} color="#3B82F6" />, title: "Help & Customer Support", action: () => onNavigateScreen('support') }
             ].map((item, idx, arr) => (
@@ -136,7 +142,12 @@ export default function ProfileScreen({ user, onNavigateScreen }) {
                   }}>
                     {item.icon}
                   </div>
-                  <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0F172A' }}>{item.title}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0F172A' }}>{item.title}</span>
+                    {item.badge && (
+                      <span style={{ fontSize: '0.62rem', fontWeight: 900, color: '#FFFFFF', background: 'linear-gradient(135deg, #10B981, #059669)', padding: '2px 7px', borderRadius: '999px', letterSpacing: '0.02em' }}>{item.badge}</span>
+                    )}
+                  </div>
                 </div>
                 <ChevronRight size={18} color="#94A3B8" />
               </button>
