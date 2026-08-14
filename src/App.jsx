@@ -23,6 +23,8 @@ import BookingSummary from './views/CustomerApp/BookingSummary';
 import PaymentScreen from './views/CustomerApp/PaymentScreen';
 import BookingSuccess from './views/CustomerApp/BookingSuccess';
 import BookingDetail from './views/CustomerApp/BookingDetail';
+import CategoryDetailScreen from './views/CustomerApp/CategoryDetailScreen';
+import AllCategoriesScreen from './views/CustomerApp/AllCategoriesScreen';
 import BookingsTab from './views/CustomerApp/BookingsTab';
 import NotificationsScreen from './views/CustomerApp/NotificationsScreen';
 import ReviewModal from './views/CustomerApp/ReviewModal';
@@ -33,6 +35,8 @@ import ProfileScreen from './views/CustomerApp/ProfileScreen';
 import AddressManager from './views/CustomerApp/AddressManager';
 import PaymentMethodsManager from './views/CustomerApp/PaymentMethodsManager';
 import HelpSupportScreen from './views/CustomerApp/HelpSupportScreen';
+import PersonalInfoScreen from './views/CustomerApp/PersonalInfoScreen';
+import NotificationPreferencesScreen from './views/CustomerApp/NotificationPreferencesScreen';
 
 /* Business SaaS Dashboard Views */
 import ProviderHeader from './views/BusinessDashboard/ProviderHeader';
@@ -86,6 +90,7 @@ export default function App() {
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [selectedDateTime, setSelectedDateTime] = useState(null);
   const [selectedAddons, setSelectedAddons] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [activeBookingDetail, setActiveBookingDetail] = useState(null);
   const [reviewModalBooking, setReviewModalBooking] = useState(null);
 
@@ -236,11 +241,35 @@ export default function App() {
               onOpenLocation={() => setCustomerScreen('location')}
               onOpenNotifications={() => setCustomerScreen('notifications')}
               onNavigateScreen={(scr) => setCustomerScreen(scr)}
+              onSelectCategory={(cat) => {
+                setSelectedCategory(cat);
+                setCustomerScreen('category-detail');
+              }}
               onSelectBusiness={handleSelectBusiness}
               favorites={favorites}
               onToggleFavorite={handleToggleFavorite}
               onQuickRebook={handleQuickRebook}
               onOpenVoiceSearch={() => setIsVoiceSearchOpen(true)}
+            />
+          )}
+
+          {customerScreen === 'category-detail' && (
+            <CategoryDetailScreen
+              category={selectedCategory}
+              onBack={() => setCustomerScreen('home')}
+              onSelectBusiness={handleSelectBusiness}
+              favorites={favorites}
+              onToggleFavorite={handleToggleFavorite}
+            />
+          )}
+
+          {customerScreen === 'all-categories' && (
+            <AllCategoriesScreen
+              onBack={() => setCustomerScreen('home')}
+              onSelectCategory={(cat) => {
+                setSelectedCategory(cat);
+                setCustomerScreen('category-detail');
+              }}
             />
           )}
 
@@ -368,6 +397,7 @@ export default function App() {
               onSelectBusiness={handleSelectBusiness}
               onToggleFavorite={handleToggleFavorite}
               onNavigateScreen={(scr) => setCustomerScreen(scr)}
+              onBack={() => setCustomerScreen('profile')}
             />
           )}
 
@@ -381,6 +411,21 @@ export default function App() {
 
           {customerScreen === 'profile' && (
             <ProfileScreen user={user} onNavigateScreen={(scr) => setCustomerScreen(scr)} />
+          )}
+
+          {customerScreen === 'personal-info' && (
+            <PersonalInfoScreen
+              user={user}
+              onBack={() => setCustomerScreen('profile')}
+              onSaveUser={(updated) => {
+                setUser({ ...user, ...updated });
+                showToast({ message: "Personal Info updated successfully!", type: "success" });
+              }}
+            />
+          )}
+
+          {customerScreen === 'notification-preferences' && (
+            <NotificationPreferencesScreen onBack={() => setCustomerScreen('profile')} />
           )}
 
           {customerScreen === 'addresses' && (
@@ -412,27 +457,34 @@ export default function App() {
             booking={reviewModalBooking}
           />
 
-          {/* Bottom Customer Navigation Bar */}
+          {/* Apple iOS 18 HIG Floating Glass Pill Dock */}
           {['home', 'explore', 'bookings', 'rewards', 'profile'].includes(customerScreen) && (
             <div style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: '65px',
-              background: '#FFFFFF',
-              borderTop: '1px solid #E2E8F0',
+              position: 'sticky',
+              bottom: '12px',
+              left: '12px',
+              right: '12px',
+              width: 'calc(100% - 24px)',
+              height: '62px',
+              margin: 'auto 12px 12px',
+              borderRadius: '999px',
+              background: 'rgba(255, 255, 255, 0.88)',
+              backdropFilter: 'blur(30px) saturate(190%)',
+              WebkitBackdropFilter: 'blur(30px) saturate(190%)',
+              border: '1px solid rgba(255, 255, 255, 0.7)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-around',
-              zIndex: 900
+              justifyContent: 'space-between',
+              boxShadow: '0 12px 32px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
+              zIndex: 1000,
+              padding: '4px 6px'
             }}>
               {[
-                { id: 'home', label: 'Home', icon: <HomeIcon size={20} /> },
-                { id: 'explore', label: 'Explore', icon: <Compass size={20} /> },
-                { id: 'bookings', label: 'Bookings', icon: <CalendarNav size={20} /> },
-                { id: 'rewards', label: 'Rewards', icon: <AwardNav size={20} /> },
-                { id: 'profile', label: 'Profile', icon: <UserNav size={20} /> }
+                { id: 'home', label: 'Home', icon: <HomeIcon size={18} /> },
+                { id: 'explore', label: 'Explore', icon: <Compass size={18} /> },
+                { id: 'bookings', label: 'Bookings', icon: <CalendarNav size={18} /> },
+                { id: 'rewards', label: 'Rewards', icon: <AwardNav size={18} /> },
+                { id: 'profile', label: 'Profile', icon: <UserNav size={18} /> }
               ].map(tab => {
                 const isActive = customerScreen === tab.id;
                 return (
@@ -440,13 +492,22 @@ export default function App() {
                     key={tab.id}
                     onClick={() => setCustomerScreen(tab.id)}
                     style={{
+                      flex: 1,
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
+                      justifyContent: 'center',
                       gap: '2px',
-                      color: isActive ? '#4F46E5' : '#64748B',
-                      fontSize: '0.7rem',
-                      fontWeight: isActive ? 800 : 600
+                      padding: '6px 0',
+                      borderRadius: '999px',
+                      background: isActive ? 'linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)' : 'transparent',
+                      color: isActive ? '#FFFFFF' : '#64748B',
+                      fontSize: '0.68rem',
+                      fontWeight: isActive ? 800 : 600,
+                      boxShadow: isActive ? '0 4px 14px rgba(79,70,229,0.35)' : 'none',
+                      border: isActive ? '1px solid rgba(255,255,255,0.4)' : '1px solid transparent',
+                      transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                      transform: isActive ? 'scale(1.04)' : 'scale(1)'
                     }}
                   >
                     {tab.icon}

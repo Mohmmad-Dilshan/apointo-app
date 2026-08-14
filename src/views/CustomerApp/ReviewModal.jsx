@@ -21,18 +21,22 @@ export default function ReviewModal({ isOpen, onClose, onSubmitReview, booking }
     <div style={{
       position: 'fixed',
       inset: 0,
-      background: 'rgba(15,23,42,0.6)',
-      backdropFilter: 'blur(4px)',
+      background: 'rgba(15,23,42,0.65)',
+      backdropFilter: 'blur(6px)',
       zIndex: 2000,
       display: 'flex',
-      alignItems: 'flex-end'
+      alignItems: 'flex-end',
+      justifyContent: 'center'
     }}>
       <div style={{
         width: '100%',
+        maxWidth: '480px',
+        margin: '0 auto',
         background: '#FFFFFF',
         borderTopLeftRadius: '28px',
         borderTopRightRadius: '28px',
-        padding: '24px'
+        padding: '24px',
+        boxShadow: '0 -10px 40px rgba(0,0,0,0.3)'
       }} className="animate-slide-up">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0F172A' }}>How was your experience?</h3>

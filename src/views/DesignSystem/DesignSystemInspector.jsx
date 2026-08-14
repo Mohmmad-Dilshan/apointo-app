@@ -1,9 +1,17 @@
-import React from 'react';
-import { Palette, Sparkles, Check, Heart, Star, Search, Clock, ShieldCheck, AlertCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Palette, Sparkles, Check, Heart, Star, Search, Clock, ShieldCheck, Copy } from 'lucide-react';
 import { CardSkeleton } from '../../components/SkeletonLoader';
 import EmptyState from '../../components/EmptyState';
 
 export default function DesignSystemInspector() {
+  const [copiedHex, setCopiedHex] = useState(null);
+
+  const handleCopy = (hex) => {
+    navigator.clipboard?.writeText?.(hex);
+    setCopiedHex(hex);
+    setTimeout(() => setCopiedHex(null), 2000);
+  };
+
   return (
     <div style={{ background: '#F8FAFC', padding: '32px', minHeight: '100vh', display: 'flex', flexDirection: 'column', gap: '32px' }} className="animate-fade-in">
       {/* Design System Header */}
@@ -30,7 +38,17 @@ export default function DesignSystemInspector() {
 
       {/* Color Palette Tokens */}
       <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '28px', border: '1px solid #E2E8F0' }}>
-        <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', marginBottom: '20px' }}>Color Palette System</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <div>
+            <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A' }}>Color Palette System</h2>
+            <p style={{ fontSize: '0.78rem', color: '#64748B' }}>Click any swatch to copy the hex token</p>
+          </div>
+          {copiedHex && (
+            <span className="badge badge-success animate-pop">
+              <Check size={12} /> Copied {copiedHex}!
+            </span>
+          )}
+        </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px' }}>
           {[
@@ -39,16 +57,35 @@ export default function DesignSystemInspector() {
             { name: "Emerald Success", hex: "#10B981", role: "Verified badges & confirmation" },
             { name: "Amber Warning", hex: "#F59E0B", role: "Star ratings & alerts" },
             { name: "Rose Error", hex: "#F43F5E", role: "Cancellation & error states" }
-          ].map((c, idx) => (
-            <div key={idx} style={{ borderRadius: '18px', border: '1px solid #E2E8F0', overflow: 'hidden' }}>
-              <div style={{ height: '80px', background: c.hex }} />
-              <div style={{ padding: '14px' }}>
-                <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0F172A' }}>{c.name}</div>
-                <div style={{ fontSize: '0.78rem', color: '#4F46E5', fontWeight: 700, fontFamily: 'monospace' }}>{c.hex}</div>
-                <p style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '4px' }}>{c.role}</p>
+          ].map((c, idx) => {
+            const isCopied = copiedHex === c.hex;
+            return (
+              <div
+                key={idx}
+                onClick={() => handleCopy(c.hex)}
+                style={{
+                  borderRadius: '18px',
+                  border: isCopied ? '2px solid #10B981' : '1px solid #E2E8F0',
+                  overflow: 'hidden',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  transform: isCopied ? 'scale(1.03)' : 'scale(1)'
+                }}
+              >
+                <div style={{ height: '80px', background: c.hex, display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', padding: '8px' }}>
+                  <div style={{ background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', padding: '4px 8px', borderRadius: '6px', color: '#FFFFFF', fontSize: '0.7rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {isCopied ? <Check size={12} color="#10B981" /> : <Copy size={12} />}
+                    <span>{isCopied ? 'Copied!' : 'Copy'}</span>
+                  </div>
+                </div>
+                <div style={{ padding: '14px' }}>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0F172A' }}>{c.name}</div>
+                  <div style={{ fontSize: '0.78rem', color: '#4F46E5', fontWeight: 700, fontFamily: 'monospace' }}>{c.hex}</div>
+                  <p style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '4px' }}>{c.role}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -95,3 +132,4 @@ export default function DesignSystemInspector() {
     </div>
   );
 }
+

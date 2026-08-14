@@ -14,19 +14,23 @@ export default function FilterBottomSheet({ isOpen, onClose, onApplyFilters }) {
     <div style={{
       position: 'fixed',
       inset: 0,
-      background: 'rgba(15,23,42,0.6)',
-      backdropFilter: 'blur(4px)',
+      background: 'rgba(15,23,42,0.65)',
+      backdropFilter: 'blur(6px)',
       zIndex: 2000,
       display: 'flex',
-      alignItems: 'flex-end'
+      alignItems: 'flex-end',
+      justifyContent: 'center'
     }}>
       <div style={{
         width: '100%',
+        maxWidth: '480px',
+        margin: '0 auto',
         maxHeight: '85vh',
         background: '#FFFFFF',
         borderTopLeftRadius: '28px',
         borderTopRightRadius: '28px',
         padding: '20px 24px 30px',
+        boxShadow: '0 -10px 40px rgba(0,0,0,0.3)',
         overflowY: 'auto'
       }} className="animate-slide-up no-scrollbar">
         {/* Header */}

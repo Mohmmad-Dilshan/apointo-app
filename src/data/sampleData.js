@@ -284,6 +284,120 @@ export const BUSINESSES = [
       { id: "stf_7", name: "Suresh Kumar", role: "Lead Automotive Technician", rating: 4.7, experience: "10 yrs", photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200" }
     ],
     reviews: []
+  },
+  {
+    id: "biz_6",
+    name: "Lifeline Multispecialty Clinic",
+    tagline: "Expert Doctor Consultation & Health Checkups",
+    category: "Doctor Clinic",
+    categoryId: "doctor",
+    rating: 4.9,
+    reviewCount: 420,
+    distance: "1.1 km",
+    address: "12th Main Rd, Indiranagar, Bengaluru",
+    priceRange: "₹500 - ₹1,500",
+    verified: true,
+    isOpen: true,
+    nextSlot: "Today, 03:30 PM",
+    heroImage: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800",
+    images: ["https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800"],
+    about: "Lifeline Clinic offers experienced General Physicians, Dermatologists, Pediatricians, and diagnostic consultations.",
+    cancellationPolicy: "Free cancellation 1 hour before appointment.",
+    services: [
+      {
+        id: "srv_601",
+        name: "General Physician Consultation",
+        description: "Full health check, blood pressure & vitals checkup, prescription & medical advice.",
+        duration: "30 min",
+        price: 500,
+        originalPrice: 700,
+        discount: "28% OFF",
+        popular: true,
+        image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=400",
+        included: ["Vitals Check", "Doctor Advice", "Digital Prescription"],
+        addons: []
+      }
+    ],
+    staff: [
+      { id: "stf_8", name: "Dr. Rajesh Gupta", role: "MD General Medicine", rating: 4.9, experience: "14 yrs", photo: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=200" }
+    ],
+    reviews: []
+  },
+  {
+    id: "biz_7",
+    name: "Envi Unisex Salon & Makeover",
+    tagline: "Hair Styling, Facials & Party Makeover",
+    category: "Salon",
+    categoryId: "salon",
+    rating: 4.8,
+    reviewCount: 310,
+    distance: "1.7 km",
+    address: "80 Feet Rd, Koramangala, Bengaluru",
+    priceRange: "₹399 - ₹2,999",
+    verified: true,
+    isOpen: true,
+    nextSlot: "Today, 04:30 PM",
+    heroImage: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=800",
+    images: ["https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=800"],
+    about: "Envi Unisex Salon provides premium haircuts, facial glow treatments, keratin hair smoothing, and bridal styling.",
+    cancellationPolicy: "Free cancellation 2 hours prior.",
+    services: [
+      {
+        id: "srv_701",
+        name: "Fruit Facial + Threading & Cleanup",
+        description: "Herbal fruit glow facial treatment + eyebrows & upper lip threading.",
+        duration: "50 min",
+        price: 499,
+        originalPrice: 800,
+        discount: "37% OFF",
+        popular: true,
+        image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&q=80&w=400",
+        included: ["Cleansing", "Fruit Scrub", "Face Massage", "Threading"],
+        addons: []
+      }
+    ],
+    staff: [
+      { id: "stf_9", name: "Meera Kapoor", role: "Senior Makeup Artist", rating: 4.8, experience: "6 yrs", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200" }
+    ],
+    reviews: []
+  },
+  {
+    id: "biz_8",
+    name: "CleanHome Expert Services",
+    tagline: "Deep House Cleaning, AC & Plumbing Repair",
+    category: "Home Service",
+    categoryId: "homeservice",
+    rating: 4.9,
+    reviewCount: 540,
+    distance: "0.5 km",
+    address: "Indiranagar 1st Stage, Bengaluru",
+    priceRange: "₹299 - ₹3,499",
+    verified: true,
+    isOpen: true,
+    nextSlot: "Today, 05:30 PM",
+    heroImage: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=800",
+    images: ["https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=800"],
+    about: "Verified doorstep professionals for AC service & gas recharge, bathroom deep cleaning, plumbing and electrical work.",
+    cancellationPolicy: "Free cancellation before technician dispatch.",
+    services: [
+      {
+        id: "srv_801",
+        name: "Full Home Deep Cleaning & Sanitization",
+        description: "Complete room scrubbing, window cleaning, kitchen degreasing & bathroom sanitization.",
+        duration: "180 min",
+        price: 1499,
+        originalPrice: 2200,
+        discount: "31% OFF",
+        popular: true,
+        image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=400",
+        included: ["Floor Scrubbing", "Bathroom Cleaning", "Kitchen Degreasing", "Cobweb Removal"],
+        addons: []
+      }
+    ],
+    staff: [
+      { id: "stf_10", name: "Ramesh Pawar", role: "Master Home Cleaning Specialist", rating: 4.9, experience: "8 yrs", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200" }
+    ],
+    reviews: []
   }
 ];
 
