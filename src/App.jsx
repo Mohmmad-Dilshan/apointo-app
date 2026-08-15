@@ -524,34 +524,8 @@ export default function App() {
         </MobileFrame>
       )}
 
-      {/* PLATFORM 2: BUSINESS SaaS DASHBOARD - Desktop */}
+      {/* PLATFORM 2: BUSINESS MOBILE APP (iOS & Android) */}
       {activePlatform === 'business' && (
-        <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
-          <ProviderHeader
-            businessName={selectedBusiness.name}
-            onAddAppointment={() => showToast({ message: "New appointment modal triggered!", type: "info" })}
-          />
-          <div style={{ display: 'flex' }}>
-            <ProviderSidebar activeTab={providerTab} setActiveTab={setProviderTab} />
-            <main style={{ flex: 1, minHeight: 'calc(100vh - 65px)' }}>
-              {providerTab === 'overview' && <ProviderOverview onNavigateTab={setProviderTab} />}
-              {providerTab === 'calendar' && <ProviderCalendar />}
-              {providerTab === 'appointments' && <ProviderAppointments />}
-              {providerTab === 'services' && <ProviderServices />}
-              {providerTab === 'staff' && <ProviderStaff />}
-              {providerTab === 'crm' && <ProviderCRM />}
-              {providerTab === 'payments' && <ProviderPayments />}
-              {providerTab === 'offers' && <ProviderOffers />}
-              {providerTab === 'analytics' && <ProviderAnalytics />}
-              {providerTab === 'reviews' && <ProviderReviews />}
-              {providerTab === 'settings' && <ProviderSettings />}
-            </main>
-          </div>
-        </div>
-      )}
-
-      {/* PLATFORM 2B: BUSINESS MOBILE APP */}
-      {activePlatform === 'business-mobile' && (
         <MobileFrame isDeviceFrame={isDeviceFrame} deviceOs={deviceOs}>
           <MobileBusinessDashboard />
         </MobileFrame>

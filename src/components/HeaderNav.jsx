@@ -66,24 +66,6 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
           <span>Customer Mobile App</span>
         </button>
 
-        <button
-          onClick={() => setActivePlatform('business-mobile')}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '8px 16px',
-            borderRadius: '10px',
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            color: activePlatform === 'business-mobile' ? '#FFFFFF' : '#94A3B8',
-            background: activePlatform === 'business-mobile' ? '#4F46E5' : 'transparent',
-            boxShadow: activePlatform === 'business-mobile' ? '0 2px 10px rgba(79,70,229,0.3)' : 'none'
-          }}
-        >
-          <Smartphone size={16} />
-          <span>Business App</span>
-        </button>
 
         <button
           onClick={() => setActivePlatform('business')}
@@ -96,12 +78,12 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
             fontSize: '0.85rem',
             fontWeight: 600,
             color: activePlatform === 'business' ? '#FFFFFF' : '#94A3B8',
-            background: activePlatform === 'business' ? '#4F46E5' : 'transparent',
-            boxShadow: activePlatform === 'business' ? '0 2px 10px rgba(79,70,229,0.3)' : 'none'
+            background: activePlatform === 'business' ? '#10B981' : 'transparent',
+            boxShadow: activePlatform === 'business' ? '0 2px 10px rgba(16,185,129,0.3)' : 'none'
           }}
         >
           <Building2 size={16} />
-          <span>Business SaaS</span>
+          <span>Business App</span>
         </button>
 
         <button
@@ -143,8 +125,8 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
         </button>
       </div>
 
-      {/* Frame Mode & OS Toggle for Customer App and Business Mobile */}
-      {(activePlatform === 'customer' || activePlatform === 'business-mobile') && (
+      {/* Frame Mode & OS Toggle for Customer App and Business */}
+      {(activePlatform === 'customer' || activePlatform === 'business') && (
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {/* OS Switcher: iOS vs Android */}
           <div style={{
