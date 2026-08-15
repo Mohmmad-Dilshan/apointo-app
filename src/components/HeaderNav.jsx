@@ -102,7 +102,7 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
           }}
         >
           <ShieldCheck size={16} />
-          <span>Admin Console</span>
+          <span>Admin App</span>
         </button>
 
         <button
@@ -125,8 +125,8 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
         </button>
       </div>
 
-      {/* Frame Mode & OS Toggle for Customer App and Business */}
-      {(activePlatform === 'customer' || activePlatform === 'business') && (
+      {/* Frame Mode & OS Toggle for Customer App, Business and Admin */}
+      {(activePlatform === 'customer' || activePlatform === 'business' || activePlatform === 'admin') && (
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {/* OS Switcher: iOS vs Android */}
           <div style={{

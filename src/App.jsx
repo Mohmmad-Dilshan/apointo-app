@@ -55,14 +55,7 @@ import ProviderSettings from './views/BusinessDashboard/ProviderSettings';
 import MobileBusinessDashboard from './views/BusinessDashboard/MobileBusinessDashboard';
 
 /* Admin Console Views */
-import AdminHeader from './views/AdminConsole/AdminHeader';
-import AdminSidebar from './views/AdminConsole/AdminSidebar';
-import AdminDashboard from './views/AdminConsole/AdminDashboard';
-import BusinessVerification from './views/AdminConsole/BusinessVerification';
-import AdminBookings from './views/AdminConsole/AdminBookings';
-import AdminPayments from './views/AdminConsole/AdminPayments';
-import AdminUsers from './views/AdminConsole/AdminUsers';
-import AdminSupport from './views/AdminConsole/AdminSupport';
+import MobileAdminDashboard from './views/AdminConsole/MobileAdminDashboard';
 
 /* Design System View */
 import DesignSystemInspector from './views/DesignSystem/DesignSystemInspector';
@@ -531,22 +524,11 @@ export default function App() {
         </MobileFrame>
       )}
 
-      {/* PLATFORM 3: ADMIN CONSOLE */}
+      {/* PLATFORM 3: ADMIN MOBILE APP (iOS & Android) */}
       {activePlatform === 'admin' && (
-        <div style={{ minHeight: '100vh', background: '#090D16', color: '#F8FAFC' }}>
-          <AdminHeader />
-          <div style={{ display: 'flex' }}>
-            <AdminSidebar activeTab={adminTab} setActiveTab={setAdminTab} />
-            <main style={{ flex: 1, minHeight: 'calc(100vh - 65px)' }}>
-              {adminTab === 'overview' && <AdminDashboard onNavigateTab={setAdminTab} />}
-              {adminTab === 'verification' && <BusinessVerification />}
-              {adminTab === 'bookings' && <AdminBookings />}
-              {adminTab === 'payments' && <AdminPayments />}
-              {adminTab === 'users' && <AdminUsers />}
-              {adminTab === 'support' && <AdminSupport />}
-            </main>
-          </div>
-        </div>
+        <MobileFrame isDeviceFrame={isDeviceFrame} deviceOs={deviceOs}>
+          <MobileAdminDashboard />
+        </MobileFrame>
       )}
 
       {/* PLATFORM 4: DESIGN SYSTEM INSPECTOR */}
