@@ -52,6 +52,7 @@ import ProviderOffers from './views/BusinessDashboard/ProviderOffers';
 import ProviderAnalytics from './views/BusinessDashboard/ProviderAnalytics';
 import ProviderReviews from './views/BusinessDashboard/ProviderReviews';
 import ProviderSettings from './views/BusinessDashboard/ProviderSettings';
+import MobileBusinessDashboard from './views/BusinessDashboard/MobileBusinessDashboard';
 
 /* Admin Console Views */
 import AdminHeader from './views/AdminConsole/AdminHeader';
@@ -523,7 +524,7 @@ export default function App() {
         </MobileFrame>
       )}
 
-      {/* PLATFORM 2: BUSINESS SaaS DASHBOARD */}
+      {/* PLATFORM 2: BUSINESS SaaS DASHBOARD - Desktop */}
       {activePlatform === 'business' && (
         <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
           <ProviderHeader
@@ -547,6 +548,13 @@ export default function App() {
             </main>
           </div>
         </div>
+      )}
+
+      {/* PLATFORM 2B: BUSINESS MOBILE APP */}
+      {activePlatform === 'business-mobile' && (
+        <MobileFrame isDeviceFrame={isDeviceFrame} deviceOs={deviceOs}>
+          <MobileBusinessDashboard />
+        </MobileFrame>
       )}
 
       {/* PLATFORM 3: ADMIN CONSOLE */}

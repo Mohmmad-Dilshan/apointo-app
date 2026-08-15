@@ -67,6 +67,25 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
         </button>
 
         <button
+          onClick={() => setActivePlatform('business-mobile')}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '8px 16px',
+            borderRadius: '10px',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+            color: activePlatform === 'business-mobile' ? '#FFFFFF' : '#94A3B8',
+            background: activePlatform === 'business-mobile' ? '#4F46E5' : 'transparent',
+            boxShadow: activePlatform === 'business-mobile' ? '0 2px 10px rgba(79,70,229,0.3)' : 'none'
+          }}
+        >
+          <Smartphone size={16} />
+          <span>Business App</span>
+        </button>
+
+        <button
           onClick={() => setActivePlatform('business')}
           style={{
             display: 'flex',
@@ -124,8 +143,8 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
         </button>
       </div>
 
-      {/* Frame Mode & OS Toggle for Customer App */}
-      {activePlatform === 'customer' && (
+      {/* Frame Mode & OS Toggle for Customer App and Business Mobile */}
+      {(activePlatform === 'customer' || activePlatform === 'business-mobile') && (
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {/* OS Switcher: iOS vs Android */}
           <div style={{
