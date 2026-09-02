@@ -143,25 +143,28 @@ export default function PaymentScreen({ bookingData, onBack, onPaymentSuccess })
 
       {/* Sticky Pay CTA */}
       <div style={{
-        position: 'fixed',
+        position: 'sticky',
         bottom: 0,
         left: 0,
         right: 0,
-        background: '#FFFFFF',
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
         padding: '14px 20px',
         borderTop: '1px solid #E2E8F0',
-        zIndex: 100
+        zIndex: 100,
+        boxShadow: '0 -4px 16px rgba(0,0,0,0.05)'
       }}>
         <button
           onClick={handlePay}
           disabled={isProcessing}
           style={{
             width: '100%',
-            padding: '16px',
+            padding: '15px',
             borderRadius: '999px',
             background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
             color: '#FFFFFF',
-            fontSize: '1rem',
+            fontSize: '0.96rem',
             fontWeight: 800,
             display: 'flex',
             alignItems: 'center',

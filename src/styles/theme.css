@@ -288,5 +288,92 @@ input, select, textarea {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ==========================================================================
+   Comprehensive Mobile & Responsive Breakpoints
+   ========================================================================== */
+
+/* Universal box-sizing and overflow control */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Fluid responsive images & icons */
+img, svg {
+  max-width: 100%;
+  display: block;
+}
+
+/* Tablet & Mobile Adaptations (Screen Width <= 600px) */
+@media (max-width: 600px) {
+  .mobile-frame-wrapper {
+    padding: 0 !important;
+    background: #F8FAFC !important;
+    min-height: calc(100vh - 60px) !important;
+  }
+
+  .device-outer-shell {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #F8FAFC !important;
+  }
+
+  .device-inner-viewport {
+    border-radius: 0 !important;
+    background: #F8FAFC !important;
+  }
+
+  .dynamic-island,
+  .punch-hole,
+  .device-status-bar,
+  .device-bottom-pill {
+    display: none !important;
+  }
+
+  .brand-sub-text {
+    display: none !important;
+  }
+
+  .apple-glass-dock {
+    bottom: 8px !important;
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+    width: calc(100% - 16px) !important;
+    height: 58px !important;
+  }
+}
+
+/* Small mobile devices (Screen Width <= 380px) */
+@media (max-width: 380px) {
+  h1 {
+    font-size: 1.25rem !important;
+  }
+
+  h2 {
+    font-size: 1.05rem !important;
+  }
+
+  h3 {
+    font-size: 0.95rem !important;
+  }
+
+  .badge {
+    padding: 3px 8px !important;
+    font-size: 0.7rem !important;
+  }
 }
 

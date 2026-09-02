@@ -77,32 +77,35 @@ export default function AddonsSelection({ service, onBack, onConfirmAddons }) {
 
       {/* Sticky Bottom Summary & CTA */}
       <div style={{
-        position: 'fixed',
+        position: 'sticky',
         bottom: 0,
         left: 0,
         right: 0,
-        background: '#FFFFFF',
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
         padding: '14px 20px',
         borderTop: '1px solid #E2E8F0',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        zIndex: 100
+        zIndex: 100,
+        boxShadow: '0 -4px 16px rgba(0,0,0,0.05)'
       }}>
         <div>
-          <span style={{ fontSize: '0.75rem', color: '#94A3B8', textTransform: 'uppercase' }}>Add-ons Total</span>
-          <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0F172A' }}>+₹{addonsTotal}</div>
+          <span style={{ fontSize: '0.72rem', color: '#94A3B8', textTransform: 'uppercase', fontWeight: 700 }}>Add-ons Total</span>
+          <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#0F172A' }}>+₹{addonsTotal}</div>
         </div>
 
         <button
           onClick={() => onConfirmAddons(selectedAddons)}
           style={{
-            padding: '14px 28px',
+            padding: '14px 26px',
             borderRadius: '999px',
             background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
             color: '#FFFFFF',
-            fontSize: '0.95rem',
-            fontWeight: 700,
+            fontSize: '0.92rem',
+            fontWeight: 800,
             display: 'flex',
             alignItems: 'center',
             gap: '8px',

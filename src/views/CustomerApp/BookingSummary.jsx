@@ -178,32 +178,35 @@ export default function BookingSummary({ bookingDraft, onBack, onProceedToPaymen
 
       {/* Sticky Bottom CTA */}
       <div style={{
-        position: 'fixed',
+        position: 'sticky',
         bottom: 0,
         left: 0,
         right: 0,
-        background: '#FFFFFF',
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
         padding: '14px 20px',
         borderTop: '1px solid #E2E8F0',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        zIndex: 100
+        zIndex: 100,
+        boxShadow: '0 -4px 16px rgba(0,0,0,0.05)'
       }}>
         <div>
-          <span style={{ fontSize: '0.72rem', color: '#94A3B8', textTransform: 'uppercase' }}>Grand Total</span>
-          <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#4F46E5' }}>₹{total}</div>
+          <span style={{ fontSize: '0.72rem', color: '#94A3B8', textTransform: 'uppercase', fontWeight: 700 }}>Grand Total</span>
+          <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#4F46E5' }}>₹{total}</div>
         </div>
 
         <button
           onClick={() => onProceedToPayment({ ...bookingDraft, totalAmount: total })}
           style={{
-            padding: '14px 28px',
+            padding: '14px 26px',
             borderRadius: '999px',
             background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
             color: '#FFFFFF',
-            fontSize: '0.95rem',
-            fontWeight: 700,
+            fontSize: '0.92rem',
+            fontWeight: 800,
             display: 'flex',
             alignItems: 'center',
             gap: '8px',

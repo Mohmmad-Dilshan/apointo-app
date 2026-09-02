@@ -98,7 +98,7 @@ export default function DateTimePicker({ service, staff, onBack, onConfirmDateTi
               <span>{period} Slots</span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(88px, 1fr))', gap: '8px' }}>
               {slots.map((slot, idx) => {
                 const isSelected = selectedTime === slot.time;
                 return (
@@ -107,15 +107,16 @@ export default function DateTimePicker({ service, staff, onBack, onConfirmDateTi
                     disabled={!slot.available}
                     onClick={() => setSelectedTime(slot.time)}
                     style={{
-                      padding: '12px',
-                      borderRadius: '14px',
-                      fontSize: '0.85rem',
+                      padding: '10px 4px',
+                      borderRadius: '12px',
+                      fontSize: '0.8rem',
                       fontWeight: 700,
                       background: !slot.available ? '#F1F5F9' : isSelected ? '#EEF2FF' : '#FFFFFF',
                       color: !slot.available ? '#94A3B8' : isSelected ? '#4F46E5' : '#0F172A',
                       border: !slot.available ? '1px dashed #CBD5E1' : isSelected ? '2px solid #4F46E5' : '1px solid #E2E8F0',
                       opacity: !slot.available ? 0.6 : 1,
-                      textDecoration: !slot.available ? 'line-through' : 'none'
+                      textDecoration: !slot.available ? 'line-through' : 'none',
+                      whiteSpace: 'nowrap'
                     }}
                   >
                     {slot.time}
@@ -129,25 +130,28 @@ export default function DateTimePicker({ service, staff, onBack, onConfirmDateTi
 
       {/* Sticky Bottom CTA */}
       <div style={{
-        position: 'fixed',
+        position: 'sticky',
         bottom: 0,
         left: 0,
         right: 0,
-        background: '#FFFFFF',
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
         padding: '14px 20px',
         borderTop: '1px solid #E2E8F0',
-        zIndex: 100
+        zIndex: 100,
+        boxShadow: '0 -4px 16px rgba(0,0,0,0.05)'
       }}>
         <button
           onClick={handleContinue}
           style={{
             width: '100%',
-            padding: '16px',
+            padding: '15px',
             borderRadius: '999px',
             background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
             color: '#FFFFFF',
-            fontSize: '0.98rem',
-            fontWeight: 700,
+            fontSize: '0.95rem',
+            fontWeight: 800,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
