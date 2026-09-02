@@ -53,9 +53,11 @@ import ProviderAnalytics from './views/BusinessDashboard/ProviderAnalytics';
 import ProviderReviews from './views/BusinessDashboard/ProviderReviews';
 import ProviderSettings from './views/BusinessDashboard/ProviderSettings';
 import MobileBusinessDashboard from './views/BusinessDashboard/MobileBusinessDashboard';
+import DesktopBusinessDashboard from './views/BusinessDashboard/DesktopBusinessDashboard';
 
 /* Admin Console Views */
 import MobileAdminDashboard from './views/AdminConsole/MobileAdminDashboard';
+import DesktopAdminConsole from './views/AdminConsole/DesktopAdminConsole';
 
 /* Design System View */
 import DesignSystemInspector from './views/DesignSystem/DesignSystemInspector';
@@ -517,18 +519,26 @@ export default function App() {
         </MobileFrame>
       )}
 
-      {/* PLATFORM 2: BUSINESS MOBILE APP (iOS & Android) */}
+      {/* PLATFORM 2: BUSINESS DASHBOARD (Widescreen SaaS or Mobile POS Frame) */}
       {activePlatform === 'business' && (
-        <MobileFrame isDeviceFrame={isDeviceFrame} deviceOs={deviceOs}>
-          <MobileBusinessDashboard />
-        </MobileFrame>
+        isDeviceFrame ? (
+          <MobileFrame isDeviceFrame={isDeviceFrame} deviceOs={deviceOs}>
+            <MobileBusinessDashboard />
+          </MobileFrame>
+        ) : (
+          <DesktopBusinessDashboard />
+        )
       )}
 
-      {/* PLATFORM 3: ADMIN MOBILE APP (iOS & Android) */}
+      {/* PLATFORM 3: ADMIN CONSOLE (Widescreen Command Center or Mobile KYC Frame) */}
       {activePlatform === 'admin' && (
-        <MobileFrame isDeviceFrame={isDeviceFrame} deviceOs={deviceOs}>
-          <MobileAdminDashboard />
-        </MobileFrame>
+        isDeviceFrame ? (
+          <MobileFrame isDeviceFrame={isDeviceFrame} deviceOs={deviceOs}>
+            <MobileAdminDashboard />
+          </MobileFrame>
+        ) : (
+          <DesktopAdminConsole />
+        )
       )}
 
       {/* PLATFORM 4: DESIGN SYSTEM INSPECTOR */}
