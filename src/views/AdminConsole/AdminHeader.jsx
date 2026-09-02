@@ -36,7 +36,7 @@ export default function AdminHeader({ activeTab, onSearch }) {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <h2 style={{ fontSize: '1.15rem', fontWeight: 900, letterSpacing: '-0.02em', color: '#FFFFFF' }}>
-              Apointo Command Center
+              Apo Command Center
             </h2>
             <span style={{ fontSize: '0.62rem', background: 'rgba(99, 102, 241, 0.25)', color: '#A5B4FC', padding: '2px 6px', borderRadius: '6px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               SUPER ADMIN
@@ -86,7 +86,7 @@ export default function AdminHeader({ activeTab, onSearch }) {
           </div>
           <div>
             <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#FFFFFF' }}>SuperAdmin</div>
-            <div style={{ fontSize: '0.65rem', color: '#A5B4FC' }}>admin@apointo.in</div>
+            <div style={{ fontSize: '0.65rem', color: '#A5B4FC' }}>admin@apo.in</div>
           </div>
         </div>
       </div>

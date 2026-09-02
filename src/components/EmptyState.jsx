@@ -30,7 +30,7 @@ export default function EmptyState({ type = 'bookings', title, message, onAction
     rewards: {
       icon: <Award size={48} color="#F59E0B" />,
       title: title || "No Reward History",
-      message: message || "Complete your first appointment to earn Apointo Reward points and unlock instant discounts!",
+      message: message || "Complete your first appointment to earn Apo Reward points and unlock instant discounts!",
       actionLabel: actionLabel || "Book Now"
     },
     payment: {

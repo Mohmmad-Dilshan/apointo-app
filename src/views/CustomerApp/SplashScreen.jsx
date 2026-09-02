@@ -32,8 +32,8 @@ export default function SplashScreen({ onStart }) {
           <Sparkles size={48} color="#FFFFFF" />
         </div>
 
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '8px' }}>
-          APoinTo
+        <h1 style={{ fontSize: '2.8rem', fontWeight: 900, letterSpacing: '-0.03em', marginBottom: '8px' }}>
+          Apo
         </h1>
         <p style={{ fontSize: '1.1rem', fontWeight: 600, color: '#C7D2FE', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
           Discover. Book. Go.

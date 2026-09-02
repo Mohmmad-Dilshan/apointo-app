@@ -613,7 +613,7 @@ export default function HomeScreen({ user, onOpenLocation, onOpenNotifications, 
             }}>
               <Sparkles size={16} color="#FFFFFF" />
             </div>
-            <span style={{ fontSize: '1rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>Apointo</span>
+            <span style={{ fontSize: '1rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>Apo</span>
           </div>
 
           <p style={{ fontSize: '0.78rem', fontWeight: 700, color: '#4338CA' }}>

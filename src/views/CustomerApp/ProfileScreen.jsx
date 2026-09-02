@@ -112,7 +112,7 @@ export default function ProfileScreen({ user, onNavigateScreen }) {
 
           <div style={{ background: '#FFFFFF', borderRadius: '22px', border: '1px solid #E2E8F0', overflow: 'hidden', boxShadow: '0 4px 16px rgba(15,23,42,0.03)' }}>
             {[
-              { icon: <Award size={18} color="#F59E0B" />, title: "Apointo Rewards", action: () => onNavigateScreen('rewards') },
+              { icon: <Award size={18} color="#F59E0B" />, title: "Apo Rewards", action: () => onNavigateScreen('rewards') },
               { icon: <Gift size={18} color="#10B981" />, title: "Invite & Earn ₹500", badge: "🎁 HOT", action: () => onNavigateScreen('referral') },
               { icon: <Bell size={18} color="#8B5CF6" />, title: "Notification Preferences", action: () => onNavigateScreen('notification-preferences') },
               { icon: <HelpCircle size={18} color="#3B82F6" />, title: "Help & Customer Support", action: () => onNavigateScreen('support') }

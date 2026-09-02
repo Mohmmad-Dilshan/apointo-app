@@ -25,7 +25,7 @@ export default function ProviderPayments() {
         </div>
 
         <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '20px', border: '1px solid #E2E8F0' }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748B' }}>Apointo Platform Fee</span>
+          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748B' }}>Apo Platform Fee</span>
           <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0F172A', marginTop: '6px' }}>12%</div>
           <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '4px' }}>Standard tier commission</p>
         </div>

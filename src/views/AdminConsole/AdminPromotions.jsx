@@ -13,7 +13,7 @@ export default function AdminPromotions() {
       redemptions: i === 0 ? 1420 : i === 1 ? 2840 : 890,
       burnedGMV: i === 0 ? "₹1,42,000" : i === 1 ? "₹3,90,000" : "₹89,000",
       isActive: true,
-      sponsorSplit: "70% Apointo / 30% Merchant"
+      sponsorSplit: "70% Apo / 30% Merchant"
     })),
     {
       id: "cp_4",
@@ -25,7 +25,7 @@ export default function AdminPromotions() {
       redemptions: 412,
       burnedGMV: "₹2,06,000",
       isActive: true,
-      sponsorSplit: "50% Apointo / 50% Merchant"
+      sponsorSplit: "50% Apo / 50% Merchant"
     }
   ]);
 
@@ -67,7 +67,7 @@ export default function AdminPromotions() {
       redemptions: 0,
       burnedGMV: "₹0",
       isActive: true,
-      sponsorSplit: "70% Apointo / 30% Merchant"
+      sponsorSplit: "70% Apo / 30% Merchant"
     };
 
     setCoupons([newEntry, ...coupons]);

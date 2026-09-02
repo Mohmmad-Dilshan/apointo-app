@@ -111,7 +111,7 @@ export default function AdminSidebar({ activeTab, setActiveTab }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
           <Sparkles size={13} color="#818CF8" />
-          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#E2E8F0' }}>Apointo SuperAdmin v3.0</span>
+          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#E2E8F0' }}>Apo SuperAdmin v3.0</span>
         </div>
         <p style={{ fontSize: '0.62rem', color: '#64748B', lineHeight: 1.3 }}>
           Cluster: in-blr-prod-01 (99.99%)<br />

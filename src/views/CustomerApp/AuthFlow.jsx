@@ -90,7 +90,7 @@ export default function AuthFlow({ onLoginSuccess }) {
 
           <div>
             <span style={{ fontSize: '0.72rem', color: '#A5B4FC', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              Welcome to Apointo
+              Welcome to Apo
             </span>
             <h1 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
               {step === 'login' ? 'Instant Sign In ✨' : step === 'otp' ? 'Verify Security OTP 🔒' : 'Complete Profile 👤'}
@@ -333,7 +333,7 @@ export default function AuthFlow({ onLoginSuccess }) {
                   boxShadow: '0 8px 24px rgba(79,70,229,0.35)'
                 }}
               >
-                Complete & Join Apointo
+                Complete & Join Apo
               </button>
             </div>
           </div>

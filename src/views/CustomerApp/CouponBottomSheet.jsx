@@ -53,7 +53,7 @@ export default function CouponBottomSheet({ isOpen, onClose, onApplyCoupon, appl
             <Tag size={18} color="#4F46E5" />
             <input
               type="text"
-              placeholder="Enter code e.g. APOINTO100"
+              placeholder="Enter code e.g. APO100"
               value={promoInput}
               onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
               style={{ width: '100%', border: 'none', background: 'transparent', fontSize: '0.9rem', fontWeight: 700, color: '#0F172A' }}

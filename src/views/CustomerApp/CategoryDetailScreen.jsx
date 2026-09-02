@@ -225,7 +225,7 @@ export default function CategoryDetailScreen({ category, onBack, onSelectBusines
               Category Offer
             </span>
             <h3 style={{ fontSize: '1.1rem', fontWeight: 800 }}>Flat ₹150 OFF on {categoryTitleName}</h3>
-            <p style={{ fontSize: '0.78rem', opacity: 0.9 }}>Use code APOINTO150 at checkout</p>
+            <p style={{ fontSize: '0.78rem', opacity: 0.9 }}>Use code APO150 at checkout</p>
           </div>
 
           <div style={{

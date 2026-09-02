@@ -33,7 +33,7 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
         </div>
         <div>
           <div style={{ fontSize: '1.05rem', fontWeight: 800, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span>Apointo</span>
+            <span>Apo</span>
             <span style={{ fontSize: '0.6rem', background: 'rgba(99,102,241,0.2)', color: '#818CF8', padding: '1px 5px', borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>PRO</span>
           </div>
           <p style={{ fontSize: '0.65rem', color: '#94A3B8', margin: 0, display: 'none' }} className="brand-sub-text">Discover. Book. Go.</p>

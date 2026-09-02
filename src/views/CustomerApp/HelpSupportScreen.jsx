@@ -7,8 +7,8 @@ export default function HelpSupportScreen({ onBack }) {
   const faqs = [
     { q: "How do I reschedule or cancel my booking?", a: "Go to your Bookings tab, select your upcoming appointment, and tap 'Reschedule' or 'Cancel'. You can cancel free of charge up to 2 hours before the slot." },
     { q: "What happens if I am late for my appointment?", a: "Businesses hold your slot for 15 minutes. Beyond that, please contact the business directly or call support." },
-    { q: "How do Apointo Reward points work?", a: "You earn 150 points for every completed booking. 1,000 points = ₹100 instant wallet discount at checkout." },
-    { q: "Are payments made on Apointo safe?", a: "Yes! All transactions use 256-bit SSL encryption via RBI-compliant payment gateways." }
+    { q: "How do Apo Reward points work?", a: "You earn 150 points for every completed booking. 1,000 points = ₹100 instant wallet discount at checkout." },
+    { q: "Are payments made on Apo safe?", a: "Yes! All transactions use 256-bit SSL encryption via RBI-compliant payment gateways." }
   ];
 
   return (
@@ -47,7 +47,7 @@ export default function HelpSupportScreen({ onBack }) {
           }}>
             <PhoneCall size={22} color="#10B981" style={{ marginBottom: '8px' }} />
             <h4 style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0F172A' }}>Call Toll-Free</h4>
-            <p style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '2px' }}>1800-108-APOINTO</p>
+            <p style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '2px' }}>1800-108-APOAPP</p>
           </button>
         </div>
 

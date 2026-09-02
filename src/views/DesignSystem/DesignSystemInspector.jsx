@@ -30,7 +30,7 @@ export default function DesignSystemInspector() {
             <Palette size={26} color="#FFFFFF" />
           </div>
           <div>
-            <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0F172A' }}>Apointo UI Design System</h1>
+            <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0F172A' }}>Apo UI Design System</h1>
             <p style={{ fontSize: '0.9rem', color: '#64748B' }}>Design tokens, color semantics, typography & component library</p>
           </div>
         </div>

@@ -225,7 +225,7 @@ export default function AdminBroadcast() {
                   <div style={{ width: '20px', height: '20px', borderRadius: '6px', background: '#6366F1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Sparkles size={11} color="#FFFFFF" />
                   </div>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.04em' }}>APOINTO</span>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.04em' }}>APO</span>
                 </div>
                 <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.7)' }}>now</span>
               </div>

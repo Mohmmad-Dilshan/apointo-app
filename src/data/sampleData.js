@@ -1,4 +1,4 @@
-// Comprehensive Sample Data for Apointo Platform (Customer, Business, Admin)
+// Comprehensive Sample Data for Apo Platform (Customer, Business, Admin)
 
 export const INITIAL_USER = {
   name: "Dilshan Perera",
@@ -110,7 +110,7 @@ export const BUSINESSES = [
     ],
     reviews: [
       { id: "rev_1", author: "Karan Mehta", rating: 5, date: "2 days ago", comment: "Rahul gave me the cleanest fade I've ever had in Bangalore. Super courteous team and hygienic environment!", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150" },
-      { id: "rev_2", author: "Aakash Roy", rating: 5, date: "1 week ago", comment: "Booked via Apointo app seamlessly. No waiting time at all. Worth every rupee!", avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=150" }
+      { id: "rev_2", author: "Aakash Roy", rating: 5, date: "1 week ago", comment: "Booked via Apo app seamlessly. No waiting time at all. Worth every rupee!", avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=150" }
     ]
   },
   {
@@ -402,7 +402,7 @@ export const BUSINESSES = [
 ];
 
 export const COUPONS = [
-  { code: "APOINTO100", title: "Flat ₹100 OFF", description: "Valid on all bookings above ₹400", amount: 100, minOrder: 400, type: "FLAT" },
+  { code: "APO100", title: "Flat ₹100 OFF", description: "Valid on all bookings above ₹400", amount: 100, minOrder: 400, type: "FLAT" },
   { code: "FIRSTBOOK20", title: "20% OFF First Booking", description: "Maximum discount up to ₹150 for new users", percentage: 20, maxDiscount: 150, minOrder: 300, type: "PERCENT" },
   { code: "GLOW50", title: "Flat ₹50 OFF Spa & Beauty", description: "Applicable on Spa & Beauty services", amount: 50, minOrder: 500, type: "FLAT" }
 ];
@@ -410,7 +410,7 @@ export const COUPONS = [
 export const NOTIFICATIONS = [
   { id: "n_1", type: "reminder", title: "Appointment Tomorrow ⏰", message: "Reminder: Classic Haircut at Urban Cut Studio tomorrow at 02:30 PM.", time: "10m ago", read: false },
   { id: "n_2", type: "reward", title: "+150 Points Earned! 🎉", message: "You earned 150 points for your last appointment at Glow Beauty Lounge.", time: "2h ago", read: false },
-  { id: "n_3", type: "offer", title: "Special Weekend Offer 🔥", message: "Get Flat ₹100 OFF on all salon services this weekend with code APOINTO100.", time: "1d ago", read: true }
+  { id: "n_3", type: "offer", title: "Special Weekend Offer 🔥", message: "Get Flat ₹100 OFF on all salon services this weekend with code APO100.", time: "1d ago", read: true }
 ];
 
 export const INITIAL_BOOKINGS = [

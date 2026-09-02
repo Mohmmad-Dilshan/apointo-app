@@ -55,7 +55,7 @@ export default function RewardsScreen({ user, onNavigateScreen }) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
           <div>
             <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', fontWeight: 800, color: '#A5B4FC', letterSpacing: '0.06em' }}>
-              APOINTO CLUB & REWARDS
+              APO CLUB & REWARDS
             </div>
             <h1 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
               Gold VIP Status 👑

@@ -3,11 +3,11 @@ import { History, Shield, Search, FileText, Download, Filter, CheckCircle2, User
 
 export default function AdminAuditLogs() {
   const [logs, setLogs] = useState([
-    { id: "LOG-9921", admin: "SuperAdmin (admin@apointo.in)", action: "KYC Approval", detail: "Granted verified badge to Urban Cut Studio (#biz_1)", ip: "103.21.24.1", timestamp: "Today 02:45 PM", status: "SUCCESS" },
-    { id: "LOG-9920", admin: "FinanceOfficer (arun.k@apointo.in)", action: "Payout Disbursal", detail: "Approved batch disbursal ₹1,42,800 to Urban Cut Studio", ip: "114.143.10.82", timestamp: "Today 01:15 PM", status: "SUCCESS" },
-    { id: "LOG-9919", admin: "SuperAdmin (admin@apointo.in)", action: "Commission Override", detail: "Modified take-rate for Glow Beauty Lounge from 15% to 12%", ip: "103.21.24.1", timestamp: "Today 11:30 AM", status: "SUCCESS" },
-    { id: "LOG-9918", admin: "SupportLead (sneha.t@apointo.in)", action: "Dispute Refund", detail: "Issued ₹329 refund on cancelled booking #APT-54321", ip: "49.207.210.12", timestamp: "Yesterday 05:20 PM", status: "SUCCESS" },
-    { id: "LOG-9917", admin: "SuperAdmin (admin@apointo.in)", action: "Marketing Campaign", detail: "Published coupon 'FESTIVE500' (25% off max ₹500)", ip: "103.21.24.1", timestamp: "Yesterday 02:10 PM", status: "SUCCESS" },
+    { id: "LOG-9921", admin: "SuperAdmin (admin@apo.in)", action: "KYC Approval", detail: "Granted verified badge to Urban Cut Studio (#biz_1)", ip: "103.21.24.1", timestamp: "Today 02:45 PM", status: "SUCCESS" },
+    { id: "LOG-9920", admin: "FinanceOfficer (arun.k@apo.in)", action: "Payout Disbursal", detail: "Approved batch disbursal ₹1,42,800 to Urban Cut Studio", ip: "114.143.10.82", timestamp: "Today 01:15 PM", status: "SUCCESS" },
+    { id: "LOG-9919", admin: "SuperAdmin (admin@apo.in)", action: "Commission Override", detail: "Modified take-rate for Glow Beauty Lounge from 15% to 12%", ip: "103.21.24.1", timestamp: "Today 11:30 AM", status: "SUCCESS" },
+    { id: "LOG-9918", admin: "SupportLead (sneha.t@apo.in)", action: "Dispute Refund", detail: "Issued ₹329 refund on cancelled booking #APT-54321", ip: "49.207.210.12", timestamp: "Yesterday 05:20 PM", status: "SUCCESS" },
+    { id: "LOG-9917", admin: "SuperAdmin (admin@apo.in)", action: "Marketing Campaign", detail: "Published coupon 'FESTIVE500' (25% off max ₹500)", ip: "103.21.24.1", timestamp: "Yesterday 02:10 PM", status: "SUCCESS" },
     { id: "LOG-9916", admin: "SecuritySentinel (Auto-Bot)", action: "IP Rate-Limit", detail: "Blocked IP 103.21.14.88 due to 18 failed card attempts", ip: "System Daemon", timestamp: "10 Aug 09:45 PM", status: "BLOCKED" },
   ]);
 

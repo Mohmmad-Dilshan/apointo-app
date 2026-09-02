@@ -25,7 +25,7 @@ export default function Onboarding({ onFinish }) {
     },
     {
       title: "Manage everything in one place",
-      description: "Reschedule, cancel, earn Apointo reward points, write reviews, and rebook with 1 tap.",
+      description: "Reschedule, cancel, earn Apo reward points, write reviews, and rebook with 1 tap.",
       icon: <ShieldCheck size={40} color="#F59E0B" />,
       image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80&w=600"
     }

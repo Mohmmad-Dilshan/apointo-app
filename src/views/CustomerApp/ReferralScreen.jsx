@@ -9,7 +9,7 @@ const FRIENDS = [
 
 const HOW_IT_WORKS = [
   { icon: "📤", step: "1", title: "Share Your Code", desc: "Send your exclusive invite link to friends & family" },
-  { icon: "📱", step: "2", title: "They Book First", desc: "Your friend downloads Apointo and completes their 1st booking" },
+  { icon: "📱", step: "2", title: "They Book First", desc: "Your friend downloads Apo and completes their 1st booking" },
   { icon: "💰", step: "3", title: "Both Get Rewarded", desc: "They get ₹100 OFF and you earn ₹500 instant cashback" }
 ];
 
@@ -29,7 +29,7 @@ export default function ReferralScreen({ onBack, onShowToast }) {
 
   const handleWhatsAppShare = () => {
     setActiveShare('whatsapp');
-    const text = `Hey! 🎉 Use my code *${referralCode}* on Apointo to get ₹100 OFF your 1st salon or doctor appointment!\n\nBook here 👉 https://apointo.app/ref/${referralCode}`;
+    const text = `Hey! 🎉 Use my code *${referralCode}* on Apo to get ₹100 OFF your 1st salon or doctor appointment!\n\nBook here 👉 https://apo.app/ref/${referralCode}`;
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     setTimeout(() => setActiveShare(null), 1500);
   };
@@ -154,7 +154,7 @@ export default function ReferralScreen({ onBack, onShowToast }) {
             border: '1px solid #E2E8F0'
           }}>
             <span style={{ fontSize: '0.76rem', color: '#64748B', fontFamily: 'monospace' }}>
-              apointo.app/ref/{referralCode.toLowerCase()}
+              apo.app/ref/{referralCode.toLowerCase()}
             </span>
             <ChevronRight size={14} color="#94A3B8" />
           </div>

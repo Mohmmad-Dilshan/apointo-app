@@ -3,7 +3,7 @@ import { ArrowLeft, Calendar, Clock, User, Tag, Sparkles, ShieldCheck, ChevronRi
 import CouponBottomSheet from './CouponBottomSheet';
 
 export default function BookingSummary({ bookingDraft, onBack, onProceedToPayment }) {
-  const [coupon, setCoupon] = useState({ code: 'APOINTO100', amount: 100, description: 'Flat ₹100 OFF' });
+  const [coupon, setCoupon] = useState({ code: 'APO100', amount: 100, description: 'Flat ₹100 OFF' });
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
   const [useRewards, setUseRewards] = useState(true);
 
@@ -109,7 +109,7 @@ export default function BookingSummary({ bookingDraft, onBack, onProceedToPaymen
           justifyContent: 'space-between'
         }}>
           <div>
-            <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0F172A' }}>Use Apointo Points</div>
+            <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0F172A' }}>Use Apo Points</div>
             <p style={{ fontSize: '0.75rem', color: '#64748B' }}>Balance: 2,450 pts (Redeem 50 pts for ₹50 OFF)</p>
           </div>
           <button
@@ -161,7 +161,7 @@ export default function BookingSummary({ bookingDraft, onBack, onProceedToPaymen
 
             {useRewards && (
               <div style={{ display: 'flex', justifyContent: 'space-between', color: '#10B981', fontWeight: 700 }}>
-                <span>Apointo Points Discount</span>
+                <span>Apo Points Discount</span>
                 <span>-₹{rewardsDiscount}</span>
               </div>
             )}

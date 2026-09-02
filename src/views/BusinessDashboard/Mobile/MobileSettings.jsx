@@ -70,7 +70,7 @@ export default function MobileSettings() {
     { id: "hours", label: "Operating Hours & Holidays", icon: <Clock size={18} color="#10B981" />, bg: "#ECFDF5", desc: "Day-wise opening & closing timings" },
     { id: "payments_qr", label: "UPI QR Code & Bank Account", icon: <QrCode size={18} color="#06B6D4" />, bg: "#ECFEFF", desc: "Direct customer billing QR settings" },
     { id: "notifications", label: "Notification Preferences", icon: <Bell size={18} color="#F59E0B" />, bg: "#FFFBEB", desc: "Sound alerts, push & SMS triggers" },
-    { id: "security", label: "KYC & Merchant Verification", icon: <ShieldCheck size={18} color="#8B5CF6" />, bg: "#F5F3FF", desc: "Apointo verified partner status" },
+    { id: "security", label: "KYC & Merchant Verification", icon: <ShieldCheck size={18} color="#8B5CF6" />, bg: "#F5F3FF", desc: "Apo verified partner status" },
   ];
 
   /* 1. HOURS SUBPAGE */

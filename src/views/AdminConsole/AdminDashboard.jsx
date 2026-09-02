@@ -58,7 +58,7 @@ export default function AdminDashboard({ onNavigateTab }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 10px #10B981' }} />
               <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#A5B4FC', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                Apointo Unified Marketplace Command Engine
+                Apo Unified Marketplace Command Engine
               </span>
             </div>
             <h1 style={{ fontSize: '2.8rem', fontWeight: 900, color: '#FFFFFF', letterSpacing: '-0.03em', lineHeight: 1.1 }}>

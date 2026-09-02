@@ -118,7 +118,7 @@ export default function MobileAdminMore() {
           </div>
           <div>
             <div style={{ fontSize: "1rem", fontWeight: 800, color: "#FFFFFF" }}>Super Admin Command</div>
-            <div style={{ fontSize: "0.72rem", color: "#A5B4FC", marginTop: "2px" }}>admin@apointo.in • Enterprise Root Access</div>
+            <div style={{ fontSize: "0.72rem", color: "#A5B4FC", marginTop: "2px" }}>admin@apo.in • Enterprise Root Access</div>
             <span style={{ fontSize: "0.62rem", color: "#34D399", background: "rgba(16, 185, 129, 0.2)", padding: "2px 6px", borderRadius: "4px", marginTop: "4px", display: "inline-block", fontWeight: 700 }}>
               ● 2FA Secured Session (256-Bit)
             </span>

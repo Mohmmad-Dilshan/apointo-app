@@ -375,7 +375,7 @@ export default function MobileOffers() {
                 <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "#10B981" }}>Generated: {c.revenue}</span>
                 <div style={{ display: "flex", gap: "6px" }}>
                   <a
-                    href={`https://wa.me/?text=Use%20code%20*${c.code}*%20for%20${encodeURIComponent(c.discount)}%20at%20Urban%20Cut%20Studio!%20Book%20now:%20https://apointo.app`}
+                    href={`https://wa.me/?text=Use%20code%20*${c.code}*%20for%20${encodeURIComponent(c.discount)}%20at%20Urban%20Cut%20Studio!%20Book%20now:%20https://apo.app`}
                     target="_blank"
                     rel="noreferrer"
                     style={{ padding: "6px 10px", borderRadius: "8px", background: "#ECFDF5", color: "#059669", fontSize: "0.72rem", fontWeight: 800, display: "flex", alignItems: "center", gap: "4px", textDecoration: "none" }}
