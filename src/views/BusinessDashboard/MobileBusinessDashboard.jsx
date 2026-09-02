@@ -1,11 +1,24 @@
-﻿import React, { useState } from "react";
-import { LayoutDashboard, Calendar, ClipboardList, BarChart3, MoreHorizontal, Scissors } from "lucide-react";
+import React, { useState } from "react";
+import {
+  LayoutDashboard,
+  Calendar,
+  ClipboardList,
+  BarChart3,
+  MoreHorizontal,
+  Scissors,
+  Plus,
+  QrCode,
+  Sparkles,
+  CheckCircle2
+} from "lucide-react";
 import MobileOverview from "./Mobile/MobileOverview";
 import MobileCalendar from "./Mobile/MobileCalendar";
 import MobileAppointments from "./Mobile/MobileAppointments";
 import MobileAnalytics from "./Mobile/MobileAnalytics";
 import MobileServices from "./Mobile/MobileServices";
 import MobileMore from "./Mobile/MobileMore";
+import WalkInPOSModal from "./Mobile/WalkInPOSModal";
+import QRCheckinModal from "./Mobile/QRCheckinModal";
 
 const TABS = [
   { id: "overview", label: "Home", icon: LayoutDashboard },
@@ -18,36 +31,107 @@ const TABS = [
 
 export default function MobileBusinessDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [isPOSOpen, setIsPOSOpen] = useState(false);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState(null);
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 2500);
+  };
+
+  const handlePOSComplete = (invoice) => {
+    showToast(`Walk-in billing created for ${invoice.customerName} (₹${invoice.finalTotal})`);
+    setIsPOSOpen(false);
+  };
+
+  const handleVerifySuccess = (apt) => {
+    showToast(`✓ Check-in verified for ${apt.customer} (#${apt.otp})`);
+    setIsScannerOpen(false);
+  };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#F8FAFC", position: "relative" }}>
+      {/* Toast popup */}
+      {toastMessage && (
+        <div style={{
+          position: "fixed",
+          top: "60px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          background: "#0F172A",
+          color: "#FFFFFF",
+          padding: "10px 18px",
+          borderRadius: "999px",
+          fontSize: "0.78rem",
+          fontWeight: 700,
+          boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
+          zIndex: 9999,
+          display: "flex",
+          alignItems: "center",
+          gap: "8px"
+        }}>
+          <CheckCircle2 size={14} color="#10B981" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       {/* Screen Content */}
       <div style={{ flex: 1, overflowY: "auto", position: "relative" }} className="no-scrollbar">
-        {activeTab === "overview" && <MobileOverview onNavigateTab={setActiveTab} />}
-        {activeTab === "calendar" && <MobileCalendar />}
-        {activeTab === "appointments" && <MobileAppointments />}
+        {activeTab === "overview" && (
+          <MobileOverview
+            onNavigateTab={setActiveTab}
+            onOpenPOS={() => setIsPOSOpen(true)}
+            onOpenScanner={() => setIsScannerOpen(true)}
+          />
+        )}
+        {activeTab === "calendar" && (
+          <MobileCalendar
+            onOpenPOS={() => setIsPOSOpen(true)}
+          />
+        )}
+        {activeTab === "appointments" && (
+          <MobileAppointments
+            onOpenPOS={() => setIsPOSOpen(true)}
+            onOpenScanner={() => setIsScannerOpen(true)}
+          />
+        )}
         {activeTab === "services" && <MobileServices />}
         {activeTab === "analytics" && <MobileAnalytics />}
         {activeTab === "more" && <MobileMore onNavigateTab={setActiveTab} />}
       </div>
 
-      {/* Glass Bottom Nav */}
+      {/* Walk-in POS Billing Modal */}
+      <WalkInPOSModal
+        isOpen={isPOSOpen}
+        onClose={() => setIsPOSOpen(false)}
+        onCompleteBooking={handlePOSComplete}
+      />
+
+      {/* Check-in QR & OTP Scanner Modal */}
+      <QRCheckinModal
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
+        onVerifySuccess={handleVerifySuccess}
+      />
+
+      {/* Apple iOS / Android Floating Glass Bottom Navigation Dock */}
       <div style={{
         position: "sticky",
         bottom: 0,
         left: 0,
         right: 0,
-        height: "62px",
-        background: "rgba(255, 255, 255, 0.92)",
-        backdropFilter: "blur(24px) saturate(180%)",
-        WebkitBackdropFilter: "blur(24px) saturate(180%)",
-        borderTop: "1px solid rgba(226, 232, 240, 0.8)",
+        height: "64px",
+        background: "rgba(255, 255, 255, 0.94)",
+        backdropFilter: "blur(28px) saturate(190%)",
+        WebkitBackdropFilter: "blur(28px) saturate(190%)",
+        borderTop: "1px solid rgba(226, 232, 240, 0.85)",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-around",
         padding: "4px 6px",
         zIndex: 100,
-        boxShadow: "0 -4px 20px rgba(0,0,0,0.06)"
+        boxShadow: "0 -6px 24px rgba(15, 23, 42, 0.08)"
       }}>
         {TABS.map(tab => {
           const isActive = activeTab === tab.id;
@@ -62,16 +146,18 @@ export default function MobileBusinessDashboard() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "3px",
+                gap: "2px",
                 padding: "6px 2px",
                 borderRadius: "12px",
+                border: "none",
                 background: isActive ? "linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)" : "transparent",
-                color: isActive ? "#FFFFFF" : "#94A3B8",
-                fontSize: "0.6rem",
-                fontWeight: isActive ? 800 : 600,
-                boxShadow: isActive ? "0 4px 12px rgba(79,70,229,0.3)" : "none",
-                transition: "all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                transform: isActive ? "scale(1.05)" : "scale(1)"
+                color: isActive ? "#FFFFFF" : "#64748B",
+                fontSize: "0.62rem",
+                fontWeight: isActive ? 900 : 700,
+                boxShadow: isActive ? "0 4px 14px rgba(79,70,229,0.35)" : "none",
+                transition: "all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                transform: isActive ? "scale(1.06)" : "scale(1)",
+                cursor: "pointer"
               }}
             >
               <Icon size={17} />
