@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import AdminHeader from './AdminHeader';
 import AdminSidebar from './AdminSidebar';
 import AdminDashboard from './AdminDashboard';
+import AdminMerchants from './AdminMerchants';
 import BusinessVerification from './BusinessVerification';
 import AdminBookings from './AdminBookings';
 import AdminPayments from './AdminPayments';
+import AdminPromotions from './AdminPromotions';
+import AdminBroadcast from './AdminBroadcast';
 import AdminUsers from './AdminUsers';
 import AdminSupport from './AdminSupport';
+import AdminFraudSecurity from './AdminFraudSecurity';
+import AdminAuditLogs from './AdminAuditLogs';
 import AdminDiagnostics from './AdminDiagnostics';
 
 export default function DesktopAdminConsole() {
@@ -38,11 +43,16 @@ export default function DesktopAdminConsole() {
           minWidth: 0
         }} className="no-scrollbar">
           {activeTab === 'overview' && <AdminDashboard onNavigateTab={setActiveTab} />}
+          {activeTab === 'merchants' && <AdminMerchants />}
           {activeTab === 'verification' && <BusinessVerification />}
           {activeTab === 'bookings' && <AdminBookings />}
           {activeTab === 'payments' && <AdminPayments />}
+          {activeTab === 'promotions' && <AdminPromotions />}
+          {activeTab === 'broadcast' && <AdminBroadcast />}
           {activeTab === 'users' && <AdminUsers />}
           {activeTab === 'support' && <AdminSupport />}
+          {activeTab === 'security' && <AdminFraudSecurity />}
+          {activeTab === 'audit' && <AdminAuditLogs />}
           {activeTab === 'diagnostics' && <AdminDiagnostics />}
         </main>
       </div>

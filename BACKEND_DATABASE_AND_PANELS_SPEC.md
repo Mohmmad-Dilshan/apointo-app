@@ -28,6 +28,7 @@ Apointo operates as a **Multi-Tenant Platform** where three distinct user roles 
 ## 2. Multi-Tenant Role-Based Access Control (RBAC)
 
 ### 🔑 User Roles & Permissions
+
 1. **`ROLE_CUSTOMER`**:
    - Access: Customer Mobile App (`iOS` & `Android`).
    - Authentication: Phone OTP / Google OAuth / Apple Sign In.
@@ -163,37 +164,42 @@ CREATE TABLE payouts (
 ## 4. RESTful API Endpoints Specification
 
 ### 🔐 Authentication APIs
-* `POST /api/v1/auth/send-otp` -> Send 6-digit SMS OTP to customer phone.
-* `POST /api/v1/auth/verify-otp` -> Verify OTP, return JWT access & refresh tokens.
-* `POST /api/v1/auth/partner-login` -> Business Partner email/password login.
-* `POST /api/v1/auth/admin-login` -> Super Admin 2FA login.
+
+- `POST /api/v1/auth/send-otp` -> Send 6-digit SMS OTP to customer phone.
+- `POST /api/v1/auth/verify-otp` -> Verify OTP, return JWT access & refresh tokens.
+- `POST /api/v1/auth/partner-login` -> Business Partner email/password login.
+- `POST /api/v1/auth/admin-login` -> Super Admin 2FA login.
 
 ### 📱 Customer Mobile App APIs
-* `GET /api/v1/businesses` -> Search & filter businesses by category, rating & location.
-* `GET /api/v1/businesses/map` -> Get map pins within specified radius (e.g. `radius=5km`).
-* `GET /api/v1/businesses/:id` -> Get business profile, service menu & specialists.
-* `POST /api/v1/bookings` -> Create new booking & generate check-in OTP/QR token.
-* `GET /api/v1/bookings/my-appointments` -> Fetch user's upcoming, completed & cancelled appointments.
-* `POST /api/v1/rewards/redeem` -> Redeem points for voucher coupon code.
+
+- `GET /api/v1/businesses` -> Search & filter businesses by category, rating & location.
+- `GET /api/v1/businesses/map` -> Get map pins within specified radius (e.g. `radius=5km`).
+- `GET /api/v1/businesses/:id` -> Get business profile, service menu & specialists.
+- `POST /api/v1/bookings` -> Create new booking & generate check-in OTP/QR token.
+- `GET /api/v1/bookings/my-appointments` -> Fetch user's upcoming, completed & cancelled appointments.
+- `POST /api/v1/rewards/redeem` -> Redeem points for voucher coupon code.
 
 ### 🏢 Business SaaS Partner Dashboard APIs
-* `GET /api/v1/provider/overview` -> Get today's appointment count, revenue charts & timeline stream.
-* `GET /api/v1/provider/calendar` -> Get drag-and-drop slot calendar grid.
-* `POST /api/v1/provider/services` -> Add/edit service menu item.
-* `GET /api/v1/provider/payouts` -> Fetch bank transfer payouts & commission breakdown.
+
+- `GET /api/v1/provider/overview` -> Get today's appointment count, revenue charts & timeline stream.
+- `GET /api/v1/provider/calendar` -> Get drag-and-drop slot calendar grid.
+- `POST /api/v1/provider/services` -> Add/edit service menu item.
+- `GET /api/v1/provider/payouts` -> Fetch bank transfer payouts & commission breakdown.
 
 ### ⚙️ Super Admin Console APIs
-* `GET /api/v1/admin/pending-partners` -> List partner verification requests.
-* `POST /api/v1/admin/approve-partner/:id` -> Approve partner business for listing on Customer App.
-* `GET /api/v1/admin/revenue` -> Get 10% platform commission revenue metrics.
+
+- `GET /api/v1/admin/pending-partners` -> List partner verification requests.
+- `POST /api/v1/admin/approve-partner/:id` -> Approve partner business for listing on Customer App.
+- `GET /api/v1/admin/revenue` -> Get 10% platform commission revenue metrics.
 
 ---
 
 ## 5. WebSockets & Real-Time Queue Updates
 
 Use WebSockets / Socket.io for live real-time synchronization:
-* **`event: queue_update`**: Broadcast live queue position changes (*"Your position is now #2, est. 12 mins wait"*).
-* **`event: new_booking_alert`**: Send instant notification sound to Provider SaaS Dashboard when a customer books a slot.
+
+- **`event: queue_update`**: Broadcast live queue position changes (_"Your position is now #2, est. 12 mins wait"_).
+- **`event: new_booking_alert`**: Send instant notification sound to Provider SaaS Dashboard when a customer books a slot.
 
 ---
 
@@ -204,7 +210,8 @@ Use WebSockets / Socket.io for live real-time synchronization:
 │                    Cloudflare CDN & WAF                     │
 └──────────────────────────────┬──────────────────────────────┘
                                │
-┌──────────────────────────────▼──────────────────────────────┐
+┌──────────────────────────────▼
+──────────────────────────────┐
 │        API Gateway (Kong / NGINX Reverse Proxy)             │
 └──────────────────────────────┬──────────────────────────────┘
                                │
@@ -217,5 +224,5 @@ Use WebSockets / Socket.io for live real-time synchronization:
 └─────────────────────────────┘└─────────────────────────────┘
 ```
 
-* **Redis Cache**: Used for 1-second slot locking during checkout to prevent double-booking.
-* **Storage**: Amazon S3 / Google Cloud Storage for compressed WebP hero images & user avatars.
+- **Redis Cache**: Used for 1-second slot locking during checkout to prevent double-booking.
+- **Storage**: Amazon S3 / Google Cloud Storage for compressed WebP hero images & user avatars.
