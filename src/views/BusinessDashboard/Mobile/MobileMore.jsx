@@ -160,7 +160,7 @@ function StaffSection({ onBack }) {
 
       {/* Add Staff Modal */}
       {isAddStaffOpen && (
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15, 23, 42, 0.65)", backdropFilter: "blur(6px)", zIndex: 9990, display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
+        <div style={{ position: "absolute", inset: 0, background: "rgba(15, 23, 42, 0.65)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", zIndex: 9990, display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth: "440px", background: "#FFFFFF", borderRadius: "24px 24px 0 0", padding: "20px 18px", boxShadow: "0 -10px 40px rgba(0,0,0,0.2)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
               <h3 style={{ fontSize: "1.05rem", fontWeight: 900, color: "#0F172A" }}>Add Specialist</h3>
@@ -417,7 +417,7 @@ function InventorySection({ onBack }) {
 
       {/* Restock Modal */}
       {isRestockOpen && selectedProduct && (
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15, 23, 42, 0.65)", backdropFilter: "blur(6px)", zIndex: 9990, display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
+        <div style={{ position: "absolute", inset: 0, background: "rgba(15, 23, 42, 0.65)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", zIndex: 9990, display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth: "440px", background: "#FFFFFF", borderRadius: "24px 24px 0 0", padding: "20px 18px", boxShadow: "0 -10px 40px rgba(0,0,0,0.2)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
               <h3 style={{ fontSize: "1rem", fontWeight: 900, color: "#0F172A" }}>Restock: {selectedProduct.name}</h3>

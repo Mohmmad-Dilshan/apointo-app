@@ -55,13 +55,11 @@ export default function QRCheckinModal({ isOpen, onClose, onVerifySuccess }) {
 
   return (
     <div style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
+      position: "absolute",
+      inset: 0,
       background: "rgba(15, 23, 42, 0.8)",
       backdropFilter: "blur(8px)",
+      WebkitBackdropFilter: "blur(8px)",
       zIndex: 9999,
       display: "flex",
       alignItems: "flex-end",

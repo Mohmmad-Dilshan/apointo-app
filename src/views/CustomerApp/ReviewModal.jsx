@@ -19,10 +19,11 @@ export default function ReviewModal({ isOpen, onClose, onSubmitReview, booking }
 
   return (
     <div style={{
-      position: 'fixed',
+      position: 'absolute',
       inset: 0,
       background: 'rgba(15,23,42,0.65)',
       backdropFilter: 'blur(6px)',
+      WebkitBackdropFilter: 'blur(6px)',
       zIndex: 2000,
       display: 'flex',
       alignItems: 'flex-end',

@@ -177,8 +177,8 @@ export default function MobileOffers() {
       {/* Toast Alert */}
       {toastMessage && (
         <div style={{
-          position: "fixed",
-          top: "60px",
+          position: "absolute",
+          top: "16px",
           left: "50%",
           transform: "translateX(-50%)",
           background: "#0F172A",
@@ -400,13 +400,11 @@ export default function MobileOffers() {
       {/* Create Promo Modal */}
       {isCreateOpen && (
         <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
+          position: "absolute",
+          inset: 0,
           background: "rgba(15, 23, 42, 0.65)",
           backdropFilter: "blur(6px)",
+          WebkitBackdropFilter: "blur(6px)",
           zIndex: 9990,
           display: "flex",
           alignItems: "flex-end",

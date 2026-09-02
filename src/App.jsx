@@ -194,22 +194,22 @@ export default function App() {
         setDeviceOs={setDeviceOs}
       />
 
-      {/* Global Toast Alert Popup */}
-      <Toast toast={toast} onClose={() => setToast(null)} />
-
-      {/* Voice Search Modal */}
-      <VoiceSearchModal
-        isOpen={isVoiceSearchOpen}
-        onClose={() => setIsVoiceSearchOpen(false)}
-        onSearchSubmit={(query) => {
-          showToast({ message: `Voice search result for "${query}"`, type: "info" });
-          setCustomerScreen('search');
-        }}
-      />
-
       {/* PLATFORM 1: CUSTOMER MOBILE APP */}
       {activePlatform === 'customer' && (
         <MobileFrame isDeviceFrame={isDeviceFrame} deviceOs={deviceOs}>
+          {/* In-Frame Toast Alert Popup */}
+          <Toast toast={toast} onClose={() => setToast(null)} />
+
+          {/* In-Frame Voice Search Modal */}
+          <VoiceSearchModal
+            isOpen={isVoiceSearchOpen}
+            onClose={() => setIsVoiceSearchOpen(false)}
+            onSearchSubmit={(query) => {
+              showToast({ message: `Voice search result for "${query}"`, type: "info" });
+              setCustomerScreen('search');
+            }}
+          />
+
           {customerScreen === 'splash' && (
             <SplashScreen onStart={() => setCustomerScreen('onboarding')} />
           )}

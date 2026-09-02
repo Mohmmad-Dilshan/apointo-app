@@ -15,7 +15,7 @@ export default function MapViewScreen({ onBack, onSelectBusiness }) {
   });
 
   return (
-    <div style={{ position: 'relative', height: '100%', minHeight: '650px', background: '#0F172A', overflow: 'hidden' }} className="animate-fade-in">
+    <div style={{ position: 'relative', height: '100%', minHeight: '100%', background: '#0F172A', overflow: 'hidden' }} className="animate-fade-in">
       {/* Top Header Bar & Category Pills */}
       <div style={{
         position: 'absolute',

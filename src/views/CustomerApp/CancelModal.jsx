@@ -6,10 +6,11 @@ export default function CancelModal({ isOpen, onClose, onConfirm }) {
 
   return (
     <div style={{
-      position: 'fixed',
+      position: 'absolute',
       inset: 0,
       background: 'rgba(15,23,42,0.6)',
       backdropFilter: 'blur(4px)',
+      WebkitBackdropFilter: 'blur(4px)',
       zIndex: 2000,
       display: 'flex',
       alignItems: 'flex-end'

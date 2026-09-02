@@ -208,8 +208,8 @@ export default function MobileSettings() {
       {/* Toast Alert */}
       {toastMessage && (
         <div style={{
-          position: "fixed",
-          top: "60px",
+          position: "absolute",
+          top: "16px",
           left: "50%",
           transform: "translateX(-50%)",
           background: "#0F172A",

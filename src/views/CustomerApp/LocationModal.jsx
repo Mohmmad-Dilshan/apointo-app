@@ -7,14 +7,13 @@ export default function LocationModal({ currentLocation, onSelectLocation }) {
 
   return (
     <div style={{
-      height: '100%',
-      minHeight: '650px',
+      minHeight: '100%',
       background: '#FFFFFF',
-      padding: '24px',
+      padding: '24px 20px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between'
-    }}>
+    }} className="animate-fade-in no-scrollbar">
       <div>
         <div style={{
           width: '64px',

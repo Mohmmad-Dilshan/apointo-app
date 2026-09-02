@@ -18,24 +18,24 @@ export default function Toast({ toast, onClose }) {
 
   return (
     <div style={{
-      position: 'fixed',
-      bottom: '80px',
+      position: 'absolute',
+      top: '20px',
       left: '50%',
       transform: 'translateX(-50%)',
       backgroundColor: bgColors[toast.type] || bgColors.info,
       color: '#FFFFFF',
-      padding: '12px 20px',
+      padding: '10px 18px',
       borderRadius: '999px',
-      boxShadow: '0 10px 25px rgba(0,0,0,0.25)',
+      boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
       display: 'flex',
       alignItems: 'center',
-      gap: '10px',
-      zIndex: 2000,
-      fontSize: '0.85rem',
-      fontWeight: 600,
-      maxWidth: '90%',
+      gap: '8px',
+      zIndex: 3000,
+      fontSize: '0.82rem',
+      fontWeight: 700,
+      maxWidth: '92%',
       whiteSpace: 'nowrap'
-    }} className="animate-slide-up">
+    }} className="animate-fade-in">
       {icons[toast.type] || icons.info}
       <span>{toast.message}</span>
       <button onClick={onClose} style={{ marginLeft: '4px', opacity: 0.8, color: '#FFFFFF' }}>
