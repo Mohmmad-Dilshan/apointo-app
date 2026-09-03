@@ -15,11 +15,19 @@ export default function CategoryDetailScreen({ category, onBack, onSelectBusines
     haircut: '✂️',
     salon: '✨',
     spa: '🌿',
+    hotel: '🏨',
+    dining: '🍽️',
     gym: '🏋️',
+    yoga: '🧘',
+    photography: '📸',
+    petcare: '🐾',
     doctor: '🩺',
     dental: '🦷',
+    tattoo: '🎨',
     carservice: '🚗',
-    homeservice: '🧹'
+    rentals: '🚙',
+    homeservice: '🧹',
+    fitness: '🏃'
   };
 
   const categoryEmoji = categoryIcons[catObj.id] || (typeof category?.icon === 'string' && category.icon.length <= 4 ? category.icon : '✨');
@@ -47,12 +55,47 @@ export default function CategoryDetailScreen({ category, onBack, onSelectBusines
       { id: 'swedish', label: 'Swedish Massage' },
       { id: 'foot', label: 'Reflexology' }
     ],
+    hotel: [
+      { id: 'all', label: 'All Stays' },
+      { id: 'day_use', label: 'Day-Use Rooms' },
+      { id: 'suites', label: 'Luxury Suites' },
+      { id: 'pool_villa', label: 'Pool Villas' },
+      { id: 'resorts', label: 'Weekend Getaway' }
+    ],
+    dining: [
+      { id: 'all', label: 'All Dining' },
+      { id: 'table', label: 'VIP Table Booking' },
+      { id: 'rooftop', label: 'Rooftop Lounges' },
+      { id: 'tasting', label: 'Chef Tasting Menu' },
+      { id: 'brunch', label: 'Sunday Brunch' }
+    ],
     gym: [
       { id: 'all', label: 'All Fitness' },
       { id: 'pass', label: 'Day Pass' },
       { id: 'trainer', label: 'Personal Trainer' },
       { id: 'crossfit', label: 'Crossfit & HIIT' },
-      { id: 'yoga', label: 'Yoga & Pilates' }
+      { id: 'yoga', label: 'Strength Training' }
+    ],
+    yoga: [
+      { id: 'all', label: 'All Mind & Body' },
+      { id: 'pilates', label: 'Reformer Pilates' },
+      { id: 'sound', label: 'Sound Meditation' },
+      { id: 'ashtanga', label: 'Ashtanga Yoga' },
+      { id: 'breathwork', label: 'Breathwork Healing' }
+    ],
+    photography: [
+      { id: 'all', label: 'All Studios' },
+      { id: 'podcast', label: 'Podcast Studio' },
+      { id: 'portraits', label: 'Fashion Portraits' },
+      { id: 'prewedding', label: 'Pre-Wedding Shoot' },
+      { id: 'commercial', label: 'Product & Ad Shoots' }
+    ],
+    petcare: [
+      { id: 'all', label: 'All Pet Care' },
+      { id: 'grooming', label: 'Royal Bath & Groom' },
+      { id: 'vet', label: 'Vet Checkup' },
+      { id: 'daycare', label: 'Dog Daycare & Pool' },
+      { id: 'boarding', label: 'Luxury Boarding' }
     ],
     doctor: [
       { id: 'all', label: 'All Doctors' },
@@ -68,12 +111,26 @@ export default function CategoryDetailScreen({ category, onBack, onSelectBusines
       { id: 'braces', label: 'Aligners & Braces' },
       { id: 'root_canal', label: 'Root Canal' }
     ],
+    tattoo: [
+      { id: 'all', label: 'All Body Art' },
+      { id: 'fineline', label: 'Fine-Line Tattoo' },
+      { id: 'custom', label: 'Custom Minimalist' },
+      { id: 'piercing', label: 'Titanium Piercing' },
+      { id: 'touchup', label: 'Touch-up & Cover' }
+    ],
     carservice: [
       { id: 'all', label: 'All Auto Care' },
       { id: 'wash', label: 'Foam Car Wash' },
       { id: 'service', label: 'Full Periodic Service' },
       { id: 'detailing', label: 'Ceramic Coating' },
       { id: 'bike', label: 'Bike Washing' }
+    ],
+    rentals: [
+      { id: 'all', label: 'All Rentals' },
+      { id: 'chauffeur', label: 'Mercedes VIP Drop' },
+      { id: 'selfdrive', label: 'Self-Drive Thar 4x4' },
+      { id: 'ev', label: 'EV Hyper-Charge Slot' },
+      { id: 'luxury', label: 'Luxury Sedans' }
     ],
     homeservice: [
       { id: 'all', label: 'All Home Care' },

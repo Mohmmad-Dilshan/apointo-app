@@ -465,9 +465,9 @@ export default function HomeScreen({ user, onOpenLocation, onOpenNotifications, 
                   transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
                   transform: isSelected ? 'scale(1.06)' : 'scale(1)'
                 }}>
-                  {cat.id === 'haircut' ? '✂️' : cat.id === 'spa' ? '🌿' : cat.id === 'gym' ? '🏋️' : cat.id === 'doctor' ? '🩺' : cat.id === 'dental' ? '🦷' : cat.id === 'carservice' ? '🚗' : cat.id === 'homeservice' ? '🧹' : '✨'}
+                  {cat.emoji || '✨'}
                 </div>
-                <span style={{ fontSize: '0.78rem', fontWeight: isSelected ? 800 : 700, color: isSelected ? '#4F46E5' : '#334155' }}>
+                <span style={{ fontSize: '0.78rem', fontWeight: isSelected ? 800 : 700, color: isSelected ? '#4F46E5' : '#334155', whiteSpace: 'nowrap' }}>
                   {cat.name}
                 </span>
               </button>

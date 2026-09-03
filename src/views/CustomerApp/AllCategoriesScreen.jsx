@@ -9,41 +9,65 @@ export default function AllCategoriesScreen({ onBack, onSelectCategory }) {
     {
       title: "Beauty & Personal Care",
       icon: "💇‍♂️",
-      tagline: "Salons, Haircuts, Spa & Skincare",
+      tagline: "Salons, Haircuts, Spa, Skincare & Body Art",
       accent: "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
       categories: [
         { id: 'haircut', name: 'Haircut & Styling', icon: '✂️', count: '18 Studios near you', offer: 'Flat 25% OFF', desc: 'Men & Women haircut, beard styling & scalp care', bgGradient: 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)', borderColor: 'rgba(99,102,241,0.25)' },
         { id: 'salon', name: 'Salon & Makeover', icon: '✨', count: '24 Salons near you', offer: 'Combos @ ₹499', desc: 'Facial, waxing, manicure, pedicure & party makeup', bgGradient: 'linear-gradient(135deg, #F3E8FF 0%, #F5D0FE 100%)', borderColor: 'rgba(168,85,247,0.25)' },
-        { id: 'spa', name: 'Luxury Spa & Massage', icon: '🌿', count: '12 Retreats near you', offer: 'Up to 30% OFF', desc: 'Aroma therapy, deep tissue & body reflexology', bgGradient: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', borderColor: 'rgba(16,185,129,0.25)' }
+        { id: 'spa', name: 'Luxury Spa & Massage', icon: '🌿', count: '12 Retreats near you', offer: 'Up to 30% OFF', desc: 'Aroma therapy, deep tissue & body reflexology', bgGradient: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', borderColor: 'rgba(16,185,129,0.25)' },
+        { id: 'tattoo', name: 'Tattoo & Piercing', icon: '🎨', count: '8 Studios near you', offer: 'Minimalist @ ₹1499', desc: 'Custom fine-line ink, botanical art & medical piercings', bgGradient: 'linear-gradient(135deg, #F3E8FF 0%, #EDE9FE 100%)', borderColor: 'rgba(139,92,246,0.25)' }
+      ]
+    },
+    {
+      title: "Luxury Stays & Fine Dining",
+      icon: "🏨",
+      tagline: "Hotels, Boutique Suites & Rooftop Lounges",
+      accent: "linear-gradient(135deg, #4F46E5 0%, #EC4899 100%)",
+      categories: [
+        { id: 'hotel', name: 'Hotels & Luxury Stays', icon: '🏨', count: '16 Stays near you', offer: 'Day-Use @ ₹1999', desc: 'Boutique refresh suites, weekend villas & pool cabanas', bgGradient: 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)', borderColor: 'rgba(79,70,229,0.25)' },
+        { id: 'dining', name: 'Dining & Rooftop Lounges', icon: '🍽️', count: '22 Lounges near you', offer: 'VIP Table Reserve', desc: 'Sunset view dining, candlelight dinners & chef tasting', bgGradient: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)', borderColor: 'rgba(245,158,11,0.25)' }
+      ]
+    },
+    {
+      title: "Fitness, Yoga & Movement",
+      icon: "🧘",
+      tagline: "Gyms, Reformer Pilates & Sound Healing",
+      accent: "linear-gradient(135deg, #10B981 0%, #059669 100%)",
+      categories: [
+        { id: 'gym', name: 'Gym & Crossfit Clubs', icon: '🏋️', count: '14 Gyms near you', offer: 'Day Pass @ ₹99', desc: 'Strength training, HIIT & personal coach assessments', bgGradient: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)', borderColor: 'rgba(245,158,11,0.25)' },
+        { id: 'yoga', name: 'Yoga, Pilates & Sound Healing', icon: '🧘', count: '10 Studios near you', offer: 'First Session ₹599', desc: 'Reformer pilates, Tibetan singing bowl & chakra yoga', bgGradient: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)', borderColor: 'rgba(16,185,129,0.25)' },
+        { id: 'fitness', name: 'Active Fitness & Cardio', icon: '🏃', count: '12 Centers near you', offer: 'Free Trial Class', desc: 'Zumba, spin studio, functional bootcamps & boxing', bgGradient: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)', borderColor: 'rgba(249,115,22,0.25)' }
+      ]
+    },
+    {
+      title: "Creative Studios & Pet Care",
+      icon: "📸",
+      tagline: "4K Podcast Studios, Photography & Pet Spas",
+      accent: "linear-gradient(135deg, #EC4899 0%, #F43F5E 100%)",
+      categories: [
+        { id: 'photography', name: 'Podcast & Photo Studios', icon: '📸', count: '9 Studios near you', offer: '4K Studio @ ₹1999', desc: 'Broadcast podcast booths, pre-wedding shoots & headshots', bgGradient: 'linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 100%)', borderColor: 'rgba(236,72,153,0.25)' },
+        { id: 'petcare', name: 'Pet Spa & Veterinary Care', icon: '🐾', count: '11 Clinics near you', offer: 'Canine Bath @ ₹899', desc: 'Canine hydro-bath, fur styling, vet checkups & daycare', bgGradient: 'linear-gradient(135deg, #FFF7ED 0%, #FED7AA 100%)', borderColor: 'rgba(249,115,22,0.25)' }
       ]
     },
     {
       title: "Health & Medical Care",
       icon: "🩺",
-      tagline: "Doctors, Dentists & Health Checks",
+      tagline: "Doctors, Dentists & Specialist Clinics",
       accent: "linear-gradient(135deg, #0EA5E9 0%, #2563EB 100%)",
       categories: [
         { id: 'doctor', name: 'Doctor Consultation', icon: '🩺', count: '15 Clinics near you', offer: 'Instant Slot', desc: 'General physician, dermatologist & specialists', bgGradient: 'linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%)', borderColor: 'rgba(14,165,233,0.25)' },
-        { id: 'dental', name: 'Dental Scan & Care', icon: '🦷', count: '9 Clinics near you', offer: 'Free Dental Scan', desc: 'Teeth scaling, whitening, braces & root canal', bgGradient: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderColor: 'rgba(56,189,248,0.25)' }
+        { id: 'dental', name: 'Dental Scan & Orthodontics', icon: '🦷', count: '9 Clinics near you', offer: 'Free Dental Scan', desc: 'Teeth scaling, whitening, aligners & root canal', bgGradient: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%)', borderColor: 'rgba(56,189,248,0.25)' }
       ]
     },
     {
-      title: "Fitness & Wellness",
-      icon: "🏋️",
-      tagline: "Gyms, Yoga, Trainers & Day Pass",
-      accent: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
-      categories: [
-        { id: 'gym', name: 'Gym & Fitness Clubs', icon: '🏋️', count: '14 Gyms near you', offer: 'Day Pass @ ₹99', desc: 'Fitness clubs, personal training & crossfit', bgGradient: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)', borderColor: 'rgba(245,158,11,0.25)' }
-      ]
-    },
-    {
-      title: "Vehicle & Home Services",
-      icon: "🚗",
-      tagline: "Car Wash, Repairs & House Cleaning",
-      accent: "linear-gradient(135deg, #10B981 0%, #059669 100%)",
+      title: "Luxury Mobility & Home Care",
+      icon: "🚙",
+      tagline: "Luxury Chauffeur, Car Wash & Deep Cleaning",
+      accent: "linear-gradient(135deg, #059669 0%, #047857 100%)",
       categories: [
         { id: 'carservice', name: 'Car & Bike Service', icon: '🚗', count: '11 Centers near you', offer: 'Foam Wash @ ₹199', desc: 'Periodic car service, detailing & foam washing', bgGradient: 'linear-gradient(135deg, #E0E7FF 0%, #C7D2FE 100%)', borderColor: 'rgba(99,102,241,0.25)' },
-        { id: 'homeservice', name: 'Deep Home Cleaning', icon: '🧹', count: '16 Experts near you', offer: '10% Cashback', desc: 'AC repair, plumbing, electrical & home cleaning', bgGradient: 'linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%)', borderColor: 'rgba(239,68,68,0.25)' }
+        { id: 'rentals', name: 'Luxury Chauffeur & Self-Drive', icon: '🚙', count: '7 Services near you', offer: 'Mercedes Drop ₹2199', desc: 'VIP airport transit, Thar 4x4 self-drive & EV charge', bgGradient: 'linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%)', borderColor: 'rgba(14,165,233,0.25)' },
+        { id: 'homeservice', name: 'Deep Home Cleaning', icon: '🧹', count: '16 Experts near you', offer: '10% Cashback', desc: 'AC repair, plumbing, electrical & home sanitization', bgGradient: 'linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%)', borderColor: 'rgba(239,68,68,0.25)' }
       ]
     }
   ];

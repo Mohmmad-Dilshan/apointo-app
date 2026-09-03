@@ -21,15 +21,22 @@ export const INITIAL_USER = {
 };
 
 export const CATEGORIES = [
-  { id: "haircut", name: "Haircut", icon: "Scissors", color: "#6366F1", count: 42 },
-  { id: "salon", name: "Salon", icon: "Sparkles", color: "#EC4899", count: 58 },
-  { id: "spa", name: "Spa", icon: "Flower2", color: "#14B8A6", count: 24 },
-  { id: "gym", name: "Gym", icon: "Dumbbell", color: "#F59E0B", count: 31 },
-  { id: "doctor", name: "Doctor", icon: "Stethoscope", color: "#10B981", count: 64 },
-  { id: "dental", name: "Dental", icon: "Smile", color: "#3B82F6", count: 19 },
-  { id: "carservice", name: "Car Service", icon: "Car", color: "#8B5CF6", count: 27 },
-  { id: "homeservice", name: "Home Service", icon: "Home", color: "#EF4444", count: 50 },
-  { id: "fitness", name: "Fitness", icon: "Activity", color: "#F97316", count: 35 }
+  { id: "haircut", name: "Haircut", emoji: "✂️", icon: "Scissors", color: "#6366F1", count: 42 },
+  { id: "salon", name: "Salon", emoji: "✨", icon: "Sparkles", color: "#EC4899", count: 58 },
+  { id: "spa", name: "Spa", emoji: "🌿", icon: "Flower2", color: "#14B8A6", count: 24 },
+  { id: "hotel", name: "Hotels & Stays", emoji: "🏨", icon: "Hotel", color: "#4F46E5", count: 38 },
+  { id: "dining", name: "Dining & Lounges", emoji: "🍽️", icon: "Utensils", color: "#F59E0B", count: 46 },
+  { id: "gym", name: "Gym", emoji: "🏋️", icon: "Dumbbell", color: "#F59E0B", count: 31 },
+  { id: "yoga", name: "Yoga & Wellness", emoji: "🧘", icon: "Heart", color: "#10B981", count: 28 },
+  { id: "photography", name: "Photo Studios", emoji: "📸", icon: "Camera", color: "#EC4899", count: 22 },
+  { id: "petcare", name: "Pet Care & Vet", emoji: "🐾", icon: "Dog", color: "#F97316", count: 29 },
+  { id: "doctor", name: "Doctor", emoji: "🩺", icon: "Stethoscope", color: "#10B981", count: 64 },
+  { id: "dental", name: "Dental", emoji: "🦷", icon: "Smile", color: "#3B82F6", count: 19 },
+  { id: "tattoo", name: "Tattoo & Piercing", emoji: "🎨", icon: "PenTool", color: "#8B5CF6", count: 17 },
+  { id: "carservice", name: "Car Service", emoji: "🚗", icon: "Car", color: "#8B5CF6", count: 27 },
+  { id: "rentals", name: "Luxury Rentals", emoji: "🚙", icon: "Key", color: "#0EA5E9", count: 15 },
+  { id: "homeservice", name: "Home Service", emoji: "🧹", icon: "Home", color: "#EF4444", count: 50 },
+  { id: "fitness", name: "Fitness & HIIT", emoji: "🏃", icon: "Activity", color: "#F97316", count: 35 }
 ];
 
 export const BUSINESSES = [
@@ -396,6 +403,304 @@ export const BUSINESSES = [
     ],
     staff: [
       { id: "stf_10", name: "Ramesh Pawar", role: "Master Home Cleaning Specialist", rating: 4.9, experience: "8 yrs", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200" }
+    ],
+    reviews: []
+  },
+  {
+    id: "biz_9",
+    name: "The Grand Orchid Luxury Hotel & Suites",
+    tagline: "Boutique Suites, Pool Villas & Day-Stays",
+    category: "Hotels & Stays",
+    categoryId: "hotel",
+    rating: 4.9,
+    reviewCount: 480,
+    distance: "2.4 km",
+    address: "MG Road, Central Business District, Bengaluru",
+    priceRange: "₹1,999 - ₹6,499",
+    verified: true,
+    isOpen: true,
+    nextSlot: "Today, Check-in Anytime",
+    heroImage: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800",
+    images: [
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=800"
+    ],
+    about: "5-Star rated boutique hotel offering luxury day-use refresh suites, weekend luxury getaways, and rooftop pool villa cabanas.",
+    cancellationPolicy: "Free cancellation up to 6 hours prior to check-in.",
+    services: [
+      {
+        id: "srv_901",
+        name: "Day-Use Deluxe Suite Pass (4 Hours)",
+        description: "Private air-conditioned king suite, high-speed WiFi, welcome mocktail, and pool access.",
+        duration: "240 min",
+        price: 1999,
+        originalPrice: 2800,
+        discount: "29% OFF",
+        popular: true,
+        image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=400",
+        included: ["King Bed Suite", "Swimming Pool Access", "Welcome Drink", "High Speed WiFi"],
+        addons: []
+      },
+      {
+        id: "srv_902",
+        name: "Weekend Luxury Suite with Buffet Breakfast",
+        description: "Overnight suite stay with complimentary international buffet breakfast and late checkout.",
+        duration: "Overnight",
+        price: 4499,
+        originalPrice: 6000,
+        discount: "25% OFF",
+        popular: true,
+        image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=400",
+        included: ["Buffet Breakfast", "Fitness Center", "Steam & Sauna", "Late 2 PM Checkout"],
+        addons: []
+      }
+    ],
+    staff: [
+      { id: "stf_11", name: "Siddharth Sen", role: "Head Concierge & Hospitality Lead", rating: 4.9, experience: "11 yrs", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200" }
+    ],
+    reviews: []
+  },
+  {
+    id: "biz_10",
+    name: "Skyline Terrace & Rooftop Lounge",
+    tagline: "Panoramic City View Dining & Craft Mocktails",
+    category: "Dining & Lounges",
+    categoryId: "dining",
+    rating: 4.8,
+    reviewCount: 630,
+    distance: "1.2 km",
+    address: "UB City, Lavelle Road, Bengaluru",
+    priceRange: "₹499 - ₹2,999",
+    verified: true,
+    isOpen: true,
+    nextSlot: "Today, 07:30 PM",
+    heroImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800",
+    images: [
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&q=80&w=800"
+    ],
+    about: "Premier 16th floor rooftop destination with live acoustic music, gourmet woodfired pizzas, and reserved VIP sunset tables.",
+    cancellationPolicy: "Free table cancellation up to 1 hour prior.",
+    services: [
+      {
+        id: "srv_1001",
+        name: "VIP Sunset Table Reservation with Welcome Drink",
+        description: "Guaranteed prime skyline table booking + 2 complimentary artisan drinks.",
+        duration: "120 min",
+        price: 499,
+        originalPrice: 800,
+        discount: "38% OFF",
+        popular: true,
+        image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&q=80&w=400",
+        included: ["Priority Table", "Welcome Drink", "Live Music Access"],
+        addons: []
+      },
+      {
+        id: "srv_1002",
+        name: "4-Course Candlelight Chef Tasting Dinner",
+        description: "Curated 4-course gourmet dinner for two with appetizer, woodfired main, artisan dessert.",
+        duration: "90 min",
+        price: 2499,
+        originalPrice: 3200,
+        discount: "22% OFF",
+        popular: true,
+        image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=400",
+        included: ["4 Gourmet Courses", "Dessert Platter", "Personal Butler Service"],
+        addons: []
+      }
+    ],
+    staff: [
+      { id: "stf_12", name: "Chef Marco Rossi", role: "Executive Head Chef", rating: 4.9, experience: "15 yrs", photo: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=200" }
+    ],
+    reviews: []
+  },
+  {
+    id: "biz_11",
+    name: "Aura Creative & Podcast Studios",
+    tagline: "4K Multi-Cam Podcast & Fashion Photo Studio",
+    category: "Photo Studios",
+    categoryId: "photography",
+    rating: 4.9,
+    reviewCount: 210,
+    distance: "1.8 km",
+    address: "100 Feet Rd, Indiranagar, Bengaluru",
+    priceRange: "₹1,499 - ₹4,999",
+    verified: true,
+    isOpen: true,
+    nextSlot: "Tomorrow, 11:00 AM",
+    heroImage: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=800",
+    images: ["https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=800"],
+    about: "Acoustically treated creator studios with Rode broadcast mics, Sony 4K cameras, and professional motorized backdrops.",
+    cancellationPolicy: "Reschedule free 24 hours prior.",
+    services: [
+      {
+        id: "srv_1101",
+        name: "2-Hour 4K Podcast Studio Recording",
+        description: "Studio engineer included, 3x Shure SM7B microphones, live audio switcher and raw 4K footage handover.",
+        duration: "120 min",
+        price: 1999,
+        originalPrice: 2800,
+        discount: "29% OFF",
+        popular: true,
+        image: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=400",
+        included: ["Studio Engineer", "3 Mics Setup", "Raw 4K Video Files", "Soundproof Booth"],
+        addons: []
+      }
+    ],
+    staff: [
+      { id: "stf_13", name: "Devansh Rao", role: "Studio Sound & Visual Director", rating: 4.9, experience: "7 yrs", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200" }
+    ],
+    reviews: []
+  },
+  {
+    id: "biz_12",
+    name: "Paws & Tails Luxury Pet Spa & Clinic",
+    tagline: "Canine Hydrotherapy, Haircuts & Vet Care",
+    category: "Pet Care & Vet",
+    categoryId: "petcare",
+    rating: 4.9,
+    reviewCount: 350,
+    distance: "1.5 km",
+    address: "Koramangala 4th Block, Bengaluru",
+    priceRange: "₹499 - ₹1,499",
+    verified: true,
+    isOpen: true,
+    nextSlot: "Today, 03:00 PM",
+    heroImage: "https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&q=80&w=800",
+    images: ["https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&q=80&w=800"],
+    about: "Dedicated pet care sanctuary featuring warm hydro-baths, hypoallergenic coat grooming, ear cleaning, and certified veterinary checks.",
+    cancellationPolicy: "Free cancellation 2 hours prior.",
+    services: [
+      {
+        id: "srv_1201",
+        name: "Full Canine Royal Spa & Fur Styling",
+        description: "Warm water bath, gentle organic shampoo, blow dry, paw pad balm, and hygienic trim.",
+        duration: "60 min",
+        price: 899,
+        originalPrice: 1200,
+        discount: "25% OFF",
+        popular: true,
+        image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=400",
+        included: ["Organic Bath", "Fur Detangling", "Nail Clipping", "Ear Cleaning"],
+        addons: []
+      }
+    ],
+    staff: [
+      { id: "stf_14", name: "Dr. Shalini Das", role: "Chief Veterinary Officer", rating: 4.9, experience: "9 yrs", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200" }
+    ],
+    reviews: []
+  },
+  {
+    id: "biz_13",
+    name: "Prana Soul Yoga & Sound Sanctuary",
+    tagline: "Reformer Pilates, Yin Yoga & Sound Healing",
+    category: "Yoga & Wellness",
+    categoryId: "yoga",
+    rating: 4.9,
+    reviewCount: 290,
+    distance: "2.0 km",
+    address: "Defence Colony, Indiranagar, Bengaluru",
+    priceRange: "₹599 - ₹1,999",
+    verified: true,
+    isOpen: true,
+    nextSlot: "Tomorrow, 07:00 AM",
+    heroImage: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&q=80&w=800",
+    images: ["https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&q=80&w=800"],
+    about: "Peaceful bamboo studio for mindful movement, reformer pilates machines, Tibetan singing bowl meditations, and breathwork.",
+    cancellationPolicy: "Cancel 3 hours prior for full credit.",
+    services: [
+      {
+        id: "srv_1301",
+        name: "Tibetan Sound Bowl & Chakra Meditation",
+        description: "Full sound immersion therapy with 7 chakra bronze singing bowls for deep stress relief.",
+        duration: "60 min",
+        price: 599,
+        originalPrice: 850,
+        discount: "30% OFF",
+        popular: true,
+        image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=400",
+        included: ["Singing Bowl Therapy", "Guided Breathwork", "Herbal Tea"],
+        addons: []
+      }
+    ],
+    staff: [
+      { id: "stf_15", name: "Tara Mehra", role: "Certified Yoga & Sound Master", rating: 4.9, experience: "10 yrs", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200" }
+    ],
+    reviews: []
+  },
+  {
+    id: "biz_14",
+    name: "InkMinds Artisan Tattoo & Piercing",
+    tagline: "Custom Fine-Line Art & Hospital-Grade Piercing",
+    category: "Tattoo & Piercing",
+    categoryId: "tattoo",
+    rating: 4.9,
+    reviewCount: 415,
+    distance: "1.6 km",
+    address: "Church Street, Central Bengaluru",
+    priceRange: "₹499 - ₹3,999",
+    verified: true,
+    isOpen: true,
+    nextSlot: "Today, 04:00 PM",
+    heroImage: "https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?auto=format&fit=crop&q=80&w=800",
+    images: ["https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?auto=format&fit=crop&q=80&w=800"],
+    about: "Sterile single-use studio specializing in botanical fine-line tattoos, micro-realism, and medical-grade titanium piercings.",
+    cancellationPolicy: "Free rescheduling up to 12 hours prior.",
+    services: [
+      {
+        id: "srv_1401",
+        name: "Custom Minimalist Tattoo (Up to 2x2 Inch)",
+        description: "Bespoke fine-line design, dynamic black ink, sterile single-use needles, and second-skin bandage.",
+        duration: "60 min",
+        price: 1499,
+        originalPrice: 2000,
+        discount: "25% OFF",
+        popular: true,
+        image: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?auto=format&fit=crop&q=80&w=400",
+        included: ["Custom Stencil", "Sterile Needle", "Second-Skin Bandage", "Aftercare Balm"],
+        addons: []
+      }
+    ],
+    staff: [
+      { id: "stf_16", name: "Zack D'Souza", role: "Lead Fine-Line Tattoo Artist", rating: 4.9, experience: "8 yrs", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200" }
+    ],
+    reviews: []
+  },
+  {
+    id: "biz_15",
+    name: "Apex Luxury Drive & Chauffeur Services",
+    tagline: "Mercedes Airport Transit & Self-Drive SUVs",
+    category: "Car Rentals & EV",
+    categoryId: "rentals",
+    rating: 4.8,
+    reviewCount: 185,
+    distance: "3.5 km",
+    address: "Hebbal, Airport Expressway, Bengaluru",
+    priceRange: "₹299 - ₹4,999",
+    verified: true,
+    isOpen: true,
+    nextSlot: "Today, Available 24/7",
+    heroImage: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800",
+    images: ["https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=800"],
+    about: "Chauffeur driven Mercedes & BMW sedans, verified airport transit, and self-drive 4x4 Thar rentals with comprehensive insurance.",
+    cancellationPolicy: "Free cancellation up to 2 hours before trip.",
+    services: [
+      {
+        id: "srv_1501",
+        name: "Mercedes E-Class VIP Airport Transit",
+        description: "Uniformed chauffeur, chilled mineral water, flight tracking, and toll included.",
+        duration: "75 min",
+        price: 2199,
+        originalPrice: 2800,
+        discount: "21% OFF",
+        popular: true,
+        image: "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=400",
+        included: ["Mercedes Luxury Ride", "Airport Tolls", "Mineral Water", "Flight Tracking"],
+        addons: []
+      }
+    ],
+    staff: [
+      { id: "stf_17", name: "Gurpreet Singh", role: "Senior VIP Chauffeur", rating: 4.9, experience: "12 yrs", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200" }
     ],
     reviews: []
   }
