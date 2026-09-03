@@ -3,7 +3,7 @@ import HeaderNav from './components/HeaderNav';
 import MobileFrame from './components/MobileFrame';
 import Toast from './components/Toast';
 import VoiceSearchModal from './components/VoiceSearchModal';
-import { INITIAL_USER, BUSINESSES, INITIAL_BOOKINGS } from './data/sampleData';
+import { PlatformProvider, usePlatform } from './context/PlatformContext';
 
 /* Customer App Screens */
 import SplashScreen from './views/CustomerApp/SplashScreen';
@@ -39,19 +39,6 @@ import PersonalInfoScreen from './views/CustomerApp/PersonalInfoScreen';
 import NotificationPreferencesScreen from './views/CustomerApp/NotificationPreferencesScreen';
 
 /* Business SaaS Dashboard Views */
-import ProviderHeader from './views/BusinessDashboard/ProviderHeader';
-import ProviderSidebar from './views/BusinessDashboard/ProviderSidebar';
-import ProviderOverview from './views/BusinessDashboard/ProviderOverview';
-import ProviderCalendar from './views/BusinessDashboard/ProviderCalendar';
-import ProviderAppointments from './views/BusinessDashboard/ProviderAppointments';
-import ProviderServices from './views/BusinessDashboard/ProviderServices';
-import ProviderStaff from './views/BusinessDashboard/ProviderStaff';
-import ProviderCRM from './views/BusinessDashboard/ProviderCRM';
-import ProviderPayments from './views/BusinessDashboard/ProviderPayments';
-import ProviderOffers from './views/BusinessDashboard/ProviderOffers';
-import ProviderAnalytics from './views/BusinessDashboard/ProviderAnalytics';
-import ProviderReviews from './views/BusinessDashboard/ProviderReviews';
-import ProviderSettings from './views/BusinessDashboard/ProviderSettings';
 import MobileBusinessDashboard from './views/BusinessDashboard/MobileBusinessDashboard';
 import DesktopBusinessDashboard from './views/BusinessDashboard/DesktopBusinessDashboard';
 
@@ -64,24 +51,34 @@ import DesignSystemInspector from './views/DesignSystem/DesignSystemInspector';
 
 import { Home as HomeIcon, Compass, Calendar as CalendarNav, Award as AwardNav, User as UserNav } from 'lucide-react';
 
-export default function App() {
+function AppContent() {
+  const {
+    user,
+    setUser,
+    businesses,
+    bookings,
+    favorites,
+    setFavorites,
+    toast,
+    setToast,
+    showToast,
+    createBooking,
+    rescheduleBooking,
+    cancelBooking,
+    submitReview
+  } = usePlatform();
+
   // Top level platform view: 'customer' | 'business' | 'admin' | 'design-system'
   const [activePlatform, setActivePlatform] = useState('customer');
   const [isDeviceFrame, setIsDeviceFrame] = useState(true);
   const [deviceOs, setDeviceOs] = useState('ios'); // 'ios' | 'android'
-
-  // Global State Store
-  const [user, setUser] = useState(INITIAL_USER);
-  const [favorites, setFavorites] = useState(['biz_1', 'biz_3']);
-  const [bookings, setBookings] = useState(INITIAL_BOOKINGS);
-  const [toast, setToast] = useState(null);
   const [isVoiceSearchOpen, setIsVoiceSearchOpen] = useState(false);
 
   // Customer Screen Router
   const [customerScreen, setCustomerScreen] = useState('home');
 
   // Booking Flow Draft State
-  const [selectedBusiness, setSelectedBusiness] = useState(BUSINESSES[0]);
+  const [selectedBusiness, setSelectedBusiness] = useState(businesses[0] || null);
   const [selectedService, setSelectedService] = useState(null);
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState(null);
@@ -91,16 +88,8 @@ export default function App() {
   const [activeBookingDetail, setActiveBookingDetail] = useState(null);
   const [reviewModalBooking, setReviewModalBooking] = useState(null);
 
-  // Business Dashboard Active Tab
-  const [providerTab, setProviderTab] = useState('overview');
-
-  // Admin Console Active Tab
-  const [adminTab, setAdminTab] = useState('overview');
-
-  const showToast = (toastObj) => {
-    setToast(toastObj);
-    setTimeout(() => setToast(null), 3000);
-  };
+  // Sync selected business if initial is null
+  const currentBusiness = selectedBusiness || businesses[0];
 
   const handleToggleFavorite = (bizId) => {
     if (favorites.includes(bizId)) {
@@ -143,27 +132,19 @@ export default function App() {
     setCustomerScreen('summary');
   };
 
-  const handleProceedToPayment = (finalDraft) => {
+  const handleProceedToPayment = () => {
     setCustomerScreen('payment');
   };
 
   const handlePaymentSuccess = () => {
-    const newBooking = {
-      id: "APT-" + Math.floor(10000 + Math.random() * 90000),
-      businessName: selectedBusiness.name,
-      businessImage: selectedBusiness.heroImage,
-      serviceName: selectedService.name,
-      staffName: selectedStaff?.name || "Rahul Sharma",
-      date: selectedDateTime?.date || "14 Aug 2026",
-      time: selectedDateTime?.time || "02:30 PM",
-      duration: selectedService.duration,
-      price: selectedService.price,
-      totalPaid: selectedService.price + 20,
-      status: "Confirmed",
-      address: selectedBusiness.address
-    };
+    const newBooking = createBooking({
+      business: currentBusiness,
+      service: selectedService || currentBusiness.services[0],
+      staff: selectedStaff,
+      dateTime: selectedDateTime,
+      totalAmount: (selectedService?.price || 299) + 20
+    });
 
-    setBookings([newBooking, ...bookings]);
     setActiveBookingDetail(newBooking);
     setCustomerScreen('success');
   };
@@ -175,13 +156,11 @@ export default function App() {
   };
 
   const handleReschedule = (bookingId, newDate, newTime) => {
-    setBookings(bookings.map(b => b.id === bookingId ? { ...b, date: newDate, time: newTime, status: 'Confirmed' } : b));
-    showToast({ message: "Appointment rescheduled successfully!", type: "success" });
+    rescheduleBooking(bookingId, newDate, newTime);
   };
 
   const handleCancel = (bookingId) => {
-    setBookings(bookings.map(b => b.id === bookingId ? { ...b, status: 'Cancelled' } : b));
-    showToast({ message: "Appointment cancelled. Full refund initiated.", type: "info" });
+    cancelBooking(bookingId);
   };
 
   return (
@@ -452,7 +431,10 @@ export default function App() {
           <ReviewModal
             isOpen={!!reviewModalBooking}
             onClose={() => setReviewModalBooking(null)}
-            onSubmitReview={(rev) => showToast({ message: "Review posted successfully!", type: "success" })}
+            onSubmitReview={(rev) => {
+              submitReview(reviewModalBooking?.businessId || 'biz_1', rev);
+              setReviewModalBooking(null);
+            }}
             booking={reviewModalBooking}
           />
 
@@ -546,5 +528,13 @@ export default function App() {
         <DesignSystemInspector />
       )}
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <PlatformProvider>
+      <AppContent />
+    </PlatformProvider>
   );
 }

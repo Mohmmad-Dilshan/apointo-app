@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Send, Bell, Users, MessageSquare, CheckCircle2, Sparkles, Smartphone, Clock, AlertCircle } from 'lucide-react';
+import { usePlatform } from '../../context/PlatformContext';
 
 export default function AdminBroadcast() {
+  const { sendAdminBroadcast } = usePlatform();
   const [audience, setAudience] = useState('all_customers');
   const [title, setTitle] = useState('🔥 Flash 30% Off This Weekend!');
   const [body, setBody] = useState('Top salons in Bengaluru & Mumbai have open slots today. Book your grooming session with code FLASH30.');
@@ -17,7 +19,7 @@ export default function AdminBroadcast() {
   ]);
 
   const audienceCounts = {
-    all_customers: "1,24,000 Users",
+    all_customers: "All Customers (1,24,000 Users)",
     all_merchants: "420 Partner Salons",
     blr_users: "48,500 Bengaluru Users",
     delhi_users: "36,200 Delhi NCR Users",
@@ -32,6 +34,13 @@ export default function AdminBroadcast() {
     setIsSending(true);
     setTimeout(() => {
       setIsSending(false);
+      sendAdminBroadcast({
+        type: 'offer',
+        title,
+        message: body,
+        targetGroup: audienceCounts[audience]
+      });
+
       const newEntry = {
         id: `bc_${Date.now()}`,
         title,
@@ -43,9 +52,9 @@ export default function AdminBroadcast() {
       };
 
       setBroadcastHistory([newEntry, ...broadcastHistory]);
-      setToastMsg(`Broadcast successfully transmitted to ${audienceCounts[audience]}!`);
+      setToastMsg(`Broadcast transmitted & pushed live to Customer Inbox!`);
       setTimeout(() => setToastMsg(null), 3500);
-    }, 1000);
+    }, 800);
   };
 
   return (

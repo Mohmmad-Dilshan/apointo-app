@@ -1,17 +1,28 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { Search, Calendar, Building, Clock, DollarSign, Filter, MapPin, CheckCircle2 } from "lucide-react";
+import { usePlatform } from "../../../context/PlatformContext";
 
 export default function MobileAdminBookings() {
-  const globalBookings = [
-    { id: "APT-98241", customer: "Dilshan Perera", business: "Urban Cut Studio", service: "Classic Haircut", date: "Today", time: "02:30 PM", gmv: "₹329", cut: "₹39", city: "Gurugram", status: "Confirmed" },
-    { id: "APT-87120", customer: "Sneha Nair", business: "Glow Beauty Lounge", service: "Hydra Facial", date: "Today", time: "04:00 PM", gmv: "₹1,049", cut: "₹125", city: "Bengaluru", status: "Completed" },
-    { id: "APT-76510", customer: "Rohan Kapoor", business: "FitZone Fitness", service: "Workout Pass", date: "Yesterday", time: "06:00 PM", gmv: "₹350", cut: "₹42", city: "Delhi", status: "Completed" },
-    { id: "APT-65499", customer: "Priya Sharma", business: "Urban Cut Studio", service: "Hair Coloring", date: "12 Aug", time: "11:00 AM", gmv: "₹1,299", cut: "₹155", city: "Gurugram", status: "Completed" },
-    { id: "APT-54321", customer: "Amit Patel", business: "SmileCare Dental", service: "Teeth Cleaning", date: "10 Aug", time: "03:15 PM", gmv: "₹799", cut: "₹95", city: "Mumbai", status: "Cancelled" },
-  ];
-
+  const { bookings } = usePlatform();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
+
+  const globalBookings = bookings.map(b => {
+    const rawGmv = Number(b.totalPaid) || Number(b.price) || 329;
+    const cutAmount = Math.round(rawGmv * 0.12);
+    return {
+      id: b.id,
+      customer: b.customer || b.customerName || "Customer",
+      business: b.businessName || b.business || "Urban Cut Studio",
+      service: b.serviceName || b.service || "Service",
+      date: b.date || "Today",
+      time: b.time || "02:30 PM",
+      gmv: `₹${rawGmv}`,
+      cut: `₹${cutAmount}`,
+      city: b.address?.split(',')?.pop()?.trim() || "Bengaluru",
+      status: b.status || "Confirmed"
+    };
+  });
 
   const filtered = globalBookings.filter(b => {
     const matchQuery = b.customer.toLowerCase().includes(query.toLowerCase()) ||

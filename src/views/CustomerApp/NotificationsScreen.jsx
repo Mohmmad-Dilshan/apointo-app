@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { ArrowLeft, Bell, Clock, Award, Tag, CheckCheck, Zap, Gift, Calendar, AlertCircle, X } from 'lucide-react';
-import { NOTIFICATIONS } from '../../data/sampleData';
+import React from 'react';
+import { ArrowLeft, Clock, Award, Tag, CheckCheck, AlertCircle, X } from 'lucide-react';
+import { usePlatform } from '../../context/PlatformContext';
 
 const TYPE_CONFIG = {
   reminder: { icon: <Clock size={20} color="#4F46E5" />, bg: '#EEF2FF', dot: '#4F46E5', label: 'Reminder' },
@@ -10,19 +10,16 @@ const TYPE_CONFIG = {
 };
 
 export default function NotificationsScreen({ onBack }) {
-  const [notifications, setNotifications] = useState(
-    (NOTIFICATIONS || [
-      { id: 1, type: 'reminder', title: 'Appointment Tomorrow!', message: 'Your Classic Haircut at Urban Cut Studio is tomorrow at 2:30 PM. Don\'t forget!', time: '2h ago', unread: true },
-      { id: 2, type: 'reward', title: 'Points Credited 🏆', message: 'You earned 33 reward points from your last booking. Redeem them for discounts!', time: '1d ago', unread: true },
-      { id: 3, type: 'offer', title: '50% OFF Hair Spa Today Only!', message: 'Exclusive flash deal at LuxeGlow Spa. Valid for next 4 hours only. Book now!', time: '3h ago', unread: false },
-      { id: 4, type: 'reminder', title: 'Rate Your Experience', message: 'How was your visit to Urban Cut Studio? Your feedback helps others. Tap to rate!', time: '2d ago', unread: false },
-      { id: 5, type: 'reward', title: 'Referral Bonus! 🎁', message: 'Rahul Verma signed up using your code DILSHAN50. ₹500 cashback has been added to your wallet.', time: '3d ago', unread: false },
-    ]).map(n => ({ ...n, unread: n.unread !== undefined ? n.unread : true })
-  ));
+  const { notifications, setNotifications } = usePlatform();
 
-  const unreadCount = notifications.filter(n => n.unread).length;
+  const formattedNotifs = notifications.map(n => ({
+    ...n,
+    unread: n.read === false || n.unread === true
+  }));
 
-  const markAllRead = () => setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
+  const unreadCount = formattedNotifs.filter(n => n.unread).length;
+
+  const markAllRead = () => setNotifications(prev => prev.map(n => ({ ...n, read: true, unread: false })));
   const dismissNotif = (id) => setNotifications(prev => prev.filter(n => n.id !== id));
 
   return (

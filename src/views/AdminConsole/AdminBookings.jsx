@@ -1,22 +1,36 @@
 import React, { useState } from 'react';
 import { Search, Calendar, Building, Clock, DollarSign, Filter, MapPin, CheckCircle2, XCircle, ChevronRight, X, AlertCircle } from 'lucide-react';
+import { usePlatform } from '../../context/PlatformContext';
 
 export default function AdminBookings() {
-  const [bookings, setBookings] = useState([
-    { id: "APT-98241", customer: "Dilshan Perera", phone: "+91 98765 43210", business: "Urban Cut Studio", service: "Classic Haircut", specialist: "Rahul Verma", date: "14 Aug 2026", time: "02:30 PM", gmv: "₹329", cut: "₹39.48", paymentMode: "UPI / PhonePe", city: "Gurugram", status: "Confirmed" },
-    { id: "APT-87120", customer: "Sneha Nair", phone: "+91 98123 45678", business: "Glow Beauty Lounge", service: "Hydra Facial Glow", specialist: "Pooja Hegde", date: "05 Aug 2026", time: "04:00 PM", gmv: "₹1,049", cut: "₹125.88", paymentMode: "Credit Card (HDFC)", city: "Bengaluru", status: "Completed" },
-    { id: "APT-76510", customer: "Rohan Kapoor", phone: "+91 99887 76655", business: "FitZone Wellness", service: "Workout Day Pass", specialist: "Vikram Malhotra", date: "10 Aug 2026", time: "06:00 PM", gmv: "₹350", cut: "₹42.00", paymentMode: "Apo Wallet", city: "New Delhi", status: "Completed" },
-    { id: "APT-65499", customer: "Priya Sharma", phone: "+91 97766 55443", business: "Urban Cut Studio", service: "Hair Coloring & Spa", specialist: "Ananya Deshmukh", date: "12 Aug 2026", time: "11:00 AM", gmv: "₹1,299", cut: "₹155.88", paymentMode: "Google Pay", city: "Gurugram", status: "Completed" },
-    { id: "APT-54321", customer: "Amit Patel", phone: "+91 98877 66554", business: "SmileCare Dental", service: "Teeth Cleaning & Polish", specialist: "Dr. Ayesha", date: "10 Aug 2026", time: "03:15 PM", gmv: "₹799", cut: "₹95.88", paymentMode: "Net Banking", city: "Mumbai", status: "Cancelled" },
-  ]);
-
+  const { bookings, cancelBooking } = usePlatform();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('all');
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [toastMsg, setToastMsg] = useState(null);
 
+  const displayBookings = bookings.map(b => {
+    const rawGmv = Number(b.totalPaid) || Number(b.price) || 329;
+    const cutAmount = (rawGmv * 0.12).toFixed(2);
+    return {
+      id: b.id,
+      customer: b.customer || b.customerName || "Customer",
+      phone: b.customerPhone || b.phone || "+91 98765 43210",
+      business: b.businessName || b.business || "Urban Cut Studio",
+      service: b.serviceName || b.service || "Service",
+      specialist: b.staffName || b.specialist || "Rahul Sharma",
+      date: b.date || "14 Aug 2026",
+      time: b.time || "02:30 PM",
+      gmv: `₹${rawGmv}`,
+      cut: `₹${cutAmount}`,
+      paymentMode: b.paymentMethod || "UPI / Razorpay",
+      city: b.address?.split(',')?.pop()?.trim() || "Bengaluru",
+      status: b.status || "Confirmed"
+    };
+  });
+
   const handleCancelBooking = (id) => {
-    setBookings(bookings.map(b => b.id === id ? { ...b, status: 'Cancelled' } : b));
+    cancelBooking(id);
     if (selectedBooking?.id === id) {
       setSelectedBooking(prev => ({ ...prev, status: 'Cancelled' }));
     }
@@ -24,7 +38,7 @@ export default function AdminBookings() {
     setTimeout(() => setToastMsg(null), 3000);
   };
 
-  const filtered = bookings.filter(b => {
+  const filtered = displayBookings.filter(b => {
     const matchQuery = b.customer.toLowerCase().includes(query.toLowerCase()) ||
                        b.business.toLowerCase().includes(query.toLowerCase()) ||
                        b.id.toLowerCase().includes(query.toLowerCase()) ||

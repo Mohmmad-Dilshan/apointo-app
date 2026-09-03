@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Bell, Search, Mic, Star, Clock, ChevronRight, Tag, Heart, ShieldCheck, RotateCcw, Zap, Filter, Sparkles } from 'lucide-react';
-import { CATEGORIES, BUSINESSES } from '../../data/sampleData';
+import { CATEGORIES } from '../../data/sampleData';
+import { usePlatform } from '../../context/PlatformContext';
 
 export default function HomeScreen({ user, onOpenLocation, onOpenNotifications, onNavigateScreen, onSelectCategory, onSelectBusiness, favorites, onToggleFavorite, onQuickRebook, onOpenVoiceSearch }) {
+  const { businesses } = usePlatform();
   const [activeFilterPill, setActiveFilterPill] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -61,7 +63,7 @@ export default function HomeScreen({ user, onOpenLocation, onOpenNotifications, 
     }
   };
 
-  const displayedBusinesses = BUSINESSES.filter(biz => {
+  const displayedBusinesses = (businesses || []).filter(biz => {
     if (selectedCategory && biz.categoryId !== selectedCategory && !biz.category.toLowerCase().includes(selectedCategory)) {
       return false;
     }

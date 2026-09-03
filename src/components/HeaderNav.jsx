@@ -1,7 +1,10 @@
 import React from 'react';
 import { Smartphone, Building2, ShieldCheck, Palette, Sparkles, Monitor, Apple, Bot } from 'lucide-react';
+import { usePlatform } from '../context/PlatformContext';
 
 export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceFrame, setIsDeviceFrame, deviceOs, setDeviceOs }) {
+  const { computedStats } = usePlatform();
+
   return (
     <header style={{
       background: '#0F172A',
@@ -65,11 +68,25 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
             background: activePlatform === 'customer' ? '#4F46E5' : 'transparent',
             boxShadow: activePlatform === 'customer' ? '0 2px 8px rgba(79,70,229,0.3)' : 'none',
             whiteSpace: 'nowrap',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            position: 'relative'
           }}
         >
           <Smartphone size={14} />
           <span>Customer</span>
+          {computedStats?.activeBookingsCount > 0 && (
+            <span style={{
+              background: '#F43F5E',
+              color: '#FFFFFF',
+              fontSize: '0.62rem',
+              fontWeight: 800,
+              padding: '1px 5px',
+              borderRadius: '999px',
+              marginLeft: '2px'
+            }}>
+              {computedStats.activeBookingsCount}
+            </span>
+          )}
         </button>
 
         <button
@@ -91,6 +108,20 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
         >
           <Building2 size={14} />
           <span>Business POS</span>
+          {computedStats?.totalBookingsCount > 0 && (
+            <span style={{
+              background: 'rgba(16, 185, 129, 0.25)',
+              color: '#10B981',
+              border: '1px solid rgba(16, 185, 129, 0.4)',
+              fontSize: '0.62rem',
+              fontWeight: 800,
+              padding: '1px 5px',
+              borderRadius: '999px',
+              marginLeft: '2px'
+            }}>
+              {computedStats.totalBookingsCount}
+            </span>
+          )}
         </button>
 
         <button
@@ -112,6 +143,19 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
         >
           <ShieldCheck size={14} />
           <span>Admin</span>
+          {computedStats?.pendingVerificationsCount > 0 && (
+            <span style={{
+              background: '#F59E0B',
+              color: '#0F172A',
+              fontSize: '0.62rem',
+              fontWeight: 900,
+              padding: '1px 5px',
+              borderRadius: '999px',
+              marginLeft: '2px'
+            }}>
+              {computedStats.pendingVerificationsCount}
+            </span>
+          )}
         </button>
 
         <button

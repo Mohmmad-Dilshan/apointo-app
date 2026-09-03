@@ -19,105 +19,33 @@ import {
   X,
   Filter
 } from "lucide-react";
+import { usePlatform } from "../../../context/PlatformContext";
 
 export default function MobileAppointments({ onOpenPOS, onOpenScanner }) {
+  const { bookings, updateBookingStatus } = usePlatform();
   const [filterStatus, setFilterStatus] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
 
-  const [appointmentsList, setAppointmentsList] = useState([
-    {
-      id: "APT-98241",
-      customer: "Dilshan Perera",
-      phone: "+91 98765 43210",
-      service: "Classic Haircut & Styling",
-      staff: "Rahul Sharma",
-      date: "Today, 14 Aug 2026",
-      time: "02:30 PM",
-      duration: "45 min",
-      price: 299,
-      tax: 30,
-      totalAmount: 329,
-      paymentMethod: "UPI (Google Pay)",
-      status: "In Service",
-      otp: "4892",
-      notes: "Likes low fade on sides, scissor trim on top.",
-      visitsCount: 12
-    },
-    {
-      id: "APT-87120",
-      customer: "Arjun Kapoor",
-      phone: "+91 98123 45678",
-      service: "Beard Crafting Combo",
-      staff: "Vikram Singh",
-      date: "Today, 14 Aug 2026",
-      time: "10:30 AM",
-      duration: "30 min",
-      price: 499,
-      tax: 0,
-      totalAmount: 499,
-      paymentMethod: "Cash at Desk",
-      status: "Completed",
-      otp: "1923",
-      notes: "Eucalyptus hot towel treatment requested.",
-      visitsCount: 8
-    },
-    {
-      id: "APT-76510",
-      customer: "Rohan Malhotra",
-      phone: "+91 99887 76655",
-      service: "Royal Deluxe Grooming",
-      staff: "Priya Verma",
-      date: "Today, 14 Aug 2026",
-      time: "05:00 PM",
-      duration: "90 min",
-      price: 899,
-      tax: 50,
-      totalAmount: 949,
-      paymentMethod: "Card (POS)",
-      status: "Waiting",
-      otp: "6612",
-      notes: "First time visit, recommend Charcoal face scrub.",
-      visitsCount: 1
-    },
-    {
-      id: "APT-92144",
-      customer: "Vikram Malhotra",
-      phone: "+91 98111 22334",
-      service: "Head Spa & Scalp Massage",
-      staff: "Rahul Sharma",
-      date: "Tomorrow, 15 Aug 2026",
-      time: "11:00 AM",
-      duration: "45 min",
-      price: 399,
-      tax: 20,
-      totalAmount: 419,
-      paymentMethod: "UPI (PhonePe)",
-      status: "Confirmed",
-      otp: "3389",
-      notes: "Regular client. Prefers Rahul.",
-      visitsCount: 15
-    },
-    {
-      id: "APT-65430",
-      customer: "Siddharth Nair",
-      phone: "+91 97766 55443",
-      service: "Hair Coloring & Highlights",
-      staff: "Priya Verma",
-      date: "12 Aug 2026",
-      time: "04:00 PM",
-      duration: "120 min",
-      price: 1299,
-      tax: 80,
-      totalAmount: 1379,
-      paymentMethod: "Cancelled (Refunded)",
-      status: "Cancelled",
-      otp: "9910",
-      notes: "Client rescheduled due to emergency.",
-      visitsCount: 3
-    }
-  ]);
+  const appointmentsList = bookings.map(b => ({
+    id: b.id,
+    customer: b.customer || b.customerName || "Customer",
+    phone: b.customerPhone || b.phone || "+91 98765 43210",
+    service: b.serviceName || b.service || "Service",
+    staff: b.staffName || b.staff || "Rahul Sharma",
+    date: b.date || "Today, 14 Aug 2026",
+    time: b.time || "02:30 PM",
+    duration: b.duration || "45 min",
+    price: b.price || 299,
+    tax: b.tax !== undefined ? b.tax : 30,
+    totalAmount: b.totalPaid || b.totalAmount || 329,
+    paymentMethod: b.paymentMethod || "UPI (Prepaid)",
+    status: b.status || "Confirmed",
+    otp: b.otp || "4892",
+    notes: b.notes || (b.isWalkIn ? "Walk-in Desk POS billing" : "Online booking via Apo App"),
+    visitsCount: b.visitsCount || 3
+  }));
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -125,11 +53,10 @@ export default function MobileAppointments({ onOpenPOS, onOpenScanner }) {
   };
 
   const handleUpdateStatus = (aptId, newStatus) => {
-    setAppointmentsList(appointmentsList.map(a => a.id === aptId ? { ...a, status: newStatus } : a));
+    updateBookingStatus(aptId, newStatus);
     if (selectedAppointment && selectedAppointment.id === aptId) {
-      setSelectedAppointment({ ...selectedAppointment, status: newStatus });
+      setSelectedAppointment(prev => ({ ...prev, status: newStatus }));
     }
-    showToast(`Appointment #${aptId} marked as ${newStatus}`);
   };
 
   const filters = ["all", "In Service", "Waiting", "Confirmed", "Completed", "Cancelled"];

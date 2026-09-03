@@ -1,25 +1,33 @@
 import React, { useState } from 'react';
 import { ShieldCheck, Check, X, FileText, MapPin, Building, AlertCircle, Eye, CheckCircle2, XCircle } from 'lucide-react';
-import { ADMIN_STATS } from '../../data/sampleData';
+import { usePlatform } from '../../context/PlatformContext';
 
 export default function BusinessVerification() {
-  const [queue, setQueue] = useState(ADMIN_STATS.pendingVerifications);
-  const [selectedApp, setSelectedApp] = useState(queue[0]);
+  const { pendingVerifications, verifyBusinessApplication } = usePlatform();
+  const [localStatuses, setLocalStatuses] = useState({});
+  const [selectedApp, setSelectedApp] = useState(pendingVerifications[0] || null);
   const [filter, setFilter] = useState('all');
   const [feedback, setFeedback] = useState(null);
   const [previewDoc, setPreviewDoc] = useState(null);
 
+  const queue = pendingVerifications.map(item => ({
+    ...item,
+    status: localStatuses[item.id] || item.status || 'Pending'
+  }));
+
   const handleApprove = (id, name) => {
-    setQueue(queue.map(item => item.id === id ? { ...item, status: 'Approved ✓' } : item));
+    verifyBusinessApplication(id, 'approve');
+    setLocalStatuses(prev => ({ ...prev, [id]: 'Approved ✓' }));
     if (selectedApp?.id === id) {
       setSelectedApp(prev => ({ ...prev, status: 'Approved ✓' }));
     }
-    setFeedback({ message: `Verified Badge successfully granted to ${name}!`, type: 'success' });
+    setFeedback({ message: `Verified Badge successfully granted to ${name}! Added to live customer discovery.`, type: 'success' });
     setTimeout(() => setFeedback(null), 3000);
   };
 
   const handleReject = (id, name) => {
-    setQueue(queue.map(item => item.id === id ? { ...item, status: 'Rejected ✗' } : item));
+    verifyBusinessApplication(id, 'reject');
+    setLocalStatuses(prev => ({ ...prev, [id]: 'Rejected ✗' }));
     if (selectedApp?.id === id) {
       setSelectedApp(prev => ({ ...prev, status: 'Rejected ✗' }));
     }

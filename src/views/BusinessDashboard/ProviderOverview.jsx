@@ -1,17 +1,29 @@
 import React from 'react';
 import { Calendar, DollarSign, Users, Star, TrendingUp, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
-import { PROVIDER_STATS } from '../../data/sampleData';
+import { usePlatform } from '../../context/PlatformContext';
 
 export default function ProviderOverview({ onNavigateTab }) {
+  const { bookings, computedStats } = usePlatform();
+
+  // Filter today's bookings for Urban Cut Studio or all active bookings
+  const todaySchedule = bookings.slice(0, 5).map(b => ({
+    time: b.time || "02:30 PM",
+    customer: b.customer || b.customerName || "Customer",
+    service: b.serviceName || b.service || "Haircut",
+    staff: b.staffName || b.staff || "Rahul S.",
+    status: b.status || "Confirmed",
+    paid: `₹${b.totalPaid || b.price || 329}`
+  }));
+
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }} className="animate-fade-in">
       {/* Metric Cards Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
         {[
-          { title: "Today's Appointments", value: PROVIDER_STATS.todayAppointments, sub: "+4 vs yesterday", icon: <Calendar size={22} color="#4F46E5" />, bg: '#EEF2FF' },
-          { title: "Today's Revenue", value: `₹${PROVIDER_STATS.todayRevenue.toLocaleString()}`, sub: "+18% growth", icon: <DollarSign size={22} color="#10B981" />, bg: '#ECFDF5' },
-          { title: "Total Customers", value: PROVIDER_STATS.totalCustomers, sub: "92% repeat rate", icon: <Users size={22} color="#06B6D4" />, bg: '#ECFEFF' },
-          { title: "Average Rating", value: `${PROVIDER_STATS.rating} ★`, sub: "Based on 342 reviews", icon: <Star size={22} color="#F59E0B" />, bg: '#FFFBEB' }
+          { title: "Today's Appointments", value: bookings.length, sub: "Live synced with App", icon: <Calendar size={22} color="#4F46E5" />, bg: '#EEF2FF' },
+          { title: "Today's Revenue", value: `₹${computedStats.providerTodayRevenue.toLocaleString()}`, sub: "Including POS & Online", icon: <DollarSign size={22} color="#10B981" />, bg: '#ECFDF5' },
+          { title: "Active Bookings", value: computedStats.activeBookingsCount, sub: "Upcoming & In Service", icon: <Users size={22} color="#06B6D4" />, bg: '#ECFEFF' },
+          { title: "Average Rating", value: "4.9 ★", sub: "Based on 342 verified reviews", icon: <Star size={22} color="#F59E0B" />, bg: '#FFFBEB' }
         ].map((card, idx) => (
           <div
             key={idx}
@@ -46,15 +58,15 @@ export default function ProviderOverview({ onNavigateTab }) {
               <p style={{ fontSize: '0.8rem', color: '#64748B' }}>14 Aug 2026 • Real-time booking slots</p>
             </div>
             <button
-              onClick={() => onNavigateTab('calendar')}
-              style={{ fontSize: '0.82rem', fontWeight: 700, color: '#4F46E5' }}
+              onClick={() => onNavigateTab('appointments')}
+              style={{ fontSize: '0.82rem', fontWeight: 700, color: '#4F46E5', background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              Full Calendar →
+              All Appointments →
             </button>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {PROVIDER_STATS.scheduleToday.map((item, idx) => (
+            {todaySchedule.map((item, idx) => (
               <div
                 key={idx}
                 style={{

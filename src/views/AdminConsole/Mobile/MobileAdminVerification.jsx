@@ -1,21 +1,29 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { ShieldCheck, Check, X, FileText, MapPin, Building, AlertCircle, ChevronDown, ChevronUp, CheckCircle2, XCircle } from "lucide-react";
-import { ADMIN_STATS } from "../../../data/sampleData";
+import { usePlatform } from "../../../context/PlatformContext";
 
 export default function MobileAdminVerification() {
-  const [queue, setQueue] = useState(ADMIN_STATS.pendingVerifications);
-  const [expandedId, setExpandedId] = useState(queue[0]?.id || null);
+  const { pendingVerifications, verifyBusinessApplication } = usePlatform();
+  const [localStatuses, setLocalStatuses] = useState({});
+  const [expandedId, setExpandedId] = useState(pendingVerifications[0]?.id || null);
   const [filter, setFilter] = useState("all");
   const [feedback, setFeedback] = useState(null);
 
+  const queue = pendingVerifications.map(item => ({
+    ...item,
+    status: localStatuses[item.id] || item.status || 'Pending'
+  }));
+
   const handleApprove = (id, name) => {
-    setQueue(queue.map(item => item.id === id ? { ...item, status: "Approved ✓" } : item));
-    setFeedback(`Approved & Badge granted to ${name}!`);
+    verifyBusinessApplication(id, 'approve');
+    setLocalStatuses(prev => ({ ...prev, [id]: "Approved ✓" }));
+    setFeedback(`Approved & Badge granted to ${name}! Now live in Customer discovery.`);
     setTimeout(() => setFeedback(null), 2500);
   };
 
   const handleReject = (id, name) => {
-    setQueue(queue.map(item => item.id === id ? { ...item, status: "Rejected ✗" } : item));
+    verifyBusinessApplication(id, 'reject');
+    setLocalStatuses(prev => ({ ...prev, [id]: "Rejected ✗" }));
     setFeedback(`Application rejected for ${name}`);
     setTimeout(() => setFeedback(null), 2500);
   };

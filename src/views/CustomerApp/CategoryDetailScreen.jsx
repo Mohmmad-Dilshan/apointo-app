@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Search, Star, Clock, Heart, ShieldCheck, Filter, ChevronRight, Sparkles } from 'lucide-react';
-import { BUSINESSES, CATEGORIES } from '../../data/sampleData';
+import { CATEGORIES } from '../../data/sampleData';
+import { usePlatform } from '../../context/PlatformContext';
 
 export default function CategoryDetailScreen({ category, onBack, onSelectBusiness, favorites, onToggleFavorite }) {
+  const { businesses } = usePlatform();
   const [activeSubCategory, setActiveSubCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPill, setFilterPill] = useState('all');
@@ -84,7 +86,7 @@ export default function CategoryDetailScreen({ category, onBack, onSelectBusines
 
   const subCategories = subCategoriesMap[catObj.id] || subCategoriesMap.haircut;
 
-  const categoryBusinesses = BUSINESSES.filter(biz => {
+  const categoryBusinesses = (businesses || []).filter(biz => {
     const targetId = (catObj?.id || category?.id || category || '').toLowerCase();
     const targetName = (categoryTitleName || '').toLowerCase();
 

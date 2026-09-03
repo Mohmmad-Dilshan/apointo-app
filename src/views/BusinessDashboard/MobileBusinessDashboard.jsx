@@ -29,7 +29,10 @@ const TABS = [
   { id: "more", label: "More", icon: MoreHorizontal },
 ];
 
+import { usePlatform } from "../../context/PlatformContext";
+
 export default function MobileBusinessDashboard() {
+  const { createWalkInOrder, updateBookingStatus } = usePlatform();
   const [activeTab, setActiveTab] = useState("overview");
   const [isPOSOpen, setIsPOSOpen] = useState(false);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
@@ -41,12 +44,13 @@ export default function MobileBusinessDashboard() {
   };
 
   const handlePOSComplete = (invoice) => {
-    showToast(`Walk-in billing created for ${invoice.customerName} (₹${invoice.finalTotal})`);
+    createWalkInOrder(invoice);
     setIsPOSOpen(false);
   };
 
   const handleVerifySuccess = (apt) => {
-    showToast(`✓ Check-in verified for ${apt.customer} (#${apt.otp})`);
+    updateBookingStatus(apt.id, "In Service");
+    showToast(`✓ Check-in verified for ${apt.customer || 'Guest'} (#${apt.otp || 'OK'})`);
     setIsScannerOpen(false);
   };
 
