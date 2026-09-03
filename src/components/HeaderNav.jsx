@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Smartphone, Building2, ShieldCheck, Palette, Sparkles, Monitor, Apple, Bot } from 'lucide-react';
 import { usePlatform } from '../context/PlatformContext';
+import ThemeSelectorModal from './ThemeSelectorModal';
 
 export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceFrame, setIsDeviceFrame, deviceOs, setDeviceOs }) {
-  const { computedStats } = usePlatform();
+  const { computedStats, currentTheme, themesCatalog } = usePlatform();
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
+
+  const activeTheme = themesCatalog?.find((t) => t.id === currentTheme) || { name: 'Indigo Royal', emoji: '👑' };
 
   return (
     <header style={{
@@ -180,8 +184,32 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
         </button>
       </div>
 
-      {/* Simulator Frame Mode & OS Toggles */}
+      {/* Right Controls: Theme Selector + Simulator Frame Mode */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {/* Live Theme Switcher Button */}
+        <button
+          onClick={() => setIsThemeModalOpen(true)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '6px 12px',
+            borderRadius: '10px',
+            fontSize: '0.74rem',
+            fontWeight: 700,
+            color: '#FFFFFF',
+            background: 'linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(168,85,247,0.2) 100%)',
+            border: '1px solid rgba(168,85,247,0.4)',
+            cursor: 'pointer',
+            boxShadow: '0 2px 10px rgba(99,102,241,0.15)',
+            transition: 'all 0.2s'
+          }}
+          title="Preview & Switch App Color Themes"
+        >
+          <Palette size={14} color="#C084FC" />
+          <span>{activeTheme.emoji} {activeTheme.name}</span>
+        </button>
+
         {/* Device Frame Toggle */}
         <button
           onClick={() => setIsDeviceFrame(!isDeviceFrame)}
@@ -254,6 +282,12 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
           </div>
         )}
       </div>
+
+      {/* Live Theme Selector Modal */}
+      <ThemeSelectorModal
+        isOpen={isThemeModalOpen}
+        onClose={() => setIsThemeModalOpen(false)}
+      />
     </header>
   );
 }

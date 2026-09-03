@@ -8,6 +8,94 @@ import {
   PROVIDER_STATS as INITIAL_PROVIDER_STATS
 } from '../data/sampleData';
 
+export const THEMES_CATALOG = [
+  {
+    id: 'royal',
+    name: 'Indigo Royal',
+    emoji: '👑',
+    primary: '#4F46E5',
+    accent: '#6366F1',
+    gradient: 'linear-gradient(135deg, #0F172A 0%, #1E1B4B 60%, #311B92 100%)',
+    tag: 'Apple HIG Default',
+    desc: 'Deep Indigo & Midnight mesh gradient. Ultra-sleek, clean luxury aesthetic.',
+    colors: ['#0F172A', '#1E1B4B', '#4F46E5', '#6366F1', '#EEF2FF']
+  },
+  {
+    id: 'cyber',
+    name: 'Cyber Noir',
+    emoji: '🔮',
+    primary: '#8B5CF6',
+    accent: '#EC4899',
+    gradient: 'linear-gradient(135deg, #080C14 0%, #1A0B2E 60%, #3B0764 100%)',
+    tag: 'OLED Dark Mode',
+    desc: 'Futuristic night theme with cyber violet & neon pink radiant glows.',
+    colors: ['#080C14', '#1A0B2E', '#8B5CF6', '#EC4899', '#F472B6']
+  },
+  {
+    id: 'emerald',
+    name: 'Emerald Zen',
+    emoji: '🌿',
+    primary: '#059669',
+    accent: '#10B981',
+    gradient: 'linear-gradient(135deg, #022C22 0%, #064E3B 60%, #047857 100%)',
+    tag: 'Organic Wellness',
+    desc: 'Botanical jade & forest greens. Perfect for holistic spas and ayurvedic wellness.',
+    colors: ['#022C22', '#064E3B', '#059669', '#10B981', '#ECFDF5']
+  },
+  {
+    id: 'gold',
+    name: 'Champagne Gold',
+    emoji: '⚜️',
+    primary: '#D97706',
+    accent: '#F59E0B',
+    gradient: 'linear-gradient(135deg, #1C1917 0%, #292524 60%, #44403C 100%)',
+    tag: 'Imperial Luxury',
+    desc: 'Warm amber gold on obsidian stone. Designed for bridal salons and VIP studios.',
+    colors: ['#1C1917', '#292524', '#D97706', '#F59E0B', '#FEF3C7']
+  },
+  {
+    id: 'rose',
+    name: 'Sakura Glow',
+    emoji: '🌸',
+    primary: '#E11D48',
+    accent: '#FB7185',
+    gradient: 'linear-gradient(135deg, #4C0519 0%, #881337 60%, #BE123C 100%)',
+    tag: 'Cosmetic Beauty',
+    desc: 'Rose crimson & blush petals. Perfect for nail bars, skin clinics and beauty studios.',
+    colors: ['#4C0519', '#881337', '#E11D48', '#FB7185', '#FFF1F2']
+  },
+  {
+    id: 'sapphire',
+    name: 'Ocean Sapphire',
+    emoji: '💎',
+    primary: '#0284C7',
+    accent: '#38BDF8',
+    gradient: 'linear-gradient(135deg, #082F49 0%, #075985 60%, #0284C7 100%)',
+    tag: 'MedTech Clinical',
+    desc: 'Clean azure blue and arctic frost. Tailored for dental clinics and medical centers.',
+    colors: ['#082F49', '#075985', '#0284C7', '#38BDF8', '#F0F9FF']
+  },
+  {
+    id: 'sunset',
+    name: 'Sunset Coral',
+    emoji: '🌅',
+    primary: '#EA580C',
+    accent: '#F97316',
+    gradient: 'linear-gradient(135deg, #431407 0%, #7C2D12 60%, #C2410C 100%)',
+    tag: 'High Energy',
+    desc: 'Electric coral & warm tangerine. Designed for fitness gyms and active lifestyle.',
+    colors: ['#431407', '#7C2D12', '#EA580C', '#F97316', '#FFF7ED']
+  }
+];
+
+function hexToRgb(hex) {
+  const sanitized = hex.replace('#', '');
+  const r = parseInt(sanitized.substring(0, 2), 16);
+  const g = parseInt(sanitized.substring(2, 4), 16);
+  const b = parseInt(sanitized.substring(4, 6), 16);
+  return `${r}, ${g}, ${b}`;
+}
+
 const PlatformContext = createContext(null);
 
 export function PlatformProvider({ children }) {
@@ -19,11 +107,30 @@ export function PlatformProvider({ children }) {
   const [pendingVerifications, setPendingVerifications] = useState(INITIAL_ADMIN_STATS.pendingVerifications);
   const [favorites, setFavorites] = useState(['biz_1', 'biz_3']);
   const [toast, setToast] = useState(null);
+  const [currentTheme, setCurrentTheme] = useState('royal');
 
   // Quick Global Toast Trigger
   const showToast = (toastObj) => {
     setToast(typeof toastObj === 'string' ? { message: toastObj, type: 'info' } : toastObj);
     setTimeout(() => setToast(null), 3500);
+  };
+
+  // Switch Theme Dynamically Across the Platform
+  const switchTheme = (themeId) => {
+    const found = THEMES_CATALOG.find((t) => t.id === themeId);
+    if (!found) return;
+    setCurrentTheme(themeId);
+    document.documentElement.setAttribute('data-theme', themeId);
+    document.documentElement.style.setProperty('--primary-600', found.primary);
+    document.documentElement.style.setProperty('--primary-500', found.accent);
+    document.documentElement.style.setProperty('--header-gradient', found.gradient);
+    document.documentElement.style.setProperty('--brand-gradient', `linear-gradient(135deg, ${found.primary} 0%, ${found.accent} 100%)`);
+    document.documentElement.style.setProperty('--card-glow', `rgba(${hexToRgb(found.primary)}, 0.28)`);
+    document.documentElement.style.setProperty('--border-focus', found.primary);
+    showToast({
+      message: `Theme switched to ${found.name} ${found.emoji}!`,
+      type: 'success'
+    });
   };
 
   // 1. Customer Booking Actions
@@ -447,7 +554,10 @@ export function PlatformProvider({ children }) {
     computedStats,
     automationSettings,
     automationLogs,
+    currentTheme,
+    themesCatalog: THEMES_CATALOG,
     // Actions
+    switchTheme,
     showToast,
     createBooking,
     updateBookingStatus,

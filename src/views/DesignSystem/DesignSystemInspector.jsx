@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Palette, Sparkles, Check, Heart, Star, Search, Clock, ShieldCheck, Copy } from 'lucide-react';
+import { Palette, Sparkles, Check, Heart, Star, Search, Clock, ShieldCheck, Copy, Wand2 } from 'lucide-react';
 import { CardSkeleton } from '../../components/SkeletonLoader';
 import EmptyState from '../../components/EmptyState';
+import { usePlatform } from '../../context/PlatformContext';
 
 export default function DesignSystemInspector() {
+  const { currentTheme, switchTheme, themesCatalog } = usePlatform();
   const [copiedHex, setCopiedHex] = useState(null);
 
   const handleCopy = (hex) => {
@@ -30,8 +32,8 @@ export default function DesignSystemInspector() {
             <Palette size={26} color="#FFFFFF" />
           </div>
           <div>
-            <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0F172A' }}>Apo UI Design System</h1>
-            <p style={{ fontSize: '0.9rem', color: '#64748B' }}>Design tokens, color semantics, typography & component library</p>
+            <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0F172A' }}>Apo UI Design System & Themes Explorer</h1>
+            <p style={{ fontSize: '0.9rem', color: '#64748B' }}>Design tokens, typography, 7 curated luxury theme presets, and component library</p>
           </div>
         </div>
       </div>
@@ -82,6 +84,90 @@ export default function DesignSystemInspector() {
                   <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#0F172A' }}>{c.name}</div>
                   <div style={{ fontSize: '0.78rem', color: '#4F46E5', fontWeight: 700, fontFamily: 'monospace' }}>{c.hex}</div>
                   <p style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '4px' }}>{c.role}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Interactive Multi-Theme Presets Switcher */}
+      <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '28px', border: '1px solid #E2E8F0', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span>Curated Theme Presets Showcase</span>
+              <span style={{ fontSize: '0.72rem', background: '#EEF2FF', color: '#4F46E5', padding: '3px 10px', borderRadius: '999px', fontWeight: 800 }}>
+                7 Presets Available
+              </span>
+            </h2>
+            <p style={{ fontSize: '0.8rem', color: '#64748B' }}>Click any theme card to test how the entire app morphs dynamically in real-time</p>
+          </div>
+
+          <span style={{ fontSize: '0.84rem', fontWeight: 800, color: '#4F46E5', background: '#EEF2FF', padding: '6px 14px', borderRadius: '10px' }}>
+            Current Active: {themesCatalog.find((t) => t.id === currentTheme)?.name}
+          </span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: '16px' }}>
+          {themesCatalog.map((th) => {
+            const isSelected = th.id === currentTheme;
+            return (
+              <div
+                key={th.id}
+                onClick={() => switchTheme(th.id)}
+                style={{
+                  borderRadius: '20px',
+                  border: isSelected ? `2px solid ${th.primary}` : '1px solid #E2E8F0',
+                  overflow: 'hidden',
+                  cursor: 'pointer',
+                  background: isSelected ? '#F8FAFC' : '#FFFFFF',
+                  boxShadow: isSelected ? `0 8px 24px ${th.primary}30` : '0 2px 8px rgba(0,0,0,0.04)',
+                  transition: 'all 0.2s',
+                  position: 'relative'
+                }}
+              >
+                <div style={{ height: '54px', background: th.gradient, padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '1.4rem' }}>{th.emoji}</span>
+                  <span style={{ fontSize: '0.68rem', background: 'rgba(255,255,255,0.25)', color: '#FFFFFF', padding: '2px 8px', borderRadius: '999px', fontWeight: 800 }}>
+                    {th.tag}
+                  </span>
+                </div>
+
+                <div style={{ padding: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <h3 style={{ fontSize: '0.98rem', fontWeight: 800, color: '#0F172A' }}>{th.name}</h3>
+                    {isSelected && (
+                      <span style={{ background: '#ECFDF5', color: '#059669', fontSize: '0.7rem', fontWeight: 800, padding: '2px 8px', borderRadius: '999px', display: 'flex', alignItems: 'center', gap: '3px' }}>
+                        <Check size={12} strokeWidth={3} /> Active
+                      </span>
+                    )}
+                  </div>
+
+                  <p style={{ fontSize: '0.74rem', color: '#64748B', minHeight: '34px', marginBottom: '12px' }}>
+                    {th.desc}
+                  </p>
+
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #F1F5F9', paddingTop: '10px' }}>
+                    <div style={{ display: 'flex', gap: '4px' }}>
+                      {th.colors.map((col, i) => (
+                        <span key={i} style={{ width: '16px', height: '16px', borderRadius: '50%', backgroundColor: col, display: 'inline-block', border: '1px solid rgba(0,0,0,0.1)' }} />
+                      ))}
+                    </div>
+                    <button
+                      style={{
+                        padding: '4px 12px',
+                        borderRadius: '8px',
+                        fontSize: '0.72rem',
+                        fontWeight: 800,
+                        background: isSelected ? th.primary : '#F1F5F9',
+                        color: isSelected ? '#FFFFFF' : '#475569',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {isSelected ? 'Applied' : 'Preview Theme'}
+                    </button>
+                  </div>
                 </div>
               </div>
             );
