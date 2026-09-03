@@ -15,8 +15,6 @@ import {
 } from "lucide-react";
 
 export default function WalkInPOSModal({ isOpen, onClose, onCompleteBooking }) {
-  if (!isOpen) return null;
-
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [selectedSpecialist, setSelectedSpecialist] = useState("Rahul Sharma");
@@ -25,6 +23,8 @@ export default function WalkInPOSModal({ isOpen, onClose, onCompleteBooking }) {
   const [paymentMethod, setPaymentMethod] = useState("Cash");
   const [isInvoiceGenerated, setIsInvoiceGenerated] = useState(false);
   const [createdInvoiceData, setCreatedInvoiceData] = useState(null);
+
+  if (!isOpen) return null;
 
   const availableServices = [
     { name: "Classic Haircut & Styling", price: 299, duration: "45m" },

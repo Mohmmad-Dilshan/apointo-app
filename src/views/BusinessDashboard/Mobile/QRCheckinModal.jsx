@@ -12,13 +12,16 @@ import {
   Sparkles
 } from "lucide-react";
 
-export default function QRCheckinModal({ isOpen, onClose, onVerifySuccess }) {
-  if (!isOpen) return null;
+import { usePlatform } from "../../../context/PlatformContext";
 
+export default function QRCheckinModal({ isOpen, onClose, onVerifySuccess }) {
+  const { bookings } = usePlatform();
   const [enteredOtp, setEnteredOtp] = useState("");
   const [verifiedAppointment, setVerifiedAppointment] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [scanMode, setScanMode] = useState("camera"); // 'camera' | 'otp'
+
+  if (!isOpen) return null;
 
   const mockDatabase = [
     { otp: "4892", id: "APT-98241", customer: "Dilshan Perera", service: "Classic Haircut & Styling", staff: "Rahul Sharma", time: "02:30 PM", price: "₹329" },
@@ -28,10 +31,18 @@ export default function QRCheckinModal({ isOpen, onClose, onVerifySuccess }) {
 
   const handleVerifyOtp = (codeToVerify) => {
     const code = codeToVerify || enteredOtp;
-    const match = mockDatabase.find(m => m.otp === code);
+    const match = (bookings || []).find(b => b.otp === code || b.id === code) || mockDatabase.find(m => m.otp === code);
 
     if (match) {
-      setVerifiedAppointment(match);
+      setVerifiedAppointment({
+        id: match.id,
+        customer: match.customer || match.customerName || "Customer",
+        service: match.serviceName || match.service || "Service",
+        staff: match.staffName || match.staff || "Specialist",
+        time: match.time || "02:30 PM",
+        price: `₹${match.totalPaid || match.price || 329}`,
+        otp: match.otp || "4892"
+      });
       setErrorMessage(null);
     } else {
       setErrorMessage("Invalid Check-in Pass or OTP. Please check with customer.");
