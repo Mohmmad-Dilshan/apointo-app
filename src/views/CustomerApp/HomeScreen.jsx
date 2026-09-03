@@ -4,10 +4,14 @@ import { CATEGORIES } from '../../data/sampleData';
 import { usePlatform } from '../../context/PlatformContext';
 
 export default function HomeScreen({ user, onOpenLocation, onOpenNotifications, onNavigateScreen, onSelectCategory, onSelectBusiness, favorites, onToggleFavorite, onQuickRebook, onOpenVoiceSearch }) {
-  const { businesses } = usePlatform();
+  const { businesses, bookings } = usePlatform();
   const [activeFilterPill, setActiveFilterPill] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  const activeBooking = (bookings || []).find(
+    (b) => b.status === 'Confirmed' || b.status === 'Waiting in Lounge' || b.status === 'In Service'
+  );
 
   const heroBanners = [
     {
@@ -160,12 +164,64 @@ export default function HomeScreen({ user, onOpenLocation, onOpenNotifications, 
         </div>
 
         {/* Greeting Banner */}
-        <div style={{ marginBottom: '18px' }}>
+        <div style={{ marginBottom: activeBooking ? '12px' : '18px' }}>
           <h1 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
             Good morning, {user.firstName} 👋
           </h1>
           <p style={{ fontSize: '0.82rem', color: '#C7D2FE' }}>Book trusted services near you in seconds</p>
         </div>
+
+        {/* Live Active Booking Tracker Card */}
+        {activeBooking && (
+          <div
+            onClick={() => onNavigateScreen('bookings')}
+            style={{
+              marginBottom: '16px',
+              background: 'rgba(255, 255, 255, 0.14)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              borderRadius: '18px',
+              padding: '12px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              cursor: 'pointer',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.2)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Clock size={18} color="#A5B4FC" />
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{
+                    fontSize: '0.64rem',
+                    background: activeBooking.status === 'In Service' ? '#10B981' : activeBooking.status === 'Waiting in Lounge' ? '#F59E0B' : '#6366F1',
+                    color: '#FFFFFF',
+                    padding: '1px 6px',
+                    borderRadius: '4px',
+                    fontWeight: 800
+                  }}>
+                    {activeBooking.status}
+                  </span>
+                  <span style={{ fontSize: '0.68rem', color: '#C7D2FE', fontWeight: 700 }}>
+                    {activeBooking.time} Today
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#FFFFFF', marginTop: '2px' }}>
+                  {activeBooking.serviceName} • {activeBooking.businessName}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#C7D2FE', fontSize: '0.74rem', fontWeight: 800 }}>
+              <span>Pass</span>
+              <ChevronRight size={14} />
+            </div>
+          </div>
+        )}
 
         {/* Translucent Glass Search Bar Input with Voice Trigger */}
         <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>

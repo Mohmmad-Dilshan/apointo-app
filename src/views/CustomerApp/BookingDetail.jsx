@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, Clock, MapPin, Phone, RefreshCw, XCircle, QrCode, ShieldCheck, ChevronRight, Download, Share2, Wallet, CheckCircle2, Navigation, AlertCircle, Sparkles } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, MapPin, Phone, RefreshCw, XCircle, QrCode, ShieldCheck, ChevronRight, Download, Share2, Wallet, CheckCircle2, Navigation, AlertCircle, Sparkles, Copy } from 'lucide-react';
 import RescheduleModal from './RescheduleModal';
 import CancelModal from './CancelModal';
+import { usePlatform } from '../../context/PlatformContext';
 
 export default function BookingDetail({ booking, onBack, onReschedule, onCancel, onBookAgain }) {
+  const { customerCheckIn } = usePlatform();
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [downloadToast, setDownloadToast] = useState(null);
+  const [copiedOtp, setCopiedOtp] = useState(false);
 
   if (!booking) return null;
+
+  const handleCopyOtp = () => {
+    navigator.clipboard?.writeText(booking.otp || '4892');
+    setCopiedOtp(true);
+    setTimeout(() => setCopiedOtp(false), 2000);
+  };
 
   const handleDownloadInvoice = () => {
     setDownloadToast("Downloading Invoice PDF...");
@@ -114,38 +123,106 @@ export default function BookingDetail({ booking, onBack, onReschedule, onCancel,
 
       <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
         
-        {/* Live Queue Status Banner */}
+        {/* Live Queue / In Lounge / In Service Status Banner */}
         {booking.status === 'Confirmed' && (
           <div style={{
             background: 'linear-gradient(135deg, #4F46E5 0%, #4338CA 100%)',
+            borderRadius: '20px',
+            padding: '16px 18px',
+            color: '#FFFFFF',
+            boxShadow: '0 8px 24px rgba(79,70,229,0.3)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '12px',
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Clock size={20} color="#FFFFFF" />
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.86rem', fontWeight: 800 }}>Live Queue Position: #2</div>
+                  <div style={{ fontSize: '0.74rem', color: '#C7D2FE', marginTop: '1px' }}>Est. Wait: 12 mins • Arrive by 02:20 PM</div>
+                </div>
+              </div>
+              <span style={{ fontSize: '0.7rem', background: '#ECFDF5', color: '#059669', padding: '3px 8px', borderRadius: '999px', fontWeight: 800 }}>
+                On Time
+              </span>
+            </div>
+
+            {/* Arrived at Venue Button */}
+            <button
+              onClick={() => customerCheckIn(booking.id)}
+              style={{
+                width: '100%',
+                background: '#FFFFFF',
+                color: '#4F46E5',
+                border: 'none',
+                padding: '10px 16px',
+                borderRadius: '12px',
+                fontWeight: 800,
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+              }}
+            >
+              <MapPin size={16} />
+              <span>I've Arrived at Venue (Notify Reception)</span>
+            </button>
+          </div>
+        )}
+
+        {booking.status === 'Waiting in Lounge' && (
+          <div style={{
+            background: 'linear-gradient(135deg, #D97706 0%, #B45309 100%)',
             borderRadius: '20px',
             padding: '14px 18px',
             color: '#FFFFFF',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            boxShadow: '0 8px 24px rgba(79,70,229,0.3)'
+            gap: '12px',
+            boxShadow: '0 8px 24px rgba(217,119,6,0.25)'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '12px',
-                background: 'rgba(255, 255, 255, 0.2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <Clock size={20} color="#FFFFFF" />
-              </div>
-              <div>
-                <div style={{ fontSize: '0.84rem', fontWeight: 800 }}>Live Queue Position: #2</div>
-                <div style={{ fontSize: '0.74rem', color: '#C7D2FE', marginTop: '1px' }}>Est. Wait: 12 mins • Arrive by 02:20 PM</div>
-              </div>
+            <div style={{ width: '36px', height: '36px', borderRadius: '12px', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <CheckCircle2 size={20} color="#FFFFFF" />
             </div>
-            <span style={{ fontSize: '0.7rem', background: '#ECFDF5', color: '#059669', padding: '3px 8px', borderRadius: '999px', fontWeight: 800 }}>
-              On Time
-            </span>
+            <div>
+              <div style={{ fontSize: '0.86rem', fontWeight: 800 }}>Checked in at Reception Lounge</div>
+              <div style={{ fontSize: '0.74rem', color: '#FEF3C7', marginTop: '1px' }}>Station being prepped. Specialist will call you shortly!</div>
+            </div>
+          </div>
+        )}
+
+        {booking.status === 'In Service' && (
+          <div style={{
+            background: 'linear-gradient(135deg, #10B981 0%, #047857 100%)',
+            borderRadius: '20px',
+            padding: '14px 18px',
+            color: '#FFFFFF',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            boxShadow: '0 8px 24px rgba(16,185,129,0.25)'
+          }}>
+            <div style={{ width: '36px', height: '36px', borderRadius: '12px', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Sparkles size={20} color="#FFFFFF" />
+            </div>
+            <div>
+              <div style={{ fontSize: '0.86rem', fontWeight: 800 }}>Currently In Service 💈</div>
+              <div style={{ fontSize: '0.74rem', color: '#D1FAE5', marginTop: '1px' }}>Enjoy your premium service experience!</div>
+            </div>
           </div>
         )}
 
@@ -165,8 +242,8 @@ export default function BookingDetail({ booking, onBack, onReschedule, onCancel,
               <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0F172A', marginTop: '2px' }}>{booking.status}</div>
             </div>
 
-            <span className={`badge ${booking.status === 'Confirmed' || booking.status === 'Upcoming' ? 'badge-success' : booking.status === 'Completed' ? 'badge-primary' : 'badge-danger'}`} style={{ padding: '6px 14px', fontSize: '0.82rem', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-              {booking.status === 'Confirmed' || booking.status === 'Upcoming' ? '🟢 Confirmed' : booking.status === 'Completed' ? '✅ Completed' : '❌ Cancelled'}
+            <span className={`badge ${booking.status === 'Confirmed' || booking.status === 'Upcoming' ? 'badge-success' : booking.status === 'Waiting in Lounge' ? 'badge-warning' : booking.status === 'Completed' ? 'badge-primary' : 'badge-danger'}`} style={{ padding: '6px 14px', fontSize: '0.82rem', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+              {booking.status === 'Confirmed' || booking.status === 'Upcoming' ? '🟢 Confirmed' : booking.status === 'Waiting in Lounge' ? '🟡 In Lounge' : booking.status === 'In Service' ? '🟣 In Service' : booking.status === 'Completed' ? '✅ Completed' : '❌ Cancelled'}
             </span>
           </div>
 
@@ -174,16 +251,32 @@ export default function BookingDetail({ booking, onBack, onReschedule, onCancel,
           {booking.status !== 'Cancelled' && (
             <div style={{ background: '#F8FAFC', borderRadius: '20px', padding: '18px', textAlign: 'center', border: '1px solid #F1F5F9', marginBottom: '18px' }}>
               <div style={{ fontSize: '0.86rem', fontWeight: 800, color: '#0F172A', marginBottom: '2px' }}>Counter Check-in Pass</div>
-              <p style={{ fontSize: '0.76rem', color: '#64748B', marginBottom: '14px' }}>Scan QR or verify OTP code at reception</p>
+              <p style={{ fontSize: '0.76rem', color: '#64748B', marginBottom: '14px' }}>Scan QR or tap to copy OTP code</p>
 
               <div style={{ width: '145px', height: '145px', margin: '0 auto 12px', background: '#FFFFFF', padding: '10px', borderRadius: '20px', boxShadow: '0 6px 18px rgba(0,0,0,0.06)', border: '1px solid #E2E8F0' }}>
                 <img src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${booking.id}`} alt="QR Code" style={{ width: '100%', height: '100%' }} />
               </div>
 
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#EEF2FF', border: '1px solid #C7D2FE', color: '#4F46E5', padding: '5px 16px', borderRadius: '999px', fontSize: '0.84rem', fontWeight: 800 }}>
-                <ShieldCheck size={15} />
-                <span>Desk OTP: {booking.otp || '4892'}</span>
-              </div>
+              <button
+                onClick={handleCopyOtp}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: copiedOtp ? '#ECFDF5' : '#EEF2FF',
+                  border: copiedOtp ? '1px solid #A7F3D0' : '1px solid #C7D2FE',
+                  color: copiedOtp ? '#059669' : '#4F46E5',
+                  padding: '6px 18px',
+                  borderRadius: '999px',
+                  fontSize: '0.84rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {copiedOtp ? <CheckCircle2 size={15} /> : <Copy size={15} />}
+                <span>{copiedOtp ? 'OTP Copied! ✓' : `Desk OTP: ${booking.otp || '4892'}`}</span>
+              </button>
             </div>
           )}
 

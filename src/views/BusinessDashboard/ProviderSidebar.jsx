@@ -1,9 +1,10 @@
 import React from 'react';
-import { LayoutDashboard, Calendar, ClipboardList, Scissors, Users, UserCheck, CreditCard, Tag, BarChart3, Star, Settings } from 'lucide-react';
+import { LayoutDashboard, Calendar, ClipboardList, Zap, Scissors, Users, UserCheck, CreditCard, Tag, BarChart3, Star, Settings } from 'lucide-react';
 
 export default function ProviderSidebar({ activeTab, setActiveTab }) {
   const menuItems = [
     { id: 'overview', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
+    { id: 'automations', label: 'Smart Automations ⚡', icon: <Zap size={18} /> },
     { id: 'calendar', label: 'Live Calendar', icon: <Calendar size={18} /> },
     { id: 'appointments', label: 'Appointments', icon: <ClipboardList size={18} /> },
     { id: 'services', label: 'Services Catalog', icon: <Scissors size={18} /> },

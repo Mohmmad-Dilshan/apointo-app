@@ -21,11 +21,21 @@ import {
   Phone,
   Sparkles,
   Layers,
-  X
+  X,
+  Zap,
+  Bot
 } from "lucide-react";
-import { PROVIDER_STATS } from "../../../data/sampleData";
+import { usePlatform } from "../../../context/PlatformContext";
 
-export default function MobileOverview({ onNavigateTab, onOpenPOS, onOpenScanner, onOpenQueueModal, onOpenPayoutModal }) {
+export default function MobileOverview({ onNavigateTab, onOpenPOS, onOpenScanner, onOpenAutomations }) {
+  const {
+    bookings,
+    computedStats,
+    updateBookingStatus,
+    callNextInQueue,
+    automationSettings
+  } = usePlatform();
+
   const [greeting] = useState(() => {
     const h = new Date().getHours();
     if (h < 12) return "Good Morning";
@@ -33,12 +43,18 @@ export default function MobileOverview({ onNavigateTab, onOpenPOS, onOpenScanner
     return "Good Evening";
   });
 
-  const [schedule, setSchedule] = useState([
-    { id: "apt_1", time: "09:00 AM", customer: "Vikram Malhotra", phone: "+91 98111 22334", service: "Classic Haircut & Beard Trim", staff: "Rahul Sharma", status: "In Service", paid: "₹499", duration: "45 min", otp: "4892" },
-    { id: "apt_2", time: "10:30 AM", customer: "Arjun Kapoor", phone: "+91 98123 45678", service: "Beard Crafting Combo", staff: "Vikram Singh", status: "Waiting", paid: "₹349", duration: "30 min", otp: "1923" },
-    { id: "apt_3", time: "02:30 PM", customer: "Dilshan Perera", phone: "+91 98765 43210", service: "Classic Haircut & Styling", staff: "Rahul Sharma", status: "Confirmed", paid: "₹329", duration: "45 min", otp: "8821" },
-    { id: "apt_4", time: "04:00 PM", customer: "Siddharth Nair", phone: "+91 97766 55443", service: "Royal Deluxe Grooming Package", staff: "Priya Verma", status: "Confirmed", paid: "₹899", duration: "90 min", otp: "3104" }
-  ]);
+  const schedule = bookings.map(b => ({
+    id: b.id,
+    time: b.time || "02:30 PM",
+    customer: b.customer || b.customerName || "Customer",
+    phone: b.customerPhone || "+91 98765 43210",
+    service: b.serviceName || b.service || "Classic Haircut",
+    staff: b.staffName || b.staff || "Rahul Sharma",
+    status: b.status || "Confirmed",
+    paid: `₹${b.totalPaid || b.price || 329}`,
+    duration: b.duration || "45 min",
+    otp: b.otp || "4892"
+  }));
 
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [onlineBookingsEnabled, setOnlineBookingsEnabled] = useState(true);
@@ -50,7 +66,7 @@ export default function MobileOverview({ onNavigateTab, onOpenPOS, onOpenScanner
   };
 
   const handleUpdateStatus = (aptId, newStatus) => {
-    setSchedule(schedule.map(s => s.id === aptId ? { ...s, status: newStatus } : s));
+    updateBookingStatus(aptId, newStatus);
     if (selectedAppointment && selectedAppointment.id === aptId) {
       setSelectedAppointment({ ...selectedAppointment, status: newStatus });
     }
@@ -58,15 +74,15 @@ export default function MobileOverview({ onNavigateTab, onOpenPOS, onOpenScanner
   };
 
   const metrics = [
-    { label: "Today Appts", value: "18", sub: "+4 vs yesterday", icon: <Calendar size={18} color="#4F46E5" />, bg: "#EEF2FF", color: "#4F46E5" },
-    { label: "Today Revenue", value: "₹42,850", sub: "92% of daily target", icon: <TrendingUp size={18} color="#10B981" />, bg: "#ECFDF5", color: "#10B981" },
-    { label: "Active Clients", value: "1,240", sub: "88% retention rate", icon: <Users size={18} color="#06B6D4" />, bg: "#ECFEFF", color: "#06B6D4" },
-    { label: "Average Rating", value: "4.9 ★", sub: "342 verified reviews", icon: <Star size={18} color="#F59E0B" />, bg: "#FFFBEB", color: "#F59E0B" },
+    { label: "Today Appts", value: String(computedStats.totalBookingsCount), sub: "+4 vs yesterday", icon: <Calendar size={18} color="#4F46E5" />, bg: "#EEF2FF", color: "#4F46E5" },
+    { label: "Today Revenue", value: `₹${computedStats.providerTodayRevenue.toLocaleString('en-IN')}`, sub: "94% of daily target", icon: <TrendingUp size={18} color="#10B981" />, bg: "#ECFDF5", color: "#10B981" },
+    { label: "Active Queue", value: String(computedStats.activeBookingsCount), sub: `${computedStats.waitingCount || 0} in lounge`, icon: <Users size={18} color="#06B6D4" />, bg: "#ECFEFF", color: "#06B6D4" },
+    { label: "Rating & Reviews", value: "4.9 ★", sub: "342 verified reviews", icon: <Star size={18} color="#F59E0B" />, bg: "#FFFBEB", color: "#F59E0B" },
   ];
 
   const statusBadge = (st) => {
     if (st === "In Service") return { color: "#4F46E5", bg: "#EEF2FF", label: "In Service" };
-    if (st === "Waiting") return { color: "#D97706", bg: "#FFFBEB", label: "In Lounge" };
+    if (st === "Waiting" || st === "Waiting in Lounge") return { color: "#D97706", bg: "#FFFBEB", label: "In Lounge" };
     if (st === "Completed") return { color: "#059669", bg: "#ECFDF5", label: "Completed" };
     return { color: "#6366F1", bg: "#F1F5F9", label: "Confirmed" };
   };
@@ -172,11 +188,11 @@ export default function MobileOverview({ onNavigateTab, onOpenPOS, onOpenScanner
             </div>
           </div>
 
-          {/* Quick Action Matrix Banner */}
+          {/* Quick Action Matrix Banner (3 Columns) */}
           <div style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "8px",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: "6px",
             marginTop: "12px"
           }}>
             {/* Walk-in POS Button */}
@@ -186,21 +202,23 @@ export default function MobileOverview({ onNavigateTab, onOpenPOS, onOpenScanner
                 background: "linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)",
                 border: "1px solid rgba(255,255,255,0.25)",
                 borderRadius: "14px",
-                padding: "10px 12px",
+                padding: "8px 6px",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
-                gap: "8px",
+                justifyContent: "center",
+                gap: "4px",
                 color: "#FFFFFF",
                 boxShadow: "0 4px 14px rgba(79,70,229,0.4)",
                 cursor: "pointer"
               }}
             >
-              <div style={{ width: "30px", height: "30px", borderRadius: "9px", background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Plus size={18} color="#FFFFFF" />
+              <div style={{ width: "26px", height: "26px", borderRadius: "8px", background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Plus size={15} color="#FFFFFF" />
               </div>
-              <div style={{ textAlign: "left" }}>
-                <div style={{ fontSize: "0.82rem", fontWeight: 800 }}>Walk-in POS</div>
-                <div style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.8)" }}>Quick Billing</div>
+              <div style={{ textAlign: "center" }}>
+                <div style={{ fontSize: "0.72rem", fontWeight: 800 }}>Walk-in POS</div>
+                <div style={{ fontSize: "0.56rem", color: "rgba(255,255,255,0.8)" }}>Quick Bill</div>
               </div>
             </button>
 
@@ -211,22 +229,96 @@ export default function MobileOverview({ onNavigateTab, onOpenPOS, onOpenScanner
                 background: "rgba(255, 255, 255, 0.14)",
                 border: "1px solid rgba(255,255,255,0.25)",
                 borderRadius: "14px",
-                padding: "10px 12px",
+                padding: "8px 6px",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
-                gap: "8px",
+                justifyContent: "center",
+                gap: "4px",
                 color: "#FFFFFF",
                 backdropFilter: "blur(10px)",
                 cursor: "pointer"
               }}
             >
-              <div style={{ width: "30px", height: "30px", borderRadius: "9px", background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <QrCode size={17} color="#FFFFFF" />
+              <div style={{ width: "26px", height: "26px", borderRadius: "8px", background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <QrCode size={15} color="#FFFFFF" />
               </div>
-              <div style={{ textAlign: "left" }}>
-                <div style={{ fontSize: "0.82rem", fontWeight: 800 }}>Check-in Pass</div>
-                <div style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.8)" }}>Scan QR / OTP</div>
+              <div style={{ textAlign: "center" }}>
+                <div style={{ fontSize: "0.72rem", fontWeight: 800 }}>Check-in</div>
+                <div style={{ fontSize: "0.56rem", color: "rgba(255,255,255,0.8)" }}>Scan Pass</div>
               </div>
+            </button>
+
+            {/* Smart Automations AI Button */}
+            <button
+              onClick={onOpenAutomations}
+              style={{
+                background: "rgba(255, 255, 255, 0.14)",
+                border: "1px solid rgba(255,255,255,0.25)",
+                borderRadius: "14px",
+                padding: "8px 6px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "4px",
+                color: "#FFFFFF",
+                backdropFilter: "blur(10px)",
+                cursor: "pointer"
+              }}
+            >
+              <div style={{ width: "26px", height: "26px", borderRadius: "8px", background: "rgba(245,158,11,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Zap size={15} color="#FBBF24" />
+              </div>
+              <div style={{ textAlign: "center" }}>
+                <div style={{ fontSize: "0.72rem", fontWeight: 800 }}>Auto AI</div>
+                <div style={{ fontSize: "0.56rem", color: "#FDE68A" }}>{Object.values(automationSettings).filter(Boolean).length}/6 Active</div>
+              </div>
+            </button>
+          </div>
+
+          {/* Smart Queue Dispatcher Alert Bar */}
+          <div style={{
+            marginTop: "10px",
+            background: "rgba(255, 255, 255, 0.12)",
+            backdropFilter: "blur(12px)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            borderRadius: "14px",
+            padding: "8px 12px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10B981" }} />
+              <div>
+                <div style={{ fontSize: "0.76rem", fontWeight: 800, color: "#FFFFFF" }}>
+                  {computedStats.waitingCount > 0 ? `${computedStats.waitingCount} Waiting in Lounge` : "Smart Queue Active"}
+                </div>
+                <div style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.7)" }}>
+                  Auto-dispatch & chair caller
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={callNextInQueue}
+              style={{
+                background: "#10B981",
+                color: "#FFFFFF",
+                border: "none",
+                borderRadius: "8px",
+                padding: "5px 10px",
+                fontSize: "0.72rem",
+                fontWeight: 800,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "4px"
+              }}
+            >
+              <Bot size={13} />
+              <span>Call Next</span>
             </button>
           </div>
         </div>

@@ -293,7 +293,110 @@ export function PlatformProvider({ children }) {
     });
   };
 
-  // 7. Dynamic Real-time Calculations
+  // 7. Business Automations & Smart Rules Engine
+  const [automationSettings, setAutomationSettings] = useState({
+    autoConfirm: true,
+    whatsappReminders: true,
+    smartStaffDispatch: true,
+    offPeakDynamicYield: false,
+    autoLoyaltyCashback: true,
+    autoReviewCollector: true,
+  });
+
+  const [automationLogs, setAutomationLogs] = useState([
+    { id: 1, time: "10:45 AM", rule: "WhatsApp Automation", action: "Sent 2-hr pre-arrival reminder to Dilshan Perera (+91 98765 43210)", status: "Delivered", icon: "💬" },
+    { id: 2, time: "10:30 AM", rule: "Smart Dispatcher", action: "Auto-assigned walk-in guest to Vikram Singh (workload: 40%)", status: "Executed", icon: "⚡" },
+    { id: 3, time: "09:45 AM", rule: "Loyalty Cashback", action: "Credited 150 reward points to Vikram Malhotra post service", status: "Success", icon: "🎁" },
+    { id: 4, time: "09:00 AM", rule: "Auto Confirm", action: "Instant confirmation granted for online booking APT-98241", status: "Confirmed", icon: "✅" }
+  ]);
+
+  const toggleAutomation = (ruleKey) => {
+    setAutomationSettings((prev) => {
+      const nextVal = !prev[ruleKey];
+      const logEntry = {
+        id: Date.now(),
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        rule: "Rule Modified",
+        action: `Manager toggled '${ruleKey}' to ${nextVal ? 'ACTIVE 🟢' : 'DISABLED 🔴'}`,
+        status: nextVal ? "Active" : "Disabled",
+        icon: "⚙️"
+      };
+      setAutomationLogs((logs) => [logEntry, ...logs]);
+      showToast({
+        message: `Automation updated: ${ruleKey} is now ${nextVal ? 'Enabled' : 'Disabled'}`,
+        type: nextVal ? 'success' : 'info'
+      });
+      return { ...prev, [ruleKey]: nextVal };
+    });
+  };
+
+  // 1-Click Queue Advance: Calls next waiting customer into service
+  const callNextInQueue = () => {
+    const nextCandidate = bookings.find(b => b.status === "Waiting in Lounge" || b.status === "Waiting") ||
+                          bookings.find(b => b.status === "Confirmed");
+    if (!nextCandidate) {
+      showToast({ message: "No waiting appointments in queue!", type: "info" });
+      return null;
+    }
+
+    updateBookingStatus(nextCandidate.id, "In Service");
+
+    const logEntry = {
+      id: Date.now(),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      rule: "Queue Automation",
+      action: `Advanced #${nextCandidate.id} (${nextCandidate.customer || nextCandidate.customerName || 'Client'}) to Chair 1 (${nextCandidate.staffName || 'Specialist'})`,
+      status: "In Service",
+      icon: "📢"
+    };
+    setAutomationLogs((logs) => [logEntry, ...logs]);
+
+    // Send urgent alert to Customer
+    const urgentNotif = {
+      id: `notif_${Date.now()}`,
+      type: "alert",
+      title: "Your Chair is Ready! 💈",
+      message: `${nextCandidate.staffName || 'Your specialist'} is ready for you now at Chair 1. Please proceed inside!`,
+      time: "Just now",
+      read: false
+    };
+    setNotifications((prev) => [urgentNotif, ...prev]);
+
+    showToast({
+      message: `Called ${nextCandidate.customer || 'Client'} to Chair! Live status updated.`,
+      type: "success"
+    });
+
+    return nextCandidate;
+  };
+
+  // Customer Self Check-in from Boarding Pass ("I've Arrived")
+  const customerCheckIn = (bookingId) => {
+    updateBookingStatus(bookingId, "Waiting in Lounge");
+
+    const logEntry = {
+      id: Date.now(),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      rule: "Self Check-in",
+      action: `Customer arrived at reception for #${bookingId}. Waiting in lounge.`,
+      status: "In Lounge",
+      icon: "📍"
+    };
+    setAutomationLogs((logs) => [logEntry, ...logs]);
+
+    showToast({
+      message: "Reception notified! Take a seat in the lounge. Specialist alerted.",
+      type: "success"
+    });
+  };
+
+  // Clear automation logs
+  const clearAutomationLogs = () => {
+    setAutomationLogs([]);
+    showToast({ message: "Automation activity logs cleared.", type: "info" });
+  };
+
+  // 8. Dynamic Real-time Calculations
   const computedStats = useMemo(() => {
     // Total gross booking value
     const totalGmv = bookings.reduce((sum, b) => sum + (Number(b.totalPaid) || Number(b.price) || 0), 0);
@@ -301,8 +404,10 @@ export function PlatformProvider({ children }) {
     const netPlatformRevenue = Math.round(totalGmv * 0.10);
     // Active (upcoming/confirmed/in-service) bookings count
     const activeBookingsCount = bookings.filter(
-      (b) => b.status === "Confirmed" || b.status === "In Service" || b.status === "In Progress"
+      (b) => b.status === "Confirmed" || b.status === "In Service" || b.status === "In Progress" || b.status === "Waiting in Lounge"
     ).length;
+    // Waiting count
+    const waitingCount = bookings.filter(b => b.status === "Waiting in Lounge" || b.status === "Waiting").length;
     // Completed count
     const completedBookingsCount = bookings.filter((b) => b.status === "Completed").length;
     // Provider specific revenue for 'Urban Cut Studio'
@@ -314,6 +419,7 @@ export function PlatformProvider({ children }) {
       totalGmv,
       netPlatformRevenue,
       activeBookingsCount,
+      waitingCount,
       completedBookingsCount,
       totalBookingsCount: bookings.length,
       providerTodayRevenue,
@@ -339,6 +445,8 @@ export function PlatformProvider({ children }) {
     toast,
     setToast,
     computedStats,
+    automationSettings,
+    automationLogs,
     // Actions
     showToast,
     createBooking,
@@ -348,7 +456,11 @@ export function PlatformProvider({ children }) {
     createWalkInOrder,
     verifyBusinessApplication,
     sendAdminBroadcast,
-    submitReview
+    submitReview,
+    toggleAutomation,
+    callNextInQueue,
+    customerCheckIn,
+    clearAutomationLogs
   };
 
   return <PlatformContext.Provider value={value}>{children}</PlatformContext.Provider>;

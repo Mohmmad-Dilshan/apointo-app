@@ -19,6 +19,7 @@ import MobileServices from "./Mobile/MobileServices";
 import MobileMore from "./Mobile/MobileMore";
 import WalkInPOSModal from "./Mobile/WalkInPOSModal";
 import QRCheckinModal from "./Mobile/QRCheckinModal";
+import MobileAutomationsModal from "./Mobile/MobileAutomationsModal";
 
 const TABS = [
   { id: "overview", label: "Home", icon: LayoutDashboard },
@@ -36,6 +37,7 @@ export default function MobileBusinessDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isPOSOpen, setIsPOSOpen] = useState(false);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [isAutomationsOpen, setIsAutomationsOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
 
   const showToast = (msg) => {
@@ -87,6 +89,7 @@ export default function MobileBusinessDashboard() {
             onNavigateTab={setActiveTab}
             onOpenPOS={() => setIsPOSOpen(true)}
             onOpenScanner={() => setIsScannerOpen(true)}
+            onOpenAutomations={() => setIsAutomationsOpen(true)}
           />
         )}
         {activeTab === "calendar" && (
@@ -117,6 +120,12 @@ export default function MobileBusinessDashboard() {
         isOpen={isScannerOpen}
         onClose={() => setIsScannerOpen(false)}
         onVerifySuccess={handleVerifySuccess}
+      />
+
+      {/* Smart Automations Modal */}
+      <MobileAutomationsModal
+        isOpen={isAutomationsOpen}
+        onClose={() => setIsAutomationsOpen(false)}
       />
 
       {/* Apple iOS / Android Floating Glass Bottom Navigation Dock */}

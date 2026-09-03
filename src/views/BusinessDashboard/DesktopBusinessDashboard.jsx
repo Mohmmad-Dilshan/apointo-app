@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ProviderHeader from './ProviderHeader';
 import ProviderSidebar from './ProviderSidebar';
 import ProviderOverview from './ProviderOverview';
+import ProviderAutomations from './ProviderAutomations';
 import ProviderCalendar from './ProviderCalendar';
 import ProviderAppointments from './ProviderAppointments';
 import ProviderServices from './ProviderServices';
@@ -23,6 +24,7 @@ export default function DesktopBusinessDashboard() {
         <ProviderSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <main style={{ flex: 1, overflowY: 'auto', minWidth: 0 }}>
           {activeTab === 'overview' && <ProviderOverview onNavigateTab={setActiveTab} />}
+          {activeTab === 'automations' && <ProviderAutomations />}
           {activeTab === 'calendar' && <ProviderCalendar />}
           {activeTab === 'appointments' && <ProviderAppointments />}
           {activeTab === 'services' && <ProviderServices />}
