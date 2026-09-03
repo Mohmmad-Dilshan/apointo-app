@@ -3,6 +3,8 @@ import HeaderNav from './components/HeaderNav';
 import MobileFrame from './components/MobileFrame';
 import Toast from './components/Toast';
 import VoiceSearchModal from './components/VoiceSearchModal';
+import FloatingThemeBar from './components/FloatingThemeBar';
+import ThemeSelectorModal from './components/ThemeSelectorModal';
 import { PlatformProvider, usePlatform } from './context/PlatformContext';
 
 /* Customer App Screens */
@@ -73,6 +75,7 @@ function AppContent() {
   const [isDeviceFrame, setIsDeviceFrame] = useState(true);
   const [deviceOs, setDeviceOs] = useState('ios'); // 'ios' | 'android'
   const [isVoiceSearchOpen, setIsVoiceSearchOpen] = useState(false);
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
 
   // Customer Screen Router
   const [customerScreen, setCustomerScreen] = useState('home');
@@ -527,6 +530,15 @@ function AppContent() {
       {activePlatform === 'design-system' && (
         <DesignSystemInspector />
       )}
+
+      {/* Floating Theme Quick Bar for Instant 1-Tap Switching */}
+      <FloatingThemeBar onOpenFullModal={() => setIsThemeModalOpen(true)} />
+
+      {/* Global Live Theme Explorer Modal */}
+      <ThemeSelectorModal
+        isOpen={isThemeModalOpen}
+        onClose={() => setIsThemeModalOpen(false)}
+      />
     </div>
   );
 }

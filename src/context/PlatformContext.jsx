@@ -85,6 +85,39 @@ export const THEMES_CATALOG = [
     tag: 'High Energy',
     desc: 'Electric coral & warm tangerine. Designed for fitness gyms and active lifestyle.',
     colors: ['#431407', '#7C2D12', '#EA580C', '#F97316', '#FFF7ED']
+  },
+  {
+    id: 'noir',
+    name: 'Noir Titanium',
+    emoji: '🖤',
+    primary: '#18181B',
+    accent: '#71717A',
+    gradient: 'linear-gradient(135deg, #09090B 0%, #18181B 60%, #27272A 100%)',
+    tag: 'Monochrome Luxe',
+    desc: 'High-fashion Chanel/Apple obsidian minimalism with ultra-clean titanium contrasts.',
+    colors: ['#09090B', '#18181B', '#27272A', '#71717A', '#F4F4F5']
+  },
+  {
+    id: 'nordic',
+    name: 'Nordic Ice Cyan',
+    emoji: '🌊',
+    primary: '#0891B2',
+    accent: '#06B6D4',
+    gradient: 'linear-gradient(135deg, #083344 0%, #0E7490 60%, #06B6D4 100%)',
+    tag: 'Scandinavian Calm',
+    desc: 'Glacial arctic cyan & deep sea teal. Invigorating feel for contemporary spas.',
+    colors: ['#083344', '#0E7490', '#0891B2', '#06B6D4', '#ECFEFF']
+  },
+  {
+    id: 'mocha',
+    name: 'Velvet Mocha',
+    emoji: '☕',
+    primary: '#7F4F24',
+    accent: '#9C6644',
+    gradient: 'linear-gradient(135deg, #2B1810 0%, #4A2810 60%, #7F4F24 100%)',
+    tag: 'Warm Vintage',
+    desc: 'Rich cappuccino latte & roasted cedar. Ideal for artisan vintage barbershops.',
+    colors: ['#2B1810', '#4A2810', '#7F4F24', '#9C6644', '#FAF5F0']
   }
 ];
 
