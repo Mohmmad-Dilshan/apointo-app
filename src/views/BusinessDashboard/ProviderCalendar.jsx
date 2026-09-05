@@ -1,18 +1,32 @@
 import React, { useState } from 'react';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, Filter, UserCheck, Clock } from 'lucide-react';
+import { usePlatform } from '../../context/PlatformContext';
 
 export default function ProviderCalendar() {
+  const { bookings } = usePlatform();
   const [viewMode, setViewMode] = useState('Day'); // 'Day' | 'Week' | 'Month'
   const [selectedStaff, setSelectedStaff] = useState('all');
 
   const hours = ["09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM"];
 
-  const appointments = [
-    { hour: "09:00 AM", customer: "Vikram R.", service: "Classic Haircut", staff: "Rahul S.", color: "#4F46E5", duration: "45m" },
-    { hour: "10:00 AM", customer: "Arjun K.", service: "Beard Crafting", staff: "Vikram S.", color: "#06B6D4", duration: "30m" },
-    { hour: "02:00 PM", customer: "Dilshan P.", service: "Classic Haircut & Styling", staff: "Rahul S.", color: "#10B981", duration: "45m" },
-    { hour: "05:00 PM", customer: "Siddharth N.", service: "Royal Deluxe Package", staff: "Priya V.", color: "#F59E0B", duration: "90m" }
-  ];
+  const appointments = (bookings || []).map((b, i) => {
+    const rawTime = b.time || "02:30 PM";
+    const hourPrefix = rawTime.split(":")[0];
+    const ampm = rawTime.includes("PM") ? "PM" : "AM";
+    const slotHour = `${hourPrefix.padStart(2, '0')}:00 ${ampm}`;
+    const colors = ["#4F46E5", "#06B6D4", "#10B981", "#F59E0B", "#EC4899"];
+
+    return {
+      id: b.id,
+      hour: hours.includes(slotHour) ? slotHour : hours[i % hours.length],
+      customer: b.customer || b.customerName || "Customer",
+      service: b.serviceName || b.service || "Service",
+      staff: b.staffName || b.staff || "Rahul S.",
+      color: colors[i % colors.length],
+      duration: b.duration || "45m",
+      status: b.status
+    };
+  });
 
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }} className="animate-fade-in">

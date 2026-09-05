@@ -135,17 +135,32 @@ function AppContent() {
     setCustomerScreen('summary');
   };
 
-  const handleProceedToPayment = () => {
+  const [finalBookingDraft, setFinalBookingDraft] = useState(null);
+
+  const handleProceedToPayment = (draft) => {
+    setFinalBookingDraft(draft);
     setCustomerScreen('payment');
   };
 
-  const handlePaymentSuccess = () => {
-    const newBooking = createBooking({
+  const handlePaymentSuccess = (paymentResult) => {
+    const draft = finalBookingDraft || {
       business: currentBusiness,
       service: selectedService || currentBusiness.services[0],
       staff: selectedStaff,
       dateTime: selectedDateTime,
+      addons: selectedAddons,
       totalAmount: (selectedService?.price || 299) + 20
+    };
+
+    const newBooking = createBooking({
+      business: draft.business || currentBusiness,
+      service: draft.service || selectedService || currentBusiness.services[0],
+      staff: draft.staff || selectedStaff,
+      dateTime: draft.dateTime || selectedDateTime,
+      addons: draft.addons || selectedAddons,
+      discount: draft.discount || 0,
+      paymentMethod: paymentResult?.paymentMethod || "UPI (Google Pay)",
+      totalAmount: paymentResult?.totalAmount || draft.totalAmount || ((draft.service?.price || 299) + 20)
     });
 
     setActiveBookingDetail(newBooking);
@@ -326,7 +341,7 @@ function AppContent() {
 
           {customerScreen === 'payment' && (
             <PaymentScreen
-              bookingData={{ totalAmount: selectedService.price + 20 }}
+              bookingData={finalBookingDraft || { totalAmount: (selectedService?.price || 299) + 20 }}
               onBack={() => setCustomerScreen('summary')}
               onPaymentSuccess={handlePaymentSuccess}
             />
@@ -334,12 +349,12 @@ function AppContent() {
 
           {customerScreen === 'success' && (
             <BookingSuccess
-              bookingData={{
+              bookingData={activeBookingDetail || finalBookingDraft || {
                 business: selectedBusiness,
                 service: selectedService,
                 staff: selectedStaff,
                 dateTime: selectedDateTime,
-                totalAmount: selectedService.price + 20
+                totalAmount: (selectedService?.price || 299) + 20
               }}
               onViewBooking={() => setCustomerScreen('booking-detail')}
               onHome={() => setCustomerScreen('home')}

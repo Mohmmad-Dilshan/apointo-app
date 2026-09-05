@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
-import { Smartphone, Building2, ShieldCheck, Palette, Sparkles, Monitor, Apple, Bot } from 'lucide-react';
+import { Smartphone, Building2, ShieldCheck, Palette, Sparkles, Monitor, Apple, Bot, RotateCcw, Zap } from 'lucide-react';
 import { usePlatform } from '../context/PlatformContext';
 import ThemeSelectorModal from './ThemeSelectorModal';
 
 export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceFrame, setIsDeviceFrame, deviceOs, setDeviceOs }) {
-  const { computedStats, currentTheme, themesCatalog } = usePlatform();
+  const { computedStats, currentTheme, themesCatalog, resetDemoData } = usePlatform();
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   const activeTheme = themesCatalog?.find((t) => t.id === currentTheme) || { name: 'Indigo Royal', emoji: '👑' };
+
+  const handleReset = () => {
+    if (window.confirm('Reset all demo bookings, added services, staff, and coupons back to default state?')) {
+      setIsResetting(true);
+      resetDemoData();
+      setTimeout(() => {
+        setIsResetting(false);
+      }, 600);
+    }
+  };
 
   return (
     <header style={{
@@ -186,6 +197,55 @@ export default function HeaderNav({ activePlatform, setActivePlatform, isDeviceF
 
       {/* Right Controls: Theme Selector + Simulator Frame Mode */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {/* Real-time sync badge */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '5px',
+          background: 'rgba(16, 185, 129, 0.12)',
+          border: '1px solid rgba(16, 185, 129, 0.3)',
+          color: '#34D399',
+          padding: '4px 8px',
+          borderRadius: '8px',
+          fontSize: '0.7rem',
+          fontWeight: 700
+        }} title="Customer & Business states are synchronized in real-time">
+          <span style={{
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            background: '#10B981',
+            boxShadow: '0 0 8px #10B981'
+          }} />
+          <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+            Live Sync <Zap size={11} fill="#10B981" />
+          </span>
+        </div>
+
+        {/* Reset Demo Data Button */}
+        <button
+          onClick={handleReset}
+          disabled={isResetting}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            padding: '6px 10px',
+            borderRadius: '10px',
+            fontSize: '0.72rem',
+            fontWeight: 700,
+            color: '#F87171',
+            background: 'rgba(239, 68, 68, 0.12)',
+            border: '1px solid rgba(239, 68, 68, 0.25)',
+            cursor: isResetting ? 'wait' : 'pointer',
+            transition: 'all 0.2s'
+          }}
+          title="Reset demo bookings, added services, staff & coupons to default"
+        >
+          <RotateCcw size={13} className={isResetting ? 'animate-spin' : ''} />
+          <span>{isResetting ? 'Resetting...' : 'Reset Demo'}</span>
+        </button>
+
         {/* Live Theme Switcher Button */}
         <button
           onClick={() => setIsThemeModalOpen(true)}

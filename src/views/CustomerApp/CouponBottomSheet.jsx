@@ -1,11 +1,26 @@
 import React, { useState } from 'react';
 import { X, Tag, Check } from 'lucide-react';
-import { COUPONS } from '../../data/sampleData';
+import { usePlatform } from '../../context/PlatformContext';
 
 export default function CouponBottomSheet({ isOpen, onClose, onApplyCoupon, appliedCoupon }) {
+  const { coupons = [] } = usePlatform();
   const [promoInput, setPromoInput] = useState('');
 
   if (!isOpen) return null;
+
+  const activeCoupons = coupons.filter(c => c.isActive !== false);
+
+  const handleApplyCustom = () => {
+    if (!promoInput.trim()) return;
+    const matched = activeCoupons.find(c => c.code.toUpperCase() === promoInput.trim().toUpperCase()) || {
+      code: promoInput.toUpperCase(),
+      amount: 100,
+      title: `Code ${promoInput.toUpperCase()}`,
+      description: 'Special platform coupon'
+    };
+    onApplyCoupon(matched);
+    onClose();
+  };
 
   return (
     <div style={{
@@ -61,18 +76,15 @@ export default function CouponBottomSheet({ isOpen, onClose, onApplyCoupon, appl
           </div>
 
           <button
-            onClick={() => {
-              const matched = COUPONS.find(c => c.code === promoInput) || { code: promoInput, amount: 100, title: `Code ${promoInput}` };
-              onApplyCoupon(matched);
-              onClose();
-            }}
+            onClick={handleApplyCustom}
             style={{
               padding: '12px 20px',
               borderRadius: '14px',
               background: '#4F46E5',
               color: '#FFFFFF',
               fontSize: '0.88rem',
-              fontWeight: 700
+              fontWeight: 700,
+              cursor: 'pointer'
             }}
           >
             Apply
@@ -81,7 +93,7 @@ export default function CouponBottomSheet({ isOpen, onClose, onApplyCoupon, appl
 
         {/* Coupons List */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {COUPONS.map(c => {
+          {activeCoupons.map(c => {
             const isApplied = appliedCoupon?.code === c.code;
             return (
               <div

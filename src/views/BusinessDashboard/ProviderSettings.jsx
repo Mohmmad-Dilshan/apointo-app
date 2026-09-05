@@ -1,20 +1,29 @@
 import React, { useState } from 'react';
 import { Save, Building, MapPin, Clock, ShieldCheck, Camera, Phone, Globe, Share2, Star, ChevronRight, Check } from 'lucide-react';
-import { BUSINESSES } from '../../data/sampleData';
+import { usePlatform } from '../../context/PlatformContext';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const OPEN_HOURS = { Mon: '9:00 AM', Tue: '9:00 AM', Wed: '9:00 AM', Thu: '9:00 AM', Fri: '9:00 AM', Sat: '10:00 AM', Sun: null };
 const CLOSE_HOURS = { Mon: '8:00 PM', Tue: '8:00 PM', Wed: '8:00 PM', Thu: '8:00 PM', Fri: '8:00 PM', Sat: '6:00 PM', Sun: null };
 
 export default function ProviderSettings() {
-  const biz = BUSINESSES[0] || {};
+  const { businesses, updateBusinessProfile } = usePlatform();
+  const biz = businesses.find(b => b.id === 'biz_1') || businesses[0] || {};
   const [saved, setSaved] = useState(false);
+  const [bizName, setBizName] = useState(biz.name || 'Urban Cut Studio');
+  const [bizAddress, setBizAddress] = useState(biz.address || '100 Feet Rd, Indiranagar, Bengaluru');
+  const [bizPhone, setBizPhone] = useState(biz.phone || '+91 80001 00000');
   const [schedule, setSchedule] = useState(
     DAYS.reduce((acc, d) => ({ ...acc, [d]: OPEN_HOURS[d] !== null }), {})
   );
   const [activeSection, setActiveSection] = useState('profile');
 
   const handleSave = () => {
+    updateBusinessProfile(biz.id, {
+      name: bizName,
+      address: bizAddress,
+      phone: bizPhone
+    });
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };

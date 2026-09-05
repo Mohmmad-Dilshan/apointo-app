@@ -5,7 +5,9 @@ import EmptyState from '../../components/EmptyState';
 export default function BookingsTab({ bookings, onSelectBooking, onBookAgain, onOpenReview }) {
   const [activeSubTab, setActiveSubTab] = useState('upcoming');
 
-  const upcomingBookings = bookings.filter(b => b.status === 'Confirmed' || b.status === 'Upcoming');
+  const upcomingBookings = bookings.filter(
+    b => b.status === 'Confirmed' || b.status === 'Upcoming' || b.status === 'Waiting in Lounge' || b.status === 'In Service'
+  );
   const completedBookings = bookings.filter(b => b.status === 'Completed');
   const cancelledBookings = bookings.filter(b => b.status === 'Cancelled');
 

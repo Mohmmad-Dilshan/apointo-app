@@ -1,24 +1,41 @@
 import React, { useState } from 'react';
-import { Plus, UserCheck, Star, Calendar, ToggleLeft, Phone, Clock, MoreVertical, TrendingUp, Award, Edit3 } from 'lucide-react';
-import { BUSINESSES } from '../../data/sampleData';
+import { Plus, UserCheck, Star, Calendar, ToggleLeft, Phone, Clock, MoreVertical, TrendingUp, Award, Edit3, X, Check } from 'lucide-react';
+import { usePlatform } from '../../context/PlatformContext';
 
 const SHIFT_COLORS = ['#6366F1', '#10B981', '#F59E0B', '#EC4899'];
 
 export default function ProviderStaff() {
-  const staff = (BUSINESSES[0]?.staff || []).map((s, i) => ({
+  const { businesses, addBusinessStaff, toggleBusinessStaffActive } = usePlatform();
+  const currentBiz = businesses.find(b => b.id === 'biz_1') || businesses[0];
+  const staffList = (currentBiz?.staff || []).map((s, i) => ({
     ...s,
-    active: true,
-    phone: `+91 9876${String(543200 + i).padStart(6, '0')}`,
-    shift: '09:00 AM – 07:00 PM',
-    commission: `${15 + i * 2}%`,
-    bookingsToday: Math.floor(4 + Math.random() * 5),
+    active: s.active ?? true,
+    phone: s.phone || `+91 9876${String(543200 + i).padStart(6, '0')}`,
+    shift: s.shift || '09:00 AM – 07:00 PM',
+    commission: s.commission || `${15 + i * 2}%`,
+    bookingsToday: s.bookingsToday || Math.floor(4 + (i * 2)),
     color: SHIFT_COLORS[i % SHIFT_COLORS.length]
   }));
 
-  const [staffList, setStaffList] = useState(staff);
   const [activeTab, setActiveTab] = useState('all');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newStaffName, setNewStaffName] = useState('');
+  const [newStaffRole, setNewStaffRole] = useState('Senior Stylist');
+  const [newStaffExp, setNewStaffExp] = useState('5 yrs');
 
-  const toggleActive = (id) => setStaffList(prev => prev.map(s => s.id === id ? { ...s, active: !s.active } : s));
+  const toggleActive = (id) => toggleBusinessStaffActive(currentBiz.id, id);
+
+  const handleAddStaff = (e) => {
+    e.preventDefault();
+    if (!newStaffName.trim()) return;
+    addBusinessStaff(currentBiz.id, {
+      name: newStaffName.trim(),
+      role: newStaffRole,
+      experience: newStaffExp
+    });
+    setNewStaffName('');
+    setIsModalOpen(false);
+  };
 
   const filtered = activeTab === 'all' ? staffList : activeTab === 'active' ? staffList.filter(s => s.active) : staffList.filter(s => !s.active);
 
@@ -29,15 +46,19 @@ export default function ProviderStaff() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h2 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em' }}>👥 Staff Management</h2>
-          <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '2px' }}>Stylists, schedules & commissions</p>
+          <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '2px' }}>Stylists, schedules & commissions (Live synced to Customer App)</p>
         </div>
-        <button style={{
-          padding: '10px 18px', borderRadius: '14px',
-          background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
-          color: '#FFFFFF', fontSize: '0.84rem', fontWeight: 800,
-          display: 'flex', alignItems: 'center', gap: '6px',
-          boxShadow: '0 6px 18px rgba(79,70,229,0.35)'
-        }}>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          style={{
+            padding: '10px 18px', borderRadius: '14px',
+            background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
+            color: '#FFFFFF', fontSize: '0.84rem', fontWeight: 800,
+            display: 'flex', alignItems: 'center', gap: '6px',
+            boxShadow: '0 6px 18px rgba(79,70,229,0.35)',
+            cursor: 'pointer'
+          }}
+        >
           <Plus size={16} /> Add Staff
         </button>
       </div>
@@ -151,6 +172,72 @@ export default function ProviderStaff() {
           </div>
         ))}
       </div>
+
+      {/* Add Staff Modal */}
+      {isModalOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(4px)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '24px', width: '100%', maxWidth: '420px' }} className="animate-pop">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0F172A' }}>Add Stylist / Specialist</h3>
+              <button onClick={() => setIsModalOpen(false)} style={{ padding: '6px', borderRadius: '50%', background: '#F1F5F9', border: 'none', cursor: 'pointer' }}>
+                <X size={18} color="#64748B" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddStaff} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>Specialist Full Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Sameer Khan"
+                  value={newStaffName}
+                  onChange={(e) => setNewStaffName(e.target.value)}
+                  required
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', border: '1px solid #CBD5E1', fontSize: '0.88rem' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>Designation / Role</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Master Stylist & Beard Artist"
+                  value={newStaffRole}
+                  onChange={(e) => setNewStaffRole(e.target.value)}
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', border: '1px solid #CBD5E1', fontSize: '0.88rem' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>Experience</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 6 yrs"
+                  value={newStaffExp}
+                  onChange={(e) => setNewStaffExp(e.target.value)}
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', border: '1px solid #CBD5E1', fontSize: '0.88rem' }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  style={{ flex: 1, padding: '12px', borderRadius: '12px', border: '1px solid #E2E8F0', background: '#F8FAFC', color: '#64748B', fontWeight: 700, cursor: 'pointer' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{ flex: 2, padding: '12px', borderRadius: '12px', border: 'none', background: 'linear-gradient(135deg, #6366F1, #4F46E5)', color: '#FFFFFF', fontWeight: 800, cursor: 'pointer' }}
+                >
+                  Add to Salon
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

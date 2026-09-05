@@ -9,8 +9,11 @@ export default function PaymentScreen({ bookingData, onBack, onPaymentSuccess })
     setIsProcessing(true);
     setTimeout(() => {
       setIsProcessing(false);
-      onPaymentSuccess();
-    }, 1200);
+      const methodLabel = selectedMethod === 'gpay' ? 'UPI (Google Pay)' :
+                          selectedMethod === 'phonepe' ? 'UPI (PhonePe)' :
+                          selectedMethod === 'card' ? 'Credit/Debit Card' : 'Cash at Desk';
+      onPaymentSuccess({ paymentMethod: methodLabel, totalAmount: amount });
+    }, 1000);
   };
 
   const amount = bookingData?.totalAmount || 329;

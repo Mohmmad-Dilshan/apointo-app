@@ -1,24 +1,52 @@
 import React, { useState } from 'react';
-import { Plus, Tag, Flame, Percent, Copy, Eye, Trash2, ToggleLeft, ToggleRight, TrendingUp, Users, Zap } from 'lucide-react';
-
-const CAMPAIGNS = [
-  { id: 'c1', code: 'URBAN100', title: 'Flat ₹100 OFF Haircuts', type: 'flat', discount: '₹100', uses: 84, maxUses: 200, status: 'active', expires: '31 Aug 2026', color: '#6366F1', bg: '#EEF2FF', revenue: '₹8,400' },
-  { id: 'c2', code: 'BEAUTY20', title: '20% OFF Facial Combos', type: 'percent', discount: '20%', uses: 42, maxUses: 100, status: 'active', expires: '20 Aug 2026', color: '#10B981', bg: '#ECFDF5', revenue: '₹6,200' },
-  { id: 'c3', code: 'FIRSTCUT', title: 'New Member: Free Wash', type: 'free', discount: 'Free', uses: 15, maxUses: 50, status: 'active', expires: '01 Sep 2026', color: '#F59E0B', bg: '#FEF3C7', revenue: '₹2,850' },
-  { id: 'c4', code: 'SUMMER25', title: 'Summer Flash 25% OFF', type: 'percent', discount: '25%', uses: 120, maxUses: 120, status: 'expired', expires: '10 Aug 2026', color: '#94A3B8', bg: '#F1F5F9', revenue: '₹18,000' }
-];
+import { Plus, Tag, Flame, Percent, Copy, Eye, Trash2, ToggleLeft, ToggleRight, TrendingUp, Users, Zap, X, Check } from 'lucide-react';
+import { usePlatform } from '../../context/PlatformContext';
 
 export default function ProviderOffers() {
-  const [campaigns, setCampaigns] = useState(CAMPAIGNS);
-  const [activeTab, setActiveTab] = useState('active');
+  const { coupons = [], addBusinessCoupon, toggleBusinessCoupon, deleteBusinessCoupon } = usePlatform();
+  const [activeTab, setActiveTab] = useState('all');
   const [copied, setCopied] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newCode, setNewCode] = useState('');
+  const [newTitle, setNewTitle] = useState('');
+  const [newAmount, setNewAmount] = useState('100');
+  const [newMinOrder, setNewMinOrder] = useState('399');
 
-  const toggleStatus = (id) => setCampaigns(prev => prev.map(c => c.id === id ? { ...c, status: c.status === 'active' ? 'paused' : 'active' } : c));
-  const deleteCampaign = (id) => setCampaigns(prev => prev.filter(c => c.id !== id));
+  const campaigns = coupons.map((c, i) => ({
+    id: c.id || c.code,
+    code: c.code,
+    title: c.title || `Flat ₹${c.amount || 100} OFF`,
+    type: c.type || 'flat',
+    discount: `₹${c.amount || 100}`,
+    uses: c.uses || (10 + (i * 12)),
+    maxUses: c.maxUses || 200,
+    status: c.isActive === false ? 'paused' : 'active',
+    expires: '31 Aug 2026',
+    color: ['#6366F1', '#10B981', '#F59E0B', '#EC4899'][i % 4],
+    bg: ['#EEF2FF', '#ECFDF5', '#FEF3C7', '#FDF2F8'][i % 4],
+    revenue: `₹${Math.round((c.uses || 15) * (c.amount || 100) * 1.5).toLocaleString()}`
+  }));
+
+  const toggleStatus = (id) => toggleBusinessCoupon(id);
+  const deleteCampaign = (id) => deleteBusinessCoupon(id);
   const copyCode = (code) => { setCopied(code); setTimeout(() => setCopied(null), 1500); };
 
-  const filtered = campaigns.filter(c => activeTab === 'active' ? c.status === 'active' : activeTab === 'paused' ? c.status === 'paused' : c.status === 'expired');
-  const totalRevenue = campaigns.filter(c => c.status === 'active').reduce((sum, c) => sum + parseInt(c.revenue.replace(/[^0-9]/g, '')), 0);
+  const handleCreateCoupon = (e) => {
+    e.preventDefault();
+    if (!newCode.trim()) return;
+    addBusinessCoupon({
+      code: newCode.trim(),
+      title: newTitle.trim() || `Flat ₹${newAmount} OFF`,
+      amount: Number(newAmount) || 100,
+      minOrder: Number(newMinOrder) || 299
+    });
+    setNewCode('');
+    setNewTitle('');
+    setIsModalOpen(false);
+  };
+
+  const filtered = activeTab === 'all' ? campaigns : campaigns.filter(c => c.status === activeTab);
+  const totalRevenue = campaigns.filter(c => c.status === 'active').reduce((sum, c) => sum + parseInt(c.revenue.replace(/[^0-9]/g, '') || 0), 0);
   const totalUses = campaigns.filter(c => c.status === 'active').reduce((sum, c) => sum + c.uses, 0);
 
   return (
@@ -28,15 +56,19 @@ export default function ProviderOffers() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h2 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em' }}>🏷️ Marketing & Offers</h2>
-          <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '2px' }}>Promo codes, campaigns & conversions</p>
+          <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '2px' }}>Promo codes & discounts (Live synced to Customer Checkout)</p>
         </div>
-        <button style={{
-          padding: '10px 18px', borderRadius: '14px',
-          background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
-          color: '#FFFFFF', fontSize: '0.84rem', fontWeight: 800,
-          display: 'flex', alignItems: 'center', gap: '6px',
-          boxShadow: '0 6px 18px rgba(79,70,229,0.35)'
-        }}>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          style={{
+            padding: '10px 18px', borderRadius: '14px',
+            background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
+            color: '#FFFFFF', fontSize: '0.84rem', fontWeight: 800,
+            display: 'flex', alignItems: 'center', gap: '6px',
+            boxShadow: '0 6px 18px rgba(79,70,229,0.35)',
+            cursor: 'pointer'
+          }}
+        >
           <Plus size={16} /> New Campaign
         </button>
       </div>
@@ -148,6 +180,84 @@ export default function ProviderOffers() {
           </div>
         ))}
       </div>
+
+      {/* Create Promo Campaign Modal */}
+      {isModalOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(4px)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '24px', width: '100%', maxWidth: '420px' }} className="animate-pop">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0F172A' }}>Launch Promo Code</h3>
+              <button onClick={() => setIsModalOpen(false)} style={{ padding: '6px', borderRadius: '50%', background: '#F1F5F9', border: 'none', cursor: 'pointer' }}>
+                <X size={18} color="#64748B" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateCoupon} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>Coupon Code</label>
+                <input
+                  type="text"
+                  placeholder="e.g. FESTIVE150"
+                  value={newCode}
+                  onChange={(e) => setNewCode(e.target.value.toUpperCase())}
+                  required
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', border: '1px solid #CBD5E1', fontSize: '0.95rem', fontWeight: 800, letterSpacing: '0.05em' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>Campaign Title</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Flat ₹150 OFF Monsoon Special"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', border: '1px solid #CBD5E1', fontSize: '0.88rem' }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div>
+                  <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>Discount (₹)</label>
+                  <input
+                    type="number"
+                    value={newAmount}
+                    onChange={(e) => setNewAmount(e.target.value)}
+                    required
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', border: '1px solid #CBD5E1', fontSize: '0.88rem' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>Min Order (₹)</label>
+                  <input
+                    type="number"
+                    value={newMinOrder}
+                    onChange={(e) => setNewMinOrder(e.target.value)}
+                    required
+                    style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', border: '1px solid #CBD5E1', fontSize: '0.88rem' }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  style={{ flex: 1, padding: '12px', borderRadius: '12px', border: '1px solid #E2E8F0', background: '#F8FAFC', color: '#64748B', fontWeight: 700, cursor: 'pointer' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{ flex: 2, padding: '12px', borderRadius: '12px', border: 'none', background: 'linear-gradient(135deg, #6366F1, #4F46E5)', color: '#FFFFFF', fontWeight: 800, cursor: 'pointer' }}
+                >
+                  Activate Code
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Plus, Edit2, Trash2, Scissors, Clock, X, Check } from 'lucide-react';
-import { BUSINESSES } from '../../data/sampleData';
+import { usePlatform } from '../../context/PlatformContext';
 
 export default function ProviderServices() {
-  const [services, setServices] = useState(BUSINESSES[0].services);
+  const { businesses, addBusinessService, deleteBusinessService } = usePlatform();
+  const currentBiz = businesses.find(b => b.id === 'biz_1') || businesses[0];
+  const services = currentBiz?.services || [];
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newSrv, setNewSrv] = useState({ name: '', description: '', duration: '45 min', price: 399, image: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&q=80&w=400' });
 
@@ -11,26 +13,20 @@ export default function ProviderServices() {
     e.preventDefault();
     if (!newSrv.name) return;
 
-    const created = {
-      id: `srv_${Date.now()}`,
+    addBusinessService(currentBiz.id, {
       name: newSrv.name,
       description: newSrv.description || "Professional grooming service tailored for your needs.",
       duration: newSrv.duration,
       price: Number(newSrv.price),
-      originalPrice: Number(newSrv.price) + 100,
-      discount: "20% OFF",
-      popular: true,
-      image: newSrv.image,
-      included: ["Consultation", "Treatment", "Styling"]
-    };
+      image: newSrv.image
+    });
 
-    setServices([created, ...services]);
     setNewSrv({ name: '', description: '', duration: '45 min', price: 399, image: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&q=80&w=400' });
     setIsModalOpen(false);
   };
 
   const handleDelete = (id) => {
-    setServices(services.filter(s => s.id !== id));
+    deleteBusinessService(currentBiz.id, id);
   };
 
   return (

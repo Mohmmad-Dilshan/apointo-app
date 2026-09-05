@@ -13,8 +13,10 @@ import {
   Sparkles,
   Users
 } from "lucide-react";
+import { usePlatform } from "../../../context/PlatformContext";
 
 export default function MobileCalendar({ onOpenPOS }) {
+  const { bookings } = usePlatform();
   const [viewMode, setViewMode] = useState("Day"); // 'Day' | 'Staff' | 'Week'
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const dates = [10, 11, 12, 13, 14, 15, 16];
@@ -26,14 +28,25 @@ export default function MobileCalendar({ onOpenPOS }) {
     { id: "stf_3", name: "Vikram Singh", role: "Beard Master", color: "#06B6D4", bg: "#ECFEFF" }
   ]);
 
-  const [appointments, setAppointments] = useState([
-    { id: "cal_1", hour: "09:00", customer: "Vikram Malhotra", service: "Classic Haircut", staff: "Rahul Sharma", staffId: "stf_1", color: "#4F46E5", duration: "45 min", status: "Completed" },
-    { id: "cal_2", hour: "10:00", customer: "Arjun Kapoor", service: "Beard Crafting Combo", staff: "Vikram Singh", staffId: "stf_3", color: "#06B6D4", duration: "30 min", status: "In Service" },
-    { id: "cal_3", hour: "12:00", customer: "Blocked", service: "Staff Lunch & Sanitization", staff: "All Staff", staffId: "all", color: "#64748B", duration: "60 min", isBlocked: true },
-    { id: "cal_4", hour: "14:00", customer: "Dilshan Perera", service: "Haircut & Styling", staff: "Rahul Sharma", staffId: "stf_1", color: "#10B981", duration: "45 min", status: "Waiting" },
-    { id: "cal_5", hour: "16:00", customer: "Rohan Malhotra", service: "Hair Highlights", staff: "Priya Verma", staffId: "stf_2", color: "#EC4899", duration: "90 min", status: "Confirmed" },
-    { id: "cal_6", hour: "18:00", customer: "Siddharth Nair", service: "Royal Deluxe Package", staff: "Priya Verma", staffId: "stf_2", color: "#F59E0B", duration: "90 min", status: "Confirmed" }
-  ]);
+  const appointments = (bookings || []).map((b, i) => {
+    const rawTime = b.time || "02:30 PM";
+    const hourPrefix = parseInt(rawTime.split(":")[0], 10);
+    const isPM = rawTime.includes("PM") && hourPrefix !== 12;
+    const hour24 = `${String(isPM ? hourPrefix + 12 : hourPrefix).padStart(2, '0')}:00`;
+    const colors = ["#4F46E5", "#06B6D4", "#10B981", "#EC4899", "#F59E0B"];
+
+    return {
+      id: b.id,
+      hour: hour24,
+      customer: b.customer || b.customerName || "Customer",
+      service: b.serviceName || b.service || "Service",
+      staff: b.staffName || b.staff || "Rahul Sharma",
+      staffId: "stf_1",
+      color: colors[i % colors.length],
+      duration: b.duration || "45 min",
+      status: b.status
+    };
+  });
 
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
   const [blockReason, setBlockReason] = useState("Lunch Break");

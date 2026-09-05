@@ -14,94 +14,12 @@ import {
   Image as ImageIcon,
   Check
 } from "lucide-react";
+import { usePlatform } from "../../../context/PlatformContext";
 
 export default function MobileServices() {
-  const [services, setServices] = useState([
-    {
-      id: 1,
-      name: "Classic Haircut & Styling",
-      duration: "45 min",
-      price: 299,
-      originalPrice: 399,
-      category: "Hair",
-      bookings: 142,
-      revenue: "₹42,458",
-      active: true,
-      popular: true,
-      description: "Precision haircut, scalp wash, blow dry and hair setting with premium styling wax.",
-      included: ["Hair Wash", "Precision Cut", "Blow Dry", "Styling Wax"]
-    },
-    {
-      id: 2,
-      name: "Beard Crafting & Hot Towel Combo",
-      duration: "45 min",
-      price: 499,
-      originalPrice: 650,
-      category: "Beard",
-      bookings: 98,
-      revenue: "₹48,902",
-      active: true,
-      popular: true,
-      description: "Complete signature look overhaul including haircut, hot towel beard sculpting and beard oil.",
-      included: ["Hot Towel", "Beard Sculpting", "Beard Oil Massage"]
-    },
-    {
-      id: 3,
-      name: "Royal Deluxe Rejuvenation Package",
-      duration: "90 min",
-      price: 899,
-      originalPrice: 1200,
-      category: "Premium",
-      bookings: 34,
-      revenue: "₹30,566",
-      active: true,
-      popular: true,
-      description: "Ultimate rejuvenation: haircut, beard trim, organic facial glow treatment, and 20 min head massage.",
-      included: ["Deluxe Cut", "Organic Facial Glow", "20m Head Massage"]
-    },
-    {
-      id: 4,
-      name: "Express Charcoal Face Scrub",
-      duration: "30 min",
-      price: 249,
-      originalPrice: 350,
-      category: "Spa",
-      bookings: 52,
-      revenue: "₹12,948",
-      active: true,
-      popular: false,
-      description: "Deep pore cleansing and blackhead removal using natural activated bamboo charcoal scrub.",
-      included: ["Charcoal Exfoliation", "Steam", "Hydrating Gel"]
-    },
-    {
-      id: 5,
-      name: "Organic Scalp Therapy & Anti-Dandruff",
-      duration: "60 min",
-      price: 699,
-      originalPrice: 900,
-      category: "Spa",
-      bookings: 27,
-      revenue: "₹18,873",
-      active: false,
-      popular: false,
-      description: "Deep conditioning herbal scalp spa treatment to eliminate dry flakes and boost hair roots.",
-      included: ["Scalp Massage", "Herbal Hair Mask", "Steam Infusion"]
-    },
-    {
-      id: 6,
-      name: "Global Hair Color & Keratin Gloss",
-      duration: "120 min",
-      price: 1499,
-      originalPrice: 2000,
-      category: "Color",
-      bookings: 19,
-      revenue: "₹28,481",
-      active: true,
-      popular: false,
-      description: "Ammonia-free luxury hair color with glossy keratin shine coat treatment.",
-      included: ["Color Consultation", "Ammonia-free Dye", "Keratin Gloss"]
-    }
-  ]);
+  const { businesses, addBusinessService, updateBusinessService, deleteBusinessService } = usePlatform();
+  const currentBiz = businesses.find(b => b.id === 'biz_1') || businesses[0];
+  const services = currentBiz?.services || [];
 
   const categories = ["All", "Hair", "Beard", "Spa", "Premium", "Color"];
   const [activeCategory, setActiveCategory] = useState("All");
@@ -137,8 +55,7 @@ export default function MobileServices() {
     }
 
     if (editingService) {
-      setServices(services.map(s => s.id === editingService.id ? {
-        ...s,
+      updateBusinessService(currentBiz.id, editingService.id, {
         name: formName,
         category: formCategory,
         price: Number(formPrice),
@@ -146,25 +63,19 @@ export default function MobileServices() {
         duration: formDuration,
         description: formDescription,
         included: formInclusions.split(",").map(i => i.trim())
-      } : s));
+      });
       showToast(`Service "${formName}" updated successfully!`);
     } else {
-      const newService = {
-        id: Date.now(),
+      addBusinessService(currentBiz.id, {
         name: formName,
         category: formCategory,
         price: Number(formPrice),
         originalPrice: Number(formOriginalPrice),
         duration: formDuration,
-        bookings: 0,
-        revenue: "₹0",
-        active: true,
-        popular: false,
         description: formDescription,
         included: formInclusions.split(",").map(i => i.trim())
-      };
-      setServices([newService, ...services]);
-      showToast(`New service "${formName}" added to catalog!`);
+      });
+      showToast(`New service "${formName}" published & live in Customer App!`);
     }
 
     setIsAddModalOpen(false);
@@ -174,7 +85,7 @@ export default function MobileServices() {
   const openEditModal = (srv) => {
     setEditingService(srv);
     setFormName(srv.name);
-    setFormCategory(srv.category);
+    setFormCategory(srv.category || "Hair");
     setFormPrice(srv.price.toString());
     setFormOriginalPrice(srv.originalPrice ? srv.originalPrice.toString() : srv.price.toString());
     setFormDuration(srv.duration);
@@ -196,11 +107,11 @@ export default function MobileServices() {
   };
 
   const handleDeleteService = (id) => {
-    setServices(services.filter(s => s.id !== id));
+    deleteBusinessService(currentBiz.id, id);
     showToast("Service deleted from catalog");
   };
 
-  const filtered = services.filter(s => activeCategory === "All" || s.category === activeCategory);
+  const filtered = services.filter(s => activeCategory === "All" || (s.category || "Hair") === activeCategory);
 
   return (
     <div style={{ background: "#F8FAFC", minHeight: "100%", paddingBottom: "30px", position: "relative" }}>
@@ -349,9 +260,9 @@ export default function MobileServices() {
                     </span>
                     <div
                       onClick={() => {
-                        const updated = services.map(s => s.id === srv.id ? { ...s, active: !s.active } : s);
-                        setServices(updated);
-                        showToast(`Service "${srv.name}" is now ${!srv.active ? "LIVE" : "PAUSED"}`);
+                        const newActive = srv.active === false ? true : false;
+                        updateBusinessService(currentBiz.id, srv.id, { active: newActive });
+                        showToast(`Service "${srv.name}" is now ${newActive ? "LIVE" : "PAUSED"}`);
                       }}
                       style={{
                         width: "38px",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   X,
   QrCode,
@@ -9,7 +9,9 @@ import {
   Clock,
   Hash,
   Camera,
-  Sparkles
+  Sparkles,
+  Zap,
+  Check
 } from "lucide-react";
 
 import { usePlatform } from "../../../context/PlatformContext";
@@ -19,42 +21,61 @@ export default function QRCheckinModal({ isOpen, onClose, onVerifySuccess }) {
   const [enteredOtp, setEnteredOtp] = useState("");
   const [verifiedAppointment, setVerifiedAppointment] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [scanMode, setScanMode] = useState("camera"); // 'camera' | 'otp'
+  const [scanMode, setScanMode] = useState("otp"); // Default to 'otp' for easy testing
+
+  const activeWaitingList = (bookings || []).filter(
+    b => b.status === "Waiting in Lounge" || b.status === "Waiting" || b.status === "Confirmed"
+  );
+  const targetBooking = activeWaitingList[0] || (bookings || [])[0];
+
+  // Auto-set the latest booking's OTP when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setErrorMessage(null);
+      setVerifiedAppointment(null);
+      if (targetBooking?.otp) {
+        setEnteredOtp(targetBooking.otp);
+      }
+    }
+  }, [isOpen, targetBooking?.otp]);
 
   if (!isOpen) return null;
 
-  const mockDatabase = [
-    { otp: "4892", id: "APT-98241", customer: "Dilshan Perera", service: "Classic Haircut & Styling", staff: "Rahul Sharma", time: "02:30 PM", price: "₹329" },
-    { otp: "1923", id: "APT-87120", customer: "Arjun Kapoor", service: "Beard Crafting Combo", staff: "Vikram Singh", time: "10:30 AM", price: "₹499" },
-    { otp: "6612", id: "APT-76510", customer: "Rohan Malhotra", service: "Royal Deluxe Grooming", staff: "Priya Verma", time: "05:00 PM", price: "₹899" }
-  ];
-
   const handleVerifyOtp = (codeToVerify) => {
-    const code = codeToVerify || enteredOtp;
-    const match = (bookings || []).find(b => b.otp === code || b.id === code) || mockDatabase.find(m => m.otp === code);
+    const code = String(codeToVerify !== undefined ? codeToVerify : enteredOtp).trim().replace("#", "");
+    if (!code) {
+      setErrorMessage("Please enter an OTP or Booking ID.");
+      return;
+    }
+
+    const match = (bookings || []).find(b => 
+      String(b.otp) === code || 
+      String(b.id) === code || 
+      String(b.code) === code ||
+      String(b.id).replace("APT-", "") === code
+    );
 
     if (match) {
       setVerifiedAppointment({
         id: match.id,
-        customer: match.customer || match.customerName || "Customer",
-        service: match.serviceName || match.service || "Service",
-        staff: match.staffName || match.staff || "Specialist",
+        customer: match.customer || match.customerName || "Dilshan P.",
+        service: match.serviceName || match.service || "Classic Haircut & Styling",
+        staff: match.staffName || match.staff || "Rahul Sharma",
         time: match.time || "02:30 PM",
         price: `₹${match.totalPaid || match.price || 329}`,
-        otp: match.otp || "4892"
+        otp: match.otp || code,
+        status: match.status
       });
       setErrorMessage(null);
     } else {
-      setErrorMessage("Invalid Check-in Pass or OTP. Please check with customer.");
+      setErrorMessage(`Invalid OTP "${code}". Please select or enter a valid booking OTP.`);
       setVerifiedAppointment(null);
     }
   };
 
-  const handleSimulateQRScan = () => {
-    // Simulate camera scanning Dilshan's QR code
-    setTimeout(() => {
-      handleVerifyOtp("4892");
-    }, 800);
+  const handleSimulateQRScan = (specificOtp) => {
+    const code = specificOtp || targetBooking?.otp || "4892";
+    handleVerifyOtp(code);
   };
 
   const handleConfirmCheckin = () => {
@@ -64,91 +85,246 @@ export default function QRCheckinModal({ isOpen, onClose, onVerifySuccess }) {
     onClose();
   };
 
+  // Extract distinct real OTPs from bookings for quick chips
+  const dynamicBookingList = (bookings || []).filter(b => b.otp || b.id);
+
   return (
-    <div style={{
-      position: "absolute",
-      inset: 0,
-      background: "rgba(15, 23, 42, 0.8)",
-      backdropFilter: "blur(8px)",
-      WebkitBackdropFilter: "blur(8px)",
-      zIndex: 9999,
-      display: "flex",
-      alignItems: "flex-end",
-      justifyContent: "center"
-    }}>
-      <div style={{
-        width: "100%",
-        maxWidth: "440px",
-        background: "#FFFFFF",
-        borderRadius: "28px 28px 0 0",
-        padding: "20px 18px 24px",
-        boxShadow: "0 -10px 40px rgba(0,0,0,0.3)",
-        maxHeight: "85vh",
-        overflowY: "auto"
-      }}>
+    <div 
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(15, 23, 42, 0.82)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+        zIndex: 9999,
+        display: "flex",
+        alignItems: "flex-end",
+        justifyContent: "center",
+        padding: "0 10px"
+      }}
+    >
+      <div 
+        onClick={e => e.stopPropagation()}
+        style={{
+          width: "100%",
+          maxWidth: "460px",
+          background: "#FFFFFF",
+          borderRadius: "28px 28px 0 0",
+          padding: "22px 20px 28px",
+          boxShadow: "0 -10px 40px rgba(0,0,0,0.35)",
+          maxHeight: "88vh",
+          overflowY: "auto"
+        }}
+        className="animate-slide-up"
+      >
         {/* Modal Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <div style={{ width: "34px", height: "34px", borderRadius: "10px", background: "#EEF2FF", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <QrCode size={18} color="#4F46E5" />
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ width: "36px", height: "36px", borderRadius: "12px", background: "linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <QrCode size={20} color="#4F46E5" />
             </div>
             <div>
-              <h3 style={{ fontSize: "1.05rem", fontWeight: 900, color: "#0F172A" }}>Reception Check-in Scanner</h3>
-              <p style={{ fontSize: "0.68rem", color: "#64748B" }}>Scan customer Apple/Android Pass QR or enter 4-digit OTP</p>
+              <h3 style={{ fontSize: "1.05rem", fontWeight: 900, color: "#0F172A", margin: 0 }}>Reception Check-in</h3>
+              <p style={{ fontSize: "0.72rem", color: "#64748B", margin: 0 }}>Instant OTP Verification & QR Scanner</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#F1F5F9", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+            style={{ width: "34px", height: "34px", borderRadius: "50%", background: "#F1F5F9", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+            title="Close"
           >
-            <X size={16} color="#64748B" />
+            <X size={18} color="#64748B" />
           </button>
         </div>
 
-        {/* View Switcher: Camera View vs Keypad OTP */}
-        <div style={{ display: "flex", background: "#F1F5F9", padding: "3px", borderRadius: "12px", marginBottom: "14px" }}>
-          <button
-            onClick={() => { setScanMode("camera"); handleSimulateQRScan(); }}
-            style={{
-              flex: 1,
-              padding: "7px",
-              borderRadius: "9px",
-              fontSize: "0.75rem",
-              fontWeight: 800,
-              border: "none",
-              background: scanMode === "camera" ? "#FFFFFF" : "transparent",
-              color: scanMode === "camera" ? "#4F46E5" : "#64748B",
-              boxShadow: scanMode === "camera" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
-              cursor: "pointer"
-            }}
-          >
-            📷 Camera Scanner
-          </button>
+        {/* View Switcher: OTP vs Camera */}
+        <div style={{ display: "flex", background: "#F1F5F9", padding: "3px", borderRadius: "12px", marginBottom: "16px" }}>
           <button
             onClick={() => setScanMode("otp")}
             style={{
               flex: 1,
-              padding: "7px",
+              padding: "8px",
               borderRadius: "9px",
-              fontSize: "0.75rem",
+              fontSize: "0.78rem",
               fontWeight: 800,
               border: "none",
               background: scanMode === "otp" ? "#FFFFFF" : "transparent",
               color: scanMode === "otp" ? "#4F46E5" : "#64748B",
-              boxShadow: scanMode === "otp" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
-              cursor: "pointer"
+              boxShadow: scanMode === "otp" ? "0 2px 6px rgba(0,0,0,0.08)" : "none",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "6px"
             }}
           >
-            🔢 4-Digit OTP Entry
+            <span>🔢 4-Digit OTP Entry</span>
+          </button>
+          <button
+            onClick={() => setScanMode("camera")}
+            style={{
+              flex: 1,
+              padding: "8px",
+              borderRadius: "9px",
+              fontSize: "0.78rem",
+              fontWeight: 800,
+              border: "none",
+              background: scanMode === "camera" ? "#FFFFFF" : "transparent",
+              color: scanMode === "camera" ? "#4F46E5" : "#64748B",
+              boxShadow: scanMode === "camera" ? "0 2px 6px rgba(0,0,0,0.08)" : "none",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "6px"
+            }}
+          >
+            <span>📷 Camera Simulator</span>
           </button>
         </div>
+
+        {/* OTP ENTRY VIEW */}
+        {scanMode === "otp" && !verifiedAppointment && (
+          <div style={{ marginBottom: "16px" }}>
+            {/* 1-Tap Auto-Try OTP Banner */}
+            {targetBooking && (
+              <div 
+                onClick={() => {
+                  const otpCode = targetBooking.otp || "4892";
+                  setEnteredOtp(otpCode);
+                  handleVerifyOtp(otpCode);
+                }}
+                style={{
+                  background: "linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)",
+                  border: "1px solid #C7D2FE",
+                  borderRadius: "14px",
+                  padding: "10px 14px",
+                  marginBottom: "14px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  transition: "transform 0.15s ease"
+                }}
+                title="Click to auto-try this client's OTP"
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <div style={{ width: "28px", height: "28px", borderRadius: "8px", background: "#4F46E5", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Zap size={16} color="#FFFFFF" />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "0.76rem", fontWeight: 800, color: "#1E1B4B" }}>
+                      ⚡ 1-Tap Auto-Try OTP: <span style={{ color: "#4F46E5" }}>#{targetBooking.otp || "4892"}</span>
+                    </div>
+                    <div style={{ fontSize: "0.68rem", color: "#6366F1" }}>
+                      {targetBooking.customer || "Dilshan P."} • {targetBooking.serviceName}
+                    </div>
+                  </div>
+                </div>
+                <span style={{ fontSize: "0.72rem", fontWeight: 800, background: "#4F46E5", color: "#FFFFFF", padding: "4px 10px", borderRadius: "8px" }}>
+                  Try OTP →
+                </span>
+              </div>
+            )}
+
+            <label style={{ fontSize: "0.76rem", fontWeight: 800, color: "#475569", display: "block", marginBottom: "6px" }}>
+              Enter or Select Customer's 4-Digit OTP
+            </label>
+            <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
+              <input
+                type="text"
+                maxLength={8}
+                placeholder="4892"
+                value={enteredOtp}
+                onChange={e => {
+                  const val = e.target.value;
+                  setEnteredOtp(val);
+                  if (val.length === 4) {
+                    handleVerifyOtp(val);
+                  }
+                }}
+                onKeyDown={e => {
+                  if (e.key === "Enter") handleVerifyOtp();
+                }}
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  borderRadius: "14px",
+                  border: "2px solid #CBD5E1",
+                  fontSize: "1.3rem",
+                  fontWeight: 900,
+                  textAlign: "center",
+                  letterSpacing: "0.2em",
+                  color: "#0F172A",
+                  outline: "none",
+                  background: "#F8FAFC"
+                }}
+                autoFocus
+              />
+              <button
+                onClick={() => handleVerifyOtp()}
+                style={{
+                  padding: "0 22px",
+                  borderRadius: "14px",
+                  background: "linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)",
+                  color: "#FFFFFF",
+                  fontSize: "0.85rem",
+                  fontWeight: 800,
+                  border: "none",
+                  cursor: "pointer",
+                  boxShadow: "0 4px 14px rgba(79,70,229,0.35)"
+                }}
+              >
+                Verify
+              </button>
+            </div>
+
+            {/* Quick Test OTP Chips */}
+            <div style={{ marginTop: "8px" }}>
+              <span style={{ fontSize: "0.7rem", color: "#94A3B8", fontWeight: 700, display: "block", marginBottom: "6px" }}>
+                Active Booking OTPs (Tap any to verify):
+              </span>
+              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                {dynamicBookingList.slice(0, 4).map(b => {
+                  const otpCode = b.otp || (b.id ? b.id.replace("APT-", "").slice(0, 4) : "4892");
+                  return (
+                    <button
+                      key={b.id}
+                      onClick={() => {
+                        setEnteredOtp(otpCode);
+                        handleVerifyOtp(otpCode);
+                      }}
+                      style={{
+                        fontSize: "0.72rem",
+                        padding: "4px 10px",
+                        borderRadius: "8px",
+                        background: "#F8FAFC",
+                        border: "1px solid #CBD5E1",
+                        cursor: "pointer",
+                        fontWeight: 800,
+                        color: "#4F46E5",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px"
+                      }}
+                    >
+                      <span>#{otpCode}</span>
+                      <span style={{ color: "#64748B", fontWeight: 600 }}>({b.customer?.split(" ")[0] || "Guest"})</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* CAMERA SCANNER VIEW */}
         {scanMode === "camera" && !verifiedAppointment && (
           <div style={{ textAlign: "center", marginBottom: "16px" }}>
             <div style={{
-              width: "220px",
-              height: "220px",
+              width: "200px",
+              height: "200px",
               margin: "0 auto",
               background: "#090D16",
               borderRadius: "20px",
@@ -166,127 +342,78 @@ export default function QRCheckinModal({ isOpen, onClose, onVerifySuccess }) {
                 top: "20%",
                 left: 0,
                 right: 0,
-                height: "2px",
+                height: "3px",
                 background: "#10B981",
-                boxShadow: "0 0 10px #10B981, 0 0 20px #10B981"
+                boxShadow: "0 0 12px #10B981, 0 0 24px #10B981"
               }} />
 
-              <QrCode size={120} color="rgba(255,255,255,0.4)" />
+              <QrCode size={110} color="rgba(255,255,255,0.4)" />
             </div>
 
             <p style={{ fontSize: "0.72rem", color: "#64748B", marginTop: "10px" }}>
-              Point reception camera at customer's phone boarding pass
+              Camera simulation active — Point at customer's digital boarding pass
             </p>
 
             <button
-              onClick={handleSimulateQRScan}
+              onClick={() => handleSimulateQRScan(targetBooking?.otp)}
               style={{
                 marginTop: "10px",
-                padding: "8px 16px",
-                borderRadius: "10px",
-                background: "#EEF2FF",
-                color: "#4F46E5",
-                fontSize: "0.76rem",
+                padding: "10px 18px",
+                borderRadius: "12px",
+                background: "linear-gradient(135deg, #4F46E5 0%, #6366F1 100%)",
+                color: "#FFFFFF",
+                fontSize: "0.8rem",
                 fontWeight: 800,
                 border: "none",
-                cursor: "pointer"
+                cursor: "pointer",
+                boxShadow: "0 4px 14px rgba(79,70,229,0.3)"
               }}
             >
-              Simulate Scan Customer QR (Pass #4892)
+              Simulate Scan ({targetBooking?.customer || "Dilshan P."} • #{targetBooking?.otp || "4892"})
             </button>
-          </div>
-        )}
-
-        {/* OTP KEYPAD VIEW */}
-        {scanMode === "otp" && !verifiedAppointment && (
-          <div style={{ marginBottom: "16px" }}>
-            <label style={{ fontSize: "0.74rem", fontWeight: 700, color: "#64748B", display: "block", marginBottom: "6px" }}>
-              Enter 4-Digit Desk OTP
-            </label>
-            <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
-              <input
-                type="text"
-                maxLength={4}
-                placeholder="4892"
-                value={enteredOtp}
-                onChange={e => setEnteredOtp(e.target.value)}
-                style={{
-                  flex: 1,
-                  padding: "12px",
-                  borderRadius: "12px",
-                  border: "2px solid #CBD5E1",
-                  fontSize: "1.4rem",
-                  fontWeight: 900,
-                  textAlign: "center",
-                  letterSpacing: "0.3em",
-                  color: "#0F172A",
-                  outline: "none"
-                }}
-              />
-              <button
-                onClick={() => handleVerifyOtp()}
-                style={{
-                  padding: "0 20px",
-                  borderRadius: "12px",
-                  background: "linear-gradient(135deg, #4F46E5, #6366F1)",
-                  color: "#FFFFFF",
-                  fontSize: "0.85rem",
-                  fontWeight: 800,
-                  border: "none",
-                  cursor: "pointer"
-                }}
-              >
-                Verify
-              </button>
-            </div>
-
-            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-              <span style={{ fontSize: "0.68rem", color: "#94A3B8" }}>Quick Test OTPs:</span>
-              {["4892", "1923", "6612"].map(testOtp => (
-                <button
-                  key={testOtp}
-                  onClick={() => { setEnteredOtp(testOtp); handleVerifyOtp(testOtp); }}
-                  style={{ fontSize: "0.68rem", padding: "2px 6px", borderRadius: "6px", background: "#F1F5F9", border: "1px solid #E2E8F0", cursor: "pointer", fontWeight: 700, color: "#4F46E5" }}
-                >
-                  #{testOtp}
-                </button>
-              ))}
-            </div>
           </div>
         )}
 
         {/* Error Alert */}
         {errorMessage && (
-          <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: "12px", padding: "10px 12px", marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px", color: "#DC2626", fontSize: "0.75rem", fontWeight: 700 }}>
-            <AlertCircle size={16} />
+          <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: "14px", padding: "10px 14px", marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px", color: "#DC2626", fontSize: "0.76rem", fontWeight: 700 }}>
+            <AlertCircle size={16} flexShrink={0} />
             <span>{errorMessage}</span>
           </div>
         )}
 
         {/* Verified Appointment Card */}
         {verifiedAppointment && (
-          <div style={{ background: "#ECFDF5", border: "1px solid #A7F3D0", borderRadius: "18px", padding: "16px", marginBottom: "16px" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
-              <CheckCircle2 size={18} color="#10B981" />
-              <span style={{ fontSize: "0.85rem", fontWeight: 900, color: "#065F46" }}>Verified Boarding Pass Found!</span>
+          <div style={{ background: "#ECFDF5", border: "1px solid #A7F3D0", borderRadius: "20px", padding: "18px", marginBottom: "16px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+              <div style={{ width: "26px", height: "26px", borderRadius: "50%", background: "#10B981", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Check size={16} color="#FFFFFF" strokeWidth={3} />
+              </div>
+              <span style={{ fontSize: "0.9rem", fontWeight: 900, color: "#065F46" }}>Boarding Pass Verified Successfully!</span>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "0.78rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "0.8rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "#047857" }}>Client Name:</span>
+                <span style={{ color: "#047857", fontWeight: 600 }}>Client Name:</span>
                 <strong style={{ color: "#065F46" }}>{verifiedAppointment.customer}</strong>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "#047857" }}>Service Booked:</span>
+                <span style={{ color: "#047857", fontWeight: 600 }}>Service Booked:</span>
                 <strong style={{ color: "#065F46" }}>{verifiedAppointment.service}</strong>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "#047857" }}>Assigned Specialist:</span>
+                <span style={{ color: "#047857", fontWeight: 600 }}>Assigned Specialist:</span>
                 <strong style={{ color: "#4F46E5" }}>{verifiedAppointment.staff}</strong>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ color: "#047857" }}>Slot Time:</span>
+                <span style={{ color: "#047857", fontWeight: 600 }}>Slot Time:</span>
                 <strong style={{ color: "#065F46" }}>{verifiedAppointment.time}</strong>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span style={{ color: "#047857", fontWeight: 600 }}>Desk OTP Verified:</span>
+                <strong style={{ color: "#059669", background: "#D1FAE5", padding: "1px 8px", borderRadius: "6px" }}>
+                  #{verifiedAppointment.otp}
+                </strong>
               </div>
             </div>
 
@@ -294,19 +421,24 @@ export default function QRCheckinModal({ isOpen, onClose, onVerifySuccess }) {
               onClick={handleConfirmCheckin}
               style={{
                 width: "100%",
-                marginTop: "14px",
-                padding: "12px",
-                borderRadius: "12px",
+                marginTop: "16px",
+                padding: "13px",
+                borderRadius: "14px",
                 background: "linear-gradient(135deg, #059669, #10B981)",
                 color: "#FFFFFF",
-                fontSize: "0.85rem",
+                fontSize: "0.88rem",
                 fontWeight: 900,
                 border: "none",
                 cursor: "pointer",
-                boxShadow: "0 4px 12px rgba(16,185,129,0.3)"
+                boxShadow: "0 6px 18px rgba(16,185,129,0.35)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px"
               }}
             >
-              ✓ Confirm Check-in & Mark In-Service
+              <CheckCircle2 size={18} />
+              <span>Confirm Check-in & Mark In-Service</span>
             </button>
           </div>
         )}

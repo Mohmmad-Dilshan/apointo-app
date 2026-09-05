@@ -721,6 +721,8 @@ export const NOTIFICATIONS = [
 export const INITIAL_BOOKINGS = [
   {
     id: "APT-98241",
+    customer: "Dilshan P.",
+    customerPhone: "+91 98765 43210",
     businessName: "Urban Cut Studio",
     businessImage: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80&w=300",
     serviceName: "Classic Haircut & Styling",
@@ -732,11 +734,14 @@ export const INITIAL_BOOKINGS = [
     totalPaid: 329,
     status: "Confirmed",
     address: "100 Feet Rd, Indiranagar, Bengaluru",
+    otp: "4892",
     code: "APT-98241",
     qrCode: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=APT-98241"
   },
   {
     id: "APT-87120",
+    customer: "Dilshan P.",
+    customerPhone: "+91 98765 43210",
     businessName: "Glow Beauty Lounge & Spa",
     businessImage: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=300",
     serviceName: "Hydra-Glow Vitamin C Facial",
@@ -748,6 +753,7 @@ export const INITIAL_BOOKINGS = [
     totalPaid: 1049,
     status: "Completed",
     address: "5th Block, Koramangala, Bengaluru",
+    otp: "1923",
     code: "APT-87120"
   }
 ];

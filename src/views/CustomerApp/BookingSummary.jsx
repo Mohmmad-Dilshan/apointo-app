@@ -199,7 +199,15 @@ export default function BookingSummary({ bookingDraft, onBack, onProceedToPaymen
         </div>
 
         <button
-          onClick={() => onProceedToPayment({ ...bookingDraft, totalAmount: total })}
+          onClick={() => onProceedToPayment({
+            ...bookingDraft,
+            totalAmount: total,
+            subtotal,
+            taxes,
+            platformFee,
+            discount: couponDiscount + rewardsDiscount,
+            coupon
+          })}
           style={{
             padding: '14px 26px',
             borderRadius: '999px',

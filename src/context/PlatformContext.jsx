@@ -1,11 +1,12 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import {
   INITIAL_USER,
   BUSINESSES as INITIAL_BUSINESSES,
   INITIAL_BOOKINGS,
   NOTIFICATIONS as INITIAL_NOTIFICATIONS,
   ADMIN_STATS as INITIAL_ADMIN_STATS,
-  PROVIDER_STATS as INITIAL_PROVIDER_STATS
+  PROVIDER_STATS as INITIAL_PROVIDER_STATS,
+  COUPONS as INITIAL_COUPONS
 } from '../data/sampleData';
 
 export const THEMES_CATALOG = [
@@ -129,18 +130,57 @@ function hexToRgb(hex) {
   return `${r}, ${g}, ${b}`;
 }
 
+const STORAGE_KEYS = {
+  USER: 'apointo_user_v2',
+  BUSINESSES: 'apointo_businesses_v2',
+  BOOKINGS: 'apointo_bookings_v2',
+  NOTIFICATIONS: 'apointo_notifications_v2',
+  COUPONS: 'apointo_coupons_v2',
+  PENDING_VERIFICATIONS: 'apointo_verifications_v2',
+  FAVORITES: 'apointo_favorites_v2',
+  THEME: 'apointo_theme_v2',
+  AUTOMATION_SETTINGS: 'apointo_automations_v2',
+  AUTOMATION_LOGS: 'apointo_logs_v2'
+};
+
+function loadStored(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
+function saveStored(key, val) {
+  try {
+    localStorage.setItem(key, JSON.stringify(val));
+  } catch (e) {}
+}
+
 const PlatformContext = createContext(null);
 
 export function PlatformProvider({ children }) {
-  // Global State
-  const [user, setUser] = useState(INITIAL_USER);
-  const [businesses, setBusinesses] = useState(INITIAL_BUSINESSES);
-  const [bookings, setBookings] = useState(INITIAL_BOOKINGS);
-  const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
-  const [pendingVerifications, setPendingVerifications] = useState(INITIAL_ADMIN_STATS.pendingVerifications);
-  const [favorites, setFavorites] = useState(['biz_1', 'biz_3']);
+  // Global State with LocalStorage Persistence
+  const [user, setUser] = useState(() => loadStored(STORAGE_KEYS.USER, INITIAL_USER));
+  const [businesses, setBusinesses] = useState(() => loadStored(STORAGE_KEYS.BUSINESSES, INITIAL_BUSINESSES));
+  const [bookings, setBookings] = useState(() => loadStored(STORAGE_KEYS.BOOKINGS, INITIAL_BOOKINGS));
+  const [notifications, setNotifications] = useState(() => loadStored(STORAGE_KEYS.NOTIFICATIONS, INITIAL_NOTIFICATIONS));
+  const [coupons, setCoupons] = useState(() => loadStored(STORAGE_KEYS.COUPONS, INITIAL_COUPONS));
+  const [pendingVerifications, setPendingVerifications] = useState(() => loadStored(STORAGE_KEYS.PENDING_VERIFICATIONS, INITIAL_ADMIN_STATS.pendingVerifications));
+  const [favorites, setFavorites] = useState(() => loadStored(STORAGE_KEYS.FAVORITES, ['biz_1', 'biz_3']));
   const [toast, setToast] = useState(null);
-  const [currentTheme, setCurrentTheme] = useState('royal');
+  const [currentTheme, setCurrentTheme] = useState(() => loadStored(STORAGE_KEYS.THEME, 'royal'));
+
+  // Automatically synchronize state changes to localStorage
+  useEffect(() => { saveStored(STORAGE_KEYS.USER, user); }, [user]);
+  useEffect(() => { saveStored(STORAGE_KEYS.BUSINESSES, businesses); }, [businesses]);
+  useEffect(() => { saveStored(STORAGE_KEYS.BOOKINGS, bookings); }, [bookings]);
+  useEffect(() => { saveStored(STORAGE_KEYS.NOTIFICATIONS, notifications); }, [notifications]);
+  useEffect(() => { saveStored(STORAGE_KEYS.COUPONS, coupons); }, [coupons]);
+  useEffect(() => { saveStored(STORAGE_KEYS.PENDING_VERIFICATIONS, pendingVerifications); }, [pendingVerifications]);
+  useEffect(() => { saveStored(STORAGE_KEYS.FAVORITES, favorites); }, [favorites]);
+  useEffect(() => { saveStored(STORAGE_KEYS.THEME, currentTheme); }, [currentTheme]);
 
   // Quick Global Toast Trigger
   const showToast = (toastObj) => {
@@ -166,28 +206,33 @@ export function PlatformProvider({ children }) {
     });
   };
 
-  // 1. Customer Booking Actions
+  // 1. Customer Booking Actions with Full Metadata
   const createBooking = (bookingData) => {
     const bookingId = "APT-" + Math.floor(10000 + Math.random() * 90000);
     const otp = String(Math.floor(1000 + Math.random() * 9000));
+    const biz = bookingData.business || businesses[0];
+    const srv = bookingData.service || biz.services[0];
     const newBooking = {
       id: bookingId,
       customer: user.name,
       customerPhone: user.phone,
-      businessId: bookingData.business.id,
-      businessName: bookingData.business.name,
-      businessImage: bookingData.business.heroImage,
-      serviceId: bookingData.service.id,
-      serviceName: bookingData.service.name,
+      businessId: biz.id,
+      businessName: biz.name,
+      businessImage: biz.heroImage || biz.images?.[0] || "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80&w=300",
+      serviceId: srv.id,
+      serviceName: srv.name,
       staffName: bookingData.staff?.name || "Senior Specialist",
       date: bookingData.dateTime?.date || "Today, 14 Aug 2026",
       time: bookingData.dateTime?.time || "02:30 PM",
-      duration: bookingData.service.duration,
-      price: bookingData.service.price,
+      duration: srv.duration || "45 min",
+      price: srv.price || 299,
       tax: 20,
-      totalPaid: bookingData.totalAmount || (bookingData.service.price + 20),
+      addons: bookingData.addons || [],
+      discount: bookingData.discount || 0,
+      paymentMethod: bookingData.paymentMethod || "UPI (Google Pay)",
+      totalPaid: bookingData.totalAmount || (srv.price + 20),
       status: "Confirmed",
-      address: bookingData.business.address,
+      address: biz.address || "100 Feet Rd, Indiranagar, Bengaluru",
       otp: otp,
       code: bookingId,
       qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${bookingId}`,
@@ -208,7 +253,7 @@ export function PlatformProvider({ children }) {
     setNotifications((prev) => [notif, ...prev]);
 
     showToast({
-      message: `Appointment ${bookingId} booked! Synced to Business & Admin.`,
+      message: `Appointment #${bookingId} booked! Synced to Business & Admin.`,
       type: "success"
     });
 
@@ -402,12 +447,12 @@ export function PlatformProvider({ children }) {
     });
   };
 
-  // 6. Customer Review Submission
+  // 6. Customer Review Submission with Real-time Rating Recalculation
   const submitReview = (bizId, reviewData) => {
     const newReview = {
       id: `rev_${Date.now()}`,
       author: user.name,
-      rating: reviewData.rating || 5,
+      rating: Number(reviewData.rating) || 5,
       date: "Just now",
       comment: reviewData.comment || "Outstanding service experience!",
       avatar: user.avatar
@@ -417,10 +462,14 @@ export function PlatformProvider({ children }) {
       prev.map((b) => {
         if (b.id === bizId) {
           const updatedReviews = [newReview, ...(b.reviews || [])];
+          const newCount = (b.reviewCount || 0) + 1;
+          const sumRatings = updatedReviews.reduce((sum, r) => sum + (Number(r.rating) || 5), 0);
+          const newAvg = Number((sumRatings / updatedReviews.length).toFixed(1));
           return {
             ...b,
             reviews: updatedReviews,
-            reviewCount: (b.reviewCount || 0) + 1
+            reviewCount: newCount,
+            rating: newAvg
           };
         }
         return b;
@@ -428,27 +477,204 @@ export function PlatformProvider({ children }) {
     );
 
     showToast({
-      message: "Review posted! Synchronized to Business & Admin feedback.",
+      message: `Review posted! ⭐ Updated ${businesses.find(b => b.id === bizId)?.name || 'Business'} rating.`,
       type: "success"
     });
   };
 
-  // 7. Business Automations & Smart Rules Engine
-  const [automationSettings, setAutomationSettings] = useState({
-    autoConfirm: true,
-    whatsappReminders: true,
-    smartStaffDispatch: true,
-    offPeakDynamicYield: false,
-    autoLoyaltyCashback: true,
-    autoReviewCollector: true,
-  });
+  // 7. Business Services Catalog Management (Live Sync to Customer App)
+  const addBusinessService = (businessId = 'biz_1', serviceData) => {
+    const newService = {
+      id: `srv_${Date.now()}`,
+      name: serviceData.name,
+      description: serviceData.description || 'Professional grooming & care service tailored for your needs.',
+      duration: serviceData.duration || '45 min',
+      price: Number(serviceData.price) || 399,
+      originalPrice: Number(serviceData.originalPrice || (Number(serviceData.price) * 1.25)),
+      discount: serviceData.discount || '20% OFF',
+      popular: serviceData.popular ?? true,
+      image: serviceData.image || 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&q=80&w=400',
+      included: serviceData.included || ['Consultation', 'Treatment', 'Styling'],
+      addons: serviceData.addons || [
+        { id: `add_${Date.now()}_1`, name: 'Scalp Deep Conditioning', price: 149 },
+        { id: `add_${Date.now()}_2`, name: 'Aroma Scalp Massage', price: 199 }
+      ]
+    };
 
-  const [automationLogs, setAutomationLogs] = useState([
-    { id: 1, time: "10:45 AM", rule: "WhatsApp Automation", action: "Sent 2-hr pre-arrival reminder to Dilshan Perera (+91 98765 43210)", status: "Delivered", icon: "💬" },
-    { id: 2, time: "10:30 AM", rule: "Smart Dispatcher", action: "Auto-assigned walk-in guest to Vikram Singh (workload: 40%)", status: "Executed", icon: "⚡" },
-    { id: 3, time: "09:45 AM", rule: "Loyalty Cashback", action: "Credited 150 reward points to Vikram Malhotra post service", status: "Success", icon: "🎁" },
-    { id: 4, time: "09:00 AM", rule: "Auto Confirm", action: "Instant confirmation granted for online booking APT-98241", status: "Confirmed", icon: "✅" }
-  ]);
+    setBusinesses((prev) =>
+      prev.map((b) => {
+        if (b.id === businessId || (!b.id && businessId === 'biz_1')) {
+          return {
+            ...b,
+            services: [newService, ...(b.services || [])]
+          };
+        }
+        return b;
+      })
+    );
+
+    showToast({
+      message: `✓ Service "${newService.name}" published! Now bookable in Customer App.`,
+      type: 'success'
+    });
+    return newService;
+  };
+
+  const updateBusinessService = (businessId = 'biz_1', serviceId, updatedFields) => {
+    setBusinesses((prev) =>
+      prev.map((b) => {
+        if (b.id === businessId) {
+          return {
+            ...b,
+            services: (b.services || []).map((s) => (s.id === serviceId ? { ...s, ...updatedFields } : s))
+          };
+        }
+        return b;
+      })
+    );
+    showToast({ message: 'Service updated in catalog!', type: 'success' });
+  };
+
+  const deleteBusinessService = (businessId = 'biz_1', serviceId) => {
+    setBusinesses((prev) =>
+      prev.map((b) => {
+        if (b.id === businessId) {
+          return {
+            ...b,
+            services: (b.services || []).filter((s) => s.id !== serviceId)
+          };
+        }
+        return b;
+      })
+    );
+    showToast({ message: 'Service removed from catalog', type: 'info' });
+  };
+
+  // 8. Business Staff Management (Live Sync to Customer Staff Picker)
+  const addBusinessStaff = (businessId = 'biz_1', staffData) => {
+    const newStaff = {
+      id: `stf_${Date.now()}`,
+      name: staffData.name,
+      role: staffData.role || 'Senior Specialist',
+      rating: 5.0,
+      experience: staffData.experience || '5 yrs',
+      photo: staffData.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+      active: true,
+      phone: staffData.phone || '+91 98765 43210',
+      shift: staffData.shift || '09:00 AM – 07:00 PM',
+      commission: staffData.commission || '20%',
+      bookingsToday: 0
+    };
+
+    setBusinesses((prev) =>
+      prev.map((b) => {
+        if (b.id === businessId) {
+          return {
+            ...b,
+            staff: [...(b.staff || []), newStaff]
+          };
+        }
+        return b;
+      })
+    );
+
+    showToast({
+      message: `Stylist ${newStaff.name} added! Visible in customer booking flow.`,
+      type: 'success'
+    });
+    return newStaff;
+  };
+
+  const toggleBusinessStaffActive = (businessId = 'biz_1', staffId) => {
+    setBusinesses((prev) =>
+      prev.map((b) => {
+        if (b.id === businessId) {
+          return {
+            ...b,
+            staff: (b.staff || []).map((s) => (s.id === staffId ? { ...s, active: !s.active } : s))
+          };
+        }
+        return b;
+      })
+    );
+  };
+
+  // 9. Marketing Promo Coupons (Live Sync to Customer Checkout)
+  const addBusinessCoupon = (couponData) => {
+    const newCoupon = {
+      id: `c_${Date.now()}`,
+      code: (couponData.code || 'SAVE100').toUpperCase().trim(),
+      title: couponData.title || `Offer ${couponData.code}`,
+      description: couponData.description || 'Special promotional discount for online bookings',
+      amount: Number(couponData.amount) || 100,
+      minOrder: Number(couponData.minOrder) || 299,
+      type: couponData.type || 'flat',
+      discountPct: Number(couponData.discountPct) || 20,
+      isActive: true,
+      uses: 0,
+      maxUses: Number(couponData.maxUses) || 100
+    };
+
+    setCoupons((prev) => [newCoupon, ...prev]);
+
+    showToast({
+      message: `🎉 Promo code "${newCoupon.code}" active! Customers can now apply it.`,
+      type: 'success'
+    });
+    return newCoupon;
+  };
+
+  const toggleBusinessCoupon = (couponIdOrCode) => {
+    setCoupons((prev) =>
+      prev.map((c) =>
+        (c.id === couponIdOrCode || c.code === couponIdOrCode)
+          ? { ...c, isActive: !c.isActive }
+          : c
+      )
+    );
+  };
+
+  const deleteBusinessCoupon = (couponIdOrCode) => {
+    setCoupons((prev) =>
+      prev.filter((c) => c.id !== couponIdOrCode && c.code !== couponIdOrCode)
+    );
+    showToast({ message: 'Coupon removed', type: 'info' });
+  };
+
+  // 10. Business Profile & Hours Update
+  const updateBusinessProfile = (businessId = 'biz_1', profileData) => {
+    setBusinesses((prev) =>
+      prev.map((b) => (b.id === businessId ? { ...b, ...profileData } : b))
+    );
+    showToast({
+      message: 'Business profile & operating hours updated across platform!',
+      type: 'success'
+    });
+  };
+
+  // 11. Business Automations & Smart Rules Engine
+  const [automationSettings, setAutomationSettings] = useState(() =>
+    loadStored(STORAGE_KEYS.AUTOMATION_SETTINGS, {
+      autoConfirm: true,
+      whatsappReminders: true,
+      smartStaffDispatch: true,
+      offPeakDynamicYield: false,
+      autoLoyaltyCashback: true,
+      autoReviewCollector: true,
+    })
+  );
+
+  const [automationLogs, setAutomationLogs] = useState(() =>
+    loadStored(STORAGE_KEYS.AUTOMATION_LOGS, [
+      { id: 1, time: "10:45 AM", rule: "WhatsApp Automation", action: "Sent 2-hr pre-arrival reminder to Dilshan Perera (+91 98765 43210)", status: "Delivered", icon: "💬" },
+      { id: 2, time: "10:30 AM", rule: "Smart Dispatcher", action: "Auto-assigned walk-in guest to Vikram Singh (workload: 40%)", status: "Executed", icon: "⚡" },
+      { id: 3, time: "09:45 AM", rule: "Loyalty Cashback", action: "Credited 150 reward points to Vikram Malhotra post service", status: "Success", icon: "🎁" },
+      { id: 4, time: "09:00 AM", rule: "Auto Confirm", action: "Instant confirmation granted for online booking APT-98241", status: "Confirmed", icon: "✅" }
+    ])
+  );
+
+  useEffect(() => { saveStored(STORAGE_KEYS.AUTOMATION_SETTINGS, automationSettings); }, [automationSettings]);
+  useEffect(() => { saveStored(STORAGE_KEYS.AUTOMATION_LOGS, automationLogs); }, [automationLogs]);
 
   const toggleAutomation = (ruleKey) => {
     setAutomationSettings((prev) => {
@@ -536,21 +762,45 @@ export function PlatformProvider({ children }) {
     showToast({ message: "Automation activity logs cleared.", type: "info" });
   };
 
-  // 8. Dynamic Real-time Calculations
+  // 12. Reset Demo Platform to Pristine State
+  const resetDemoData = () => {
+    Object.values(STORAGE_KEYS).forEach((k) => {
+      try { localStorage.removeItem(k); } catch (e) {}
+    });
+    setUser(INITIAL_USER);
+    setBusinesses(INITIAL_BUSINESSES);
+    setBookings(INITIAL_BOOKINGS);
+    setNotifications(INITIAL_NOTIFICATIONS);
+    setCoupons(INITIAL_COUPONS);
+    setPendingVerifications(INITIAL_ADMIN_STATS.pendingVerifications);
+    setFavorites(['biz_1', 'biz_3']);
+    setCurrentTheme('royal');
+    setAutomationSettings({
+      autoConfirm: true,
+      whatsappReminders: true,
+      smartStaffDispatch: true,
+      offPeakDynamicYield: false,
+      autoLoyaltyCashback: true,
+      autoReviewCollector: true,
+    });
+    setAutomationLogs([
+      { id: 1, time: "10:45 AM", rule: "WhatsApp Automation", action: "Sent 2-hr pre-arrival reminder to Dilshan Perera (+91 98765 43210)", status: "Delivered", icon: "💬" },
+      { id: 2, time: "10:30 AM", rule: "Smart Dispatcher", action: "Auto-assigned walk-in guest to Vikram Singh (workload: 40%)", status: "Executed", icon: "⚡" },
+      { id: 3, time: "09:45 AM", rule: "Loyalty Cashback", action: "Credited 150 reward points to Vikram Malhotra post service", status: "Success", icon: "🎁" },
+      { id: 4, time: "09:00 AM", rule: "Auto Confirm", action: "Instant confirmation granted for online booking APT-98241", status: "Confirmed", icon: "✅" }
+    ]);
+    showToast({ message: "Platform reset to fresh seed demo state! 🔄", type: "info" });
+  };
+
+  // 13. Dynamic Real-time Calculations
   const computedStats = useMemo(() => {
-    // Total gross booking value
     const totalGmv = bookings.reduce((sum, b) => sum + (Number(b.totalPaid) || Number(b.price) || 0), 0);
-    // Platform commission (10%)
     const netPlatformRevenue = Math.round(totalGmv * 0.10);
-    // Active (upcoming/confirmed/in-service) bookings count
     const activeBookingsCount = bookings.filter(
       (b) => b.status === "Confirmed" || b.status === "In Service" || b.status === "In Progress" || b.status === "Waiting in Lounge"
     ).length;
-    // Waiting count
     const waitingCount = bookings.filter(b => b.status === "Waiting in Lounge" || b.status === "Waiting").length;
-    // Completed count
     const completedBookingsCount = bookings.filter((b) => b.status === "Completed").length;
-    // Provider specific revenue for 'Urban Cut Studio'
     const providerTodayRevenue = bookings
       .filter((b) => (b.businessName?.includes("Urban") || b.businessId === "biz_1"))
       .reduce((sum, b) => sum + (Number(b.totalPaid) || Number(b.price) || 0), 42850);
@@ -578,6 +828,8 @@ export function PlatformProvider({ children }) {
     setBookings,
     notifications,
     setNotifications,
+    coupons,
+    setCoupons,
     pendingVerifications,
     setPendingVerifications,
     favorites,
@@ -600,10 +852,20 @@ export function PlatformProvider({ children }) {
     verifyBusinessApplication,
     sendAdminBroadcast,
     submitReview,
+    addBusinessService,
+    updateBusinessService,
+    deleteBusinessService,
+    addBusinessStaff,
+    toggleBusinessStaffActive,
+    addBusinessCoupon,
+    toggleBusinessCoupon,
+    deleteBusinessCoupon,
+    updateBusinessProfile,
     toggleAutomation,
     callNextInQueue,
     customerCheckIn,
-    clearAutomationLogs
+    clearAutomationLogs,
+    resetDemoData
   };
 
   return <PlatformContext.Provider value={value}>{children}</PlatformContext.Provider>;

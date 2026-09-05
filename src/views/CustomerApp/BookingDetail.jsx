@@ -4,8 +4,9 @@ import RescheduleModal from './RescheduleModal';
 import CancelModal from './CancelModal';
 import { usePlatform } from '../../context/PlatformContext';
 
-export default function BookingDetail({ booking, onBack, onReschedule, onCancel, onBookAgain }) {
-  const { customerCheckIn } = usePlatform();
+export default function BookingDetail({ booking: propBooking, onBack, onReschedule, onCancel, onBookAgain }) {
+  const { bookings, customerCheckIn } = usePlatform();
+  const booking = bookings?.find(b => b.id === propBooking?.id) || propBooking;
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [downloadToast, setDownloadToast] = useState(null);
