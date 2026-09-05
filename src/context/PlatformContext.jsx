@@ -9,7 +9,7 @@ import {
   COUPONS as INITIAL_COUPONS
 } from '../data/sampleData';
 
-export const THEMES_CATALOG = [
+const THEMES_CATALOG = [
   {
     id: 'royal',
     name: 'Indigo Royal',

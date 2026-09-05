@@ -167,9 +167,22 @@ function AppContent() {
     setCustomerScreen('success');
   };
 
-  const handleQuickRebook = (biz) => {
-    setSelectedBusiness(biz);
-    setSelectedService(biz.services[0]);
+  const handleQuickRebook = (item) => {
+    const targetBusiness = businesses?.find(b => 
+      b.id === item?.businessId || 
+      b.name === item?.businessName || 
+      b.id === item?.id || 
+      b.name === item?.name
+    ) || businesses?.[0];
+
+    const targetService = targetBusiness?.services?.find(s => 
+      s.id === item?.serviceId || 
+      s.name === item?.serviceName || 
+      s.id === item?.id
+    ) || targetBusiness?.services?.[0];
+
+    setSelectedBusiness(targetBusiness);
+    setSelectedService(targetService);
     setCustomerScreen('staff');
   };
 
